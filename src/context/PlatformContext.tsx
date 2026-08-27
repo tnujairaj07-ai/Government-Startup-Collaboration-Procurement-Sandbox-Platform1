@@ -48,11 +48,15 @@ interface PlatformContextType {
   setSelectedProposalId: (id: string | null) => void;
   isCommandPaletteOpen: boolean;
   setIsCommandPaletteOpen: (open: boolean) => void;
+  isLandingPage: boolean;
+  setIsLandingPage: (isLanding: boolean) => void;
+  openPortal: (role: PortalRole, tab?: string) => void;
 }
 
 const PlatformContext = createContext<PlatformContextType | undefined>(undefined);
 
 export const PlatformProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [isLandingPage, setIsLandingPage] = useState<boolean>(true);
   const [currentRole, setCurrentRoleState] = useState<PortalRole>('gov');
   const [activeTab, setActiveTabState] = useState<string>('dashboard');
 
@@ -85,6 +89,15 @@ export const PlatformProvider: React.FC<{ children: ReactNode }> = ({ children }
   const setCurrentRole = (role: PortalRole) => {
     setCurrentRoleState(role);
     setActiveTabState('dashboard');
+  };
+
+  const openPortal = (role: PortalRole, tab: string = 'dashboard') => {
+    setCurrentRoleState(role);
+    setActiveTabState(tab);
+    setIsLandingPage(false);
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e) {}
   };
 
   const setActiveTab = (tab: string) => {
@@ -402,7 +415,10 @@ export const PlatformProvider: React.FC<{ children: ReactNode }> = ({ children }
         selectedProposalId,
         setSelectedProposalId,
         isCommandPaletteOpen,
-        setIsCommandPaletteOpen
+        setIsCommandPaletteOpen,
+        isLandingPage,
+        setIsLandingPage,
+        openPortal
       }}
     >
       {children}

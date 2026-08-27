@@ -3,7 +3,7 @@ import {
   LayoutDashboard, FilePlus2, Compass, ClipboardCheck, 
   Scale, Activity, ShieldCheck, Layers, FileSignature, 
   Rocket, FolderSearch, Ticket, FileSpreadsheet, Settings, 
-  Award, History, Shield, Users, LogOut, LucideIcon, Bot, ShoppingCart, FolderArchive 
+  Award, History, Shield, Users, LogOut, LucideIcon, Bot, ShoppingCart, FolderArchive, Home 
 } from 'lucide-react';
 import { usePlatform } from '../../context/PlatformContext';
 import clsx from 'clsx';
@@ -19,7 +19,7 @@ interface NavSection {
 }
 
 export const Sidebar: React.FC = () => {
-  const { currentRole, activeTab, setActiveTab, proposals, contracts, challenges } = usePlatform();
+  const { currentRole, activeTab, setActiveTab, proposals, contracts, challenges, setIsLandingPage } = usePlatform();
 
   const activeChallengesCount = challenges.filter(c => c.status === 'Open').length;
   const pendingContracts = contracts.filter(c => c.govStatus === 'pending' || c.startupStatus === 'pending').length;
@@ -171,15 +171,24 @@ export const Sidebar: React.FC = () => {
         </nav>
       </div>
 
-      {/* Bottom Information Card */}
-      <div className="pt-4 space-y-2">
-        <div className="p-3.5 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md text-[11px]">
+      {/* Bottom Information Card & Landing Button */}
+      <div className="pt-3 space-y-2">
+        <button
+          type="button"
+          onClick={() => setIsLandingPage(true)}
+          className="w-full py-2.5 px-3.5 rounded-2xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-400/30 text-xs font-bold flex items-center justify-center gap-2 transition-all"
+        >
+          <Home className="w-4 h-4 text-amber-300" />
+          <span>Return to Landing Page</span>
+        </button>
+
+        <div className="p-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md text-[11px]">
           <p className="font-bold text-white uppercase tracking-wider text-[10px] flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             MAHATECH PROCURE v2.0
           </p>
-          <p className="text-blue-100 text-[10px] mt-1 leading-relaxed">
-            Government of Maharashtra Innovation Procurement Pathway.
+          <p className="text-blue-100 text-[10px] mt-0.5 leading-relaxed">
+            Government of Maharashtra Innovation Sandbox.
           </p>
         </div>
       </div>

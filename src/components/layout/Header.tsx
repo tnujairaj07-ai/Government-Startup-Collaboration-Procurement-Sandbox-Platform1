@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Building2, Rocket, Award, Shield, Bell, Search, 
-  ChevronDown, Check, Sparkles 
+  ChevronDown, Check, Sparkles, Home 
 } from 'lucide-react';
 import { usePlatform } from '../../context/PlatformContext';
 import { PortalRole } from '../../types';
@@ -10,7 +10,7 @@ export const Header: React.FC = () => {
   const { 
     currentRole, setCurrentRole, setActiveTab, activeTab,
     notifications, markNotificationAsRead, setIsCommandPaletteOpen,
-    currentStartup
+    currentStartup, setIsLandingPage
   } = usePlatform();
 
   const [isNotifOpen, setIsNotifOpen] = useState(false);
@@ -88,6 +88,17 @@ export const Header: React.FC = () => {
       {/* Right Controls: Search, Switcher, Notification, Profile Capsule */}
       <div className="flex items-center gap-3 sm:gap-4">
         
+        {/* Back to Landing Page Button */}
+        <button
+          type="button"
+          onClick={() => setIsLandingPage(true)}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs font-bold transition-all shadow-2xs"
+          title="Return to Main Landing Page"
+        >
+          <Home className="w-3.5 h-3.5 text-orange-600" />
+          <span className="hidden sm:inline">Landing Page</span>
+        </button>
+
         {/* Quick Search Command Button */}
         <button
           onClick={() => setIsCommandPaletteOpen(true)}

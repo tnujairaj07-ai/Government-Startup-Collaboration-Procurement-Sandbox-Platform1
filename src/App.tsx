@@ -21,9 +21,10 @@ import { ChallengeExplorer } from './components/startup/ChallengeExplorer';
 import { ApplicationTracker } from './components/startup/ApplicationTracker';
 import { DigitalContractSigner } from './components/startup/DigitalContractSigner';
 import { ExecutionWorkspace } from './components/startup/ExecutionWorkspace';
+import { LandingPage } from './components/landing/LandingPage';
 
 const MainContent: React.FC = () => {
-  const { currentRole, activeTab } = usePlatform();
+  const { currentRole, activeTab, isLandingPage } = usePlatform();
 
   const renderContent = () => {
     switch (currentRole) {
@@ -76,6 +77,15 @@ const MainContent: React.FC = () => {
         }
     }
   };
+
+  if (isLandingPage) {
+    return (
+      <div className="min-h-screen">
+        <LandingPage />
+        <SearchCommand />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex bg-[#F4F7FC]">
