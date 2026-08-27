@@ -121,9 +121,9 @@ export const LandingPage: React.FC = () => {
     <div className="min-h-screen bg-[#FFFDF9] text-navy-900 selection:bg-amber-400 selection:text-navy-950 font-sans antialiased">
       
       {/* ========================================================================= */}
-      {/* 1. TOP GLOBAL NAVBAR                                                     */}
+      {/* 1. TOP GLOBAL NAVBAR (Clean, Spacious & Uncongested)                     */}
       {/* ========================================================================= */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-amber-100/80 shadow-xs">
+      <header className="bg-white border-b border-amber-100 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
           
           {/* Brand / Logo */}
@@ -133,46 +133,34 @@ export const LandingPage: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-lg sm:text-xl font-black text-navy-900 font-display tracking-tight leading-none">
+                <span className="text-lg sm:text-2xl font-black text-navy-950 font-display tracking-tight leading-none">
                   Mahatech <span className="text-orange-600">Procure</span>
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-extrabold uppercase tracking-wider hidden sm:inline-block">
+                <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[10px] font-extrabold uppercase tracking-wider hidden sm:inline-block border border-amber-200">
                   Gov Sandbox
                 </span>
               </div>
-              <p className="text-[10px] text-slate-500 font-semibold tracking-wide mt-0.5">
-                Government of Maharashtra
+              <p className="text-[11px] text-slate-500 font-semibold tracking-wide mt-0.5">
+                Government of Maharashtra • Innovation Marketplace
               </p>
             </div>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-6 text-xs font-bold text-slate-700">
-            <a href="#hero" className="text-orange-600 hover:text-orange-700 transition-colors">Home</a>
-            <a href="#about" className="hover:text-orange-600 transition-colors">What is it</a>
-            <a href="#departments" className="hover:text-orange-600 transition-colors">Departments</a>
-            <a href="#startups" className="hover:text-orange-600 transition-colors">Startups</a>
-            <a href="#how-it-works" className="hover:text-orange-600 transition-colors">How it Works</a>
-            <a href="#features" className="hover:text-orange-600 transition-colors">Features</a>
-            <a href="#impact" className="hover:text-orange-600 transition-colors">Impact</a>
-            <a href="#faqs" className="hover:text-orange-600 transition-colors">FAQs</a>
-          </nav>
-
           {/* Right Action Buttons */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => openPortal('startup', 'challenges')}
-              className="hidden sm:flex px-4 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-bold text-xs items-center gap-1.5 transition-all"
+              className="px-4 sm:px-5 py-2.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 font-bold text-xs flex items-center gap-1.5 transition-all shadow-2xs"
             >
-              <Compass className="w-3.5 h-3.5 text-orange-600" />
+              <Compass className="w-4 h-4 text-orange-600" />
               <span>Explore Challenges</span>
             </button>
 
             <button
               type="button"
               onClick={() => setIsLoginModalOpen(true)}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs shadow-md shadow-orange-500/25 flex items-center gap-2 transition-all hover:scale-[1.02]"
+              className="px-5 sm:px-6 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs shadow-md shadow-orange-500/25 flex items-center gap-2 transition-all hover:scale-[1.02]"
             >
               <Lock className="w-3.5 h-3.5" />
               <span>Access Portals</span>
@@ -183,9 +171,67 @@ export const LandingPage: React.FC = () => {
       </header>
 
       {/* ========================================================================= */}
-      {/* 2. HERO SECTION (Matching User Reference Image UI & Organic Curves)       */}
+      {/* 2. SUB-NAVBAR CATEGORY BAR (Spacious, Clear Pill Navigation)              */}
       {/* ========================================================================= */}
-      <section id="hero" className="relative pt-8 pb-16 lg:pt-14 lg:pb-24 overflow-hidden">
+      <nav className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-amber-200/80 shadow-xs py-2.5 px-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-center overflow-x-auto custom-scrollbar">
+          <div className="flex items-center gap-1.5 sm:gap-2 text-xs font-bold whitespace-nowrap px-2">
+            <a 
+              href="#hero" 
+              className="px-3.5 py-1.5 rounded-full bg-orange-600 text-white shadow-2xs hover:bg-orange-700 transition-all"
+            >
+              Home
+            </a>
+            <a 
+              href="#about" 
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-950 transition-all"
+            >
+              What is it
+            </a>
+            <a 
+              href="#departments" 
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-950 transition-all"
+            >
+              Departments
+            </a>
+            <a 
+              href="#startups" 
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-950 transition-all"
+            >
+              Startups
+            </a>
+            <a 
+              href="#how-it-works" 
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-950 transition-all"
+            >
+              How it Works
+            </a>
+            <a 
+              href="#features" 
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-950 transition-all"
+            >
+              Features
+            </a>
+            <a 
+              href="#impact" 
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-950 transition-all"
+            >
+              Impact
+            </a>
+            <a 
+              href="#faqs" 
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-950 transition-all"
+            >
+              FAQs
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      {/* ========================================================================= */}
+      {/* 3. HERO SECTION                                                          */}
+      {/* ========================================================================= */}
+      <section id="hero" className="relative pt-8 pb-16 lg:pt-12 lg:pb-20 overflow-hidden">
         
         {/* Background Decorative Warm Blobs */}
         <div className="absolute -top-24 right-0 w-[550px] h-[550px] bg-gradient-to-br from-amber-200/50 via-orange-200/30 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
@@ -195,9 +241,9 @@ export const LandingPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             
             {/* Left Column: Hero Text, Search, CTAs, Trust Badges */}
-            <div className="lg:col-span-7 space-y-6 sm:space-y-8">
+            <div className="lg:col-span-7 space-y-6 sm:space-y-7">
               
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100/90 text-amber-900 border border-amber-300/80 text-xs font-bold shadow-2xs">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold shadow-2xs">
                 <span className="w-2 h-2 rounded-full bg-orange-500 animate-ping" />
                 <span>Government Innovation & Sandbox Procurement</span>
               </div>
@@ -214,9 +260,9 @@ export const LandingPage: React.FC = () => {
                 </p>
               </div>
 
-              {/* Search Pill Input (Matching Reference Layout) */}
+              {/* Search Pill Input */}
               <form onSubmit={handleSearchSubmit} className="max-w-xl">
-                <div className="p-1.5 bg-white rounded-2xl border-2 border-amber-200/90 shadow-md flex items-center gap-2 focus-within:border-orange-500 focus-within:ring-4 focus-within:ring-orange-500/10 transition-all">
+                <div className="p-1.5 bg-white rounded-2xl border-2 border-amber-300 shadow-md flex items-center gap-2 focus-within:border-orange-500 focus-within:ring-4 focus-within:ring-orange-500/10 transition-all">
                   <Search className="w-5 h-5 text-slate-400 ml-3 shrink-0" />
                   <input
                     type="text"
@@ -234,46 +280,48 @@ export const LandingPage: React.FC = () => {
                 </div>
               </form>
 
-              {/* Primary CTAs */}
+              {/* Primary CTAs with Vivid, Distinct Colors */}
               <div className="flex flex-wrap items-center gap-3 pt-1">
                 <button
                   type="button"
                   onClick={() => openPortal('startup', 'challenges')}
-                  className="px-6 py-3.5 rounded-2xl bg-navy-950 hover:bg-navy-900 text-white font-bold text-xs sm:text-sm shadow-md flex items-center gap-2 transition-all hover:scale-[1.02]"
+                  className="px-6 py-3.5 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-orange-600/20 flex items-center gap-2 transition-all hover:scale-[1.02]"
                 >
-                  <Compass className="w-4 h-4 text-orange-400" />
+                  <Compass className="w-4 h-4 text-orange-200" />
                   <span>Explore Challenges</span>
-                  <ArrowRight className="w-4 h-4 text-orange-400 ml-1" />
+                  <ArrowRight className="w-4 h-4 text-orange-200 ml-1" />
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setIsRegisterModalOpen(true)}
-                  className="px-6 py-3.5 rounded-2xl bg-amber-100/80 hover:bg-amber-200/80 text-amber-950 border border-amber-300 font-bold text-xs sm:text-sm transition-all"
+                  className="px-6 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs sm:text-sm shadow-md shadow-amber-500/20 flex items-center gap-2 transition-all hover:scale-[1.02]"
                 >
-                  Register as a Startup
+                  <Rocket className="w-4 h-4 text-amber-100" />
+                  <span>Register as a Startup</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setIsLoginModalOpen(true)}
-                  className="px-5 py-3.5 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold text-xs sm:text-sm shadow-2xs transition-all"
+                  className="px-6 py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm shadow-md flex items-center gap-2 transition-all hover:scale-[1.02]"
                 >
-                  Login (Gov / Startup)
+                  <Lock className="w-4 h-4 text-slate-300" />
+                  <span>Login (Gov / Startup)</span>
                 </button>
               </div>
 
               {/* Trust Badges */}
-              <div className="pt-4 border-t border-amber-100 flex flex-wrap items-center gap-4 sm:gap-6 text-xs font-bold text-slate-600">
+              <div className="pt-4 border-t border-amber-200/80 flex flex-wrap items-center gap-4 sm:gap-6 text-xs font-bold text-slate-700">
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px]">
+                  <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px] font-black">
                     ✓
                   </div>
                   <span>Government of Maharashtra</span>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-orange-100 text-orange-800 flex items-center justify-center text-[10px]">
+                  <div className="w-6 h-6 rounded-full bg-orange-100 text-orange-800 flex items-center justify-center text-[10px] font-black">
                     ★
                   </div>
                   <span>DPIIT-recognized Startup Friendly</span>
@@ -292,7 +340,7 @@ export const LandingPage: React.FC = () => {
             {/* Right Column: Hero Graphic Card with Organic Shapes and Floating Stat Badges */}
             <div className="lg:col-span-5 relative flex justify-center lg:justify-end">
               
-              {/* Organic Curved Container Card (Matching the Reference Image Design) */}
+              {/* Organic Curved Container Card */}
               <div className="relative w-full max-w-md aspect-[4/4.8] rounded-[40px] bg-gradient-to-br from-amber-400 via-orange-500 to-amber-600 p-3 shadow-2xl overflow-hidden flex flex-col justify-between">
                 
                 {/* Inner Light Backdrop */}
@@ -315,7 +363,7 @@ export const LandingPage: React.FC = () => {
 
                   {/* Center Mockup: Pilot Cockpit Preview */}
                   <div className="my-auto space-y-3 z-10">
-                    <div className="p-4 rounded-2xl bg-white border border-amber-100 shadow-md space-y-2">
+                    <div className="p-4 rounded-2xl bg-white border border-amber-200 shadow-md space-y-2">
                       <div className="flex items-center justify-between text-[11px]">
                         <span className="font-bold text-slate-500">Active Field Pilot</span>
                         <span className="font-bold text-emerald-700">Pune Zone A</span>
@@ -336,11 +384,11 @@ export const LandingPage: React.FC = () => {
                     </div>
 
                     <div className="grid grid-cols-2 gap-2.5 text-xs">
-                      <div className="p-3 rounded-2xl bg-amber-50/80 border border-amber-200">
+                      <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200">
                         <span className="text-[10px] font-bold text-amber-900 block">AI SHORTLISTING</span>
                         <strong className="text-navy-900 font-bold">94/100 Score</strong>
                       </div>
-                      <div className="p-3 rounded-2xl bg-blue-50/80 border border-blue-200">
+                      <div className="p-3 rounded-2xl bg-blue-50 border border-blue-200">
                         <span className="text-[10px] font-bold text-blue-900 block">GEM GATEWAY</span>
                         <strong className="text-navy-900 font-bold">Fast-Track Ready</strong>
                       </div>
@@ -348,7 +396,7 @@ export const LandingPage: React.FC = () => {
                   </div>
 
                   {/* Bottom Strip */}
-                  <div className="pt-2 border-t border-amber-100 flex items-center justify-between text-[11px] text-slate-500 z-10">
+                  <div className="pt-2 border-t border-amber-200 flex items-center justify-between text-[11px] text-slate-500 z-10">
                     <span>Verified by Maharashtra Water Board</span>
                     <strong className="text-orange-600 font-bold">Audit Empanelled</strong>
                   </div>
@@ -356,7 +404,7 @@ export const LandingPage: React.FC = () => {
                 </div>
 
                 {/* Floating Glassmorphic Stat Pill 1: Top Right */}
-                <div className="absolute -top-3 -right-2 z-20 bg-white/95 backdrop-blur-md p-3 px-4 rounded-2xl border border-amber-200 shadow-xl flex items-center gap-3 animate-bounce-slow">
+                <div className="absolute -top-3 -right-2 z-20 bg-white/95 backdrop-blur-md p-3 px-4 rounded-2xl border border-amber-200 shadow-xl flex items-center gap-3">
                   <div className="w-8 h-8 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-sm">
                     ★
                   </div>
@@ -367,7 +415,7 @@ export const LandingPage: React.FC = () => {
                 </div>
 
                 {/* Floating Glassmorphic Stat Pill 2: Bottom Left */}
-                <div className="absolute -bottom-3 -left-3 z-20 bg-white/95 backdrop-blur-md p-3 px-4 rounded-2xl border border-amber-200 shadow-xl flex items-center gap-3 animate-bounce-slow">
+                <div className="absolute -bottom-3 -left-3 z-20 bg-white/95 backdrop-blur-md p-3 px-4 rounded-2xl border border-amber-200 shadow-xl flex items-center gap-3">
                   <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">
                     🏛️
                   </div>
@@ -387,7 +435,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 3. WHAT IS MAHATECH PROCURE?                                              */}
+      {/* 4. WHAT IS MAHATECH PROCURE?                                              */}
       {/* ========================================================================= */}
       <section id="about" className="py-16 sm:py-24 bg-white border-y border-amber-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -410,7 +458,7 @@ export const LandingPage: React.FC = () => {
           {/* 5 Key Points Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
-            <div className="p-6 rounded-3xl bg-amber-50/50 border border-amber-200/80 space-y-3 hover:shadow-md transition-all">
+            <div className="p-6 rounded-3xl bg-amber-50/60 border border-amber-200 space-y-3 hover:shadow-md transition-all">
               <div className="w-10 h-10 rounded-2xl bg-orange-500 text-white flex items-center justify-center font-bold">
                 🎯
               </div>
@@ -420,7 +468,7 @@ export const LandingPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-amber-50/50 border border-amber-200/80 space-y-3 hover:shadow-md transition-all">
+            <div className="p-6 rounded-3xl bg-amber-50/60 border border-amber-200 space-y-3 hover:shadow-md transition-all">
               <div className="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-bold">
                 🤖
               </div>
@@ -430,7 +478,7 @@ export const LandingPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-amber-50/50 border border-amber-200/80 space-y-3 hover:shadow-md transition-all">
+            <div className="p-6 rounded-3xl bg-amber-50/60 border border-amber-200 space-y-3 hover:shadow-md transition-all">
               <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-bold">
                 🛡️
               </div>
@@ -440,7 +488,7 @@ export const LandingPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-amber-50/50 border border-amber-200/80 space-y-3 hover:shadow-md transition-all">
+            <div className="p-6 rounded-3xl bg-amber-50/60 border border-amber-200 space-y-3 hover:shadow-md transition-all">
               <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold">
                 📊
               </div>
@@ -450,7 +498,7 @@ export const LandingPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-amber-50/50 border border-amber-200/80 space-y-3 hover:shadow-md transition-all md:col-span-2 lg:col-span-2">
+            <div className="p-6 rounded-3xl bg-amber-50/60 border border-amber-200 space-y-3 hover:shadow-md transition-all md:col-span-2 lg:col-span-2">
               <div className="w-10 h-10 rounded-2xl bg-purple-600 text-white flex items-center justify-center font-bold">
                 📜
               </div>
@@ -466,7 +514,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 4. FOR GOVERNMENT DEPARTMENTS                                             */}
+      {/* 5. FOR GOVERNMENT DEPARTMENTS                                             */}
       {/* ========================================================================= */}
       <section id="departments" className="py-16 sm:py-24 bg-[#FFFDF9]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -491,15 +539,15 @@ export const LandingPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => openPortal('gov', 'dashboard')}
-                className="px-5 py-3 rounded-xl bg-navy-950 hover:bg-navy-900 text-white font-bold text-xs shadow-md flex items-center gap-2 transition-all"
+                className="px-6 py-3 rounded-2xl bg-[#1D64EC] hover:bg-blue-700 text-white font-bold text-xs shadow-md flex items-center gap-2 transition-all hover:scale-[1.02]"
               >
-                <Building2 className="w-4 h-4 text-orange-400" />
+                <Building2 className="w-4 h-4 text-blue-200" />
                 <span>Login as Government User</span>
               </button>
               <button
                 type="button"
                 onClick={() => setIsDemoModalOpen(true)}
-                className="px-5 py-3 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 font-bold text-xs transition-all"
+                className="px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-md transition-all hover:scale-[1.02]"
               >
                 Request a Demo
               </button>
@@ -555,7 +603,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 5. FOR STARTUPS                                                           */}
+      {/* 6. FOR STARTUPS                                                           */}
       {/* ========================================================================= */}
       <section id="startups" className="py-16 sm:py-24 bg-white border-y border-amber-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -580,15 +628,15 @@ export const LandingPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsRegisterModalOpen(true)}
-                className="px-5 py-3 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs shadow-md flex items-center gap-2 transition-all"
+                className="px-6 py-3 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs shadow-md flex items-center gap-2 transition-all hover:scale-[1.02]"
               >
-                <Rocket className="w-4 h-4" />
+                <Rocket className="w-4 h-4 text-orange-200" />
                 <span>Register as a Startup</span>
               </button>
               <button
                 type="button"
                 onClick={() => openPortal('startup', 'dashboard')}
-                className="px-5 py-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-950 border border-amber-200 font-bold text-xs transition-all"
+                className="px-6 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition-all hover:scale-[1.02]"
               >
                 Login as Startup
               </button>
@@ -644,7 +692,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 6. HOW IT WORKS (12 Clear Stages Lifecycle Roadmap)                       */}
+      {/* 7. HOW IT WORKS (12 Clear Stages Lifecycle Roadmap)                       */}
       {/* ========================================================================= */}
       <section id="how-it-works" className="py-16 sm:py-24 bg-[#FFFDF9]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
@@ -665,28 +713,44 @@ export const LandingPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setHowItWorksTab('all')}
-                className={`px-4 py-2 rounded-xl transition-all ${howItWorksTab === 'all' ? 'bg-navy-950 text-white shadow-sm' : 'bg-white text-slate-600 border border-slate-200'}`}
+                className={`px-4 py-2 rounded-xl transition-all ${
+                  howItWorksTab === 'all' 
+                    ? 'bg-orange-600 text-white shadow-sm' 
+                    : 'bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300'
+                }`}
               >
                 All 12 Stages
               </button>
               <button
                 type="button"
                 onClick={() => setHowItWorksTab('phase1')}
-                className={`px-4 py-2 rounded-xl transition-all ${howItWorksTab === 'phase1' ? 'bg-orange-600 text-white shadow-sm' : 'bg-white text-slate-600 border border-slate-200'}`}
+                className={`px-4 py-2 rounded-xl transition-all ${
+                  howItWorksTab === 'phase1' 
+                    ? 'bg-orange-600 text-white shadow-sm' 
+                    : 'bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300'
+                }`}
               >
                 Phase 1: Pre-Pilot (1–6)
               </button>
               <button
                 type="button"
                 onClick={() => setHowItWorksTab('phase2')}
-                className={`px-4 py-2 rounded-xl transition-all ${howItWorksTab === 'phase2' ? 'bg-amber-600 text-white shadow-sm' : 'bg-white text-slate-600 border border-slate-200'}`}
+                className={`px-4 py-2 rounded-xl transition-all ${
+                  howItWorksTab === 'phase2' 
+                    ? 'bg-orange-600 text-white shadow-sm' 
+                    : 'bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300'
+                }`}
               >
                 Phase 2: Pilot (7–10)
               </button>
               <button
                 type="button"
                 onClick={() => setHowItWorksTab('phase3')}
-                className={`px-4 py-2 rounded-xl transition-all ${howItWorksTab === 'phase3' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white text-slate-600 border border-slate-200'}`}
+                className={`px-4 py-2 rounded-xl transition-all ${
+                  howItWorksTab === 'phase3' 
+                    ? 'bg-orange-600 text-white shadow-sm' 
+                    : 'bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300'
+                }`}
               >
                 Phase 3: Scale (11–12)
               </button>
@@ -723,10 +787,10 @@ export const LandingPage: React.FC = () => {
             <button
               type="button"
               onClick={() => openPortal('startup', 'applications')}
-              className="px-6 py-3 rounded-2xl bg-amber-100 hover:bg-amber-200 text-amber-950 font-bold text-xs border border-amber-300 inline-flex items-center gap-2 transition-all"
+              className="px-6 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md inline-flex items-center gap-2 transition-all hover:scale-[1.02]"
             >
               <span>See Detailed Process in Proposal Tracker</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 text-orange-400" />
             </button>
           </div>
 
@@ -734,7 +798,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 7. KEY FEATURES (8 Grid Cards)                                           */}
+      {/* 8. KEY FEATURES (8 Grid Cards)                                           */}
       {/* ========================================================================= */}
       <section id="features" className="py-16 sm:py-24 bg-white border-y border-amber-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -762,7 +826,7 @@ export const LandingPage: React.FC = () => {
               { title: 'Transparent Audit Trail', icon: '📜', desc: 'Every action—proposal submission, score, milestone approval, payment, and decision—is logged with user, time, and IP.' },
               { title: 'Scale-Ready Pipeline', icon: '⚡', desc: 'Move successful pilots to state-wide deployment via GeM and fast-track mechanisms, backed by verified data.' },
             ].map((feat, idx) => (
-              <div key={idx} className="p-6 rounded-3xl bg-amber-50/30 border border-amber-200/80 space-y-2.5 hover:bg-white hover:shadow-md transition-all">
+              <div key={idx} className="p-6 rounded-3xl bg-amber-50/40 border border-amber-200 space-y-2.5 hover:bg-white hover:shadow-md transition-all">
                 <div className="text-2xl">{feat.icon}</div>
                 <h3 className="font-extrabold text-navy-900 text-sm">{feat.title}</h3>
                 <p className="text-slate-600 font-medium leading-relaxed">{feat.desc}</p>
@@ -774,7 +838,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 8. IMPACT & USE CASES (5 Sector Cards)                                    */}
+      {/* 9. IMPACT & USE CASES (5 Sector Cards)                                    */}
       {/* ========================================================================= */}
       <section id="impact" className="py-16 sm:py-24 bg-[#FFFDF9]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -879,9 +943,9 @@ export const LandingPage: React.FC = () => {
             <button
               type="button"
               onClick={() => openPortal('startup', 'challenges')}
-              className="px-6 py-3.5 rounded-2xl bg-[#1D64EC] hover:bg-blue-700 text-white font-bold text-xs shadow-md inline-flex items-center gap-2 transition-all"
+              className="px-6 py-3.5 rounded-2xl bg-[#1D64EC] hover:bg-blue-700 text-white font-bold text-xs shadow-md inline-flex items-center gap-2 transition-all hover:scale-[1.02]"
             >
-              <Compass className="w-4 h-4" />
+              <Compass className="w-4 h-4 text-blue-200" />
               <span>Explore Live Challenges</span>
             </button>
           </div>
@@ -890,7 +954,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 9. SECURITY, COMPLIANCE & TRUST                                           */}
+      {/* 10. SECURITY, COMPLIANCE & TRUST                                          */}
       {/* ========================================================================= */}
       <section className="py-16 sm:py-24 bg-white border-y border-amber-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -955,7 +1019,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 10. FREQUENTLY ASKED QUESTIONS (FAQs)                                     */}
+      {/* 11. FREQUENTLY ASKED QUESTIONS (FAQs)                                     */}
       {/* ========================================================================= */}
       <section id="faqs" className="py-16 sm:py-24 bg-[#FFFDF9]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
@@ -981,7 +1045,7 @@ export const LandingPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => toggleFaq(idx)}
-                  className="w-full p-4 sm:p-5 text-left font-bold text-navy-900 text-sm sm:text-base flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors"
+                  className="w-full p-4 sm:p-5 text-left font-bold text-navy-900 text-sm sm:text-base flex items-center justify-between gap-4 hover:bg-amber-50/50 transition-colors"
                 >
                   <span>{faq.q}</span>
                   {openFaq === idx ? (
@@ -1004,7 +1068,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 11. FINAL HEROIC CTA BANNER                                               */}
+      {/* 12. FINAL HEROIC CTA BANNER                                               */}
       {/* ========================================================================= */}
       <section className="py-16 sm:py-20 bg-gradient-to-br from-navy-950 via-navy-900 to-slate-900 text-white relative overflow-hidden">
         <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-orange-500/20 blur-3xl" />
@@ -1029,7 +1093,7 @@ export const LandingPage: React.FC = () => {
             <button
               type="button"
               onClick={() => openPortal('gov', 'dashboard')}
-              className="px-6 py-3.5 rounded-2xl bg-white hover:bg-slate-100 text-navy-950 shadow-lg flex items-center gap-2 transition-all hover:scale-[1.02]"
+              className="px-6 py-3.5 rounded-2xl bg-white hover:bg-amber-50 text-navy-950 font-bold shadow-lg flex items-center gap-2 transition-all hover:scale-[1.02]"
             >
               <Building2 className="w-4 h-4 text-[#1D64EC]" />
               <span>Login as Government</span>
@@ -1038,9 +1102,9 @@ export const LandingPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsRegisterModalOpen(true)}
-              className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-lg flex items-center gap-2 transition-all hover:scale-[1.02]"
+              className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold shadow-lg flex items-center gap-2 transition-all hover:scale-[1.02]"
             >
-              <Rocket className="w-4 h-4" />
+              <Rocket className="w-4 h-4 text-white" />
               <span>Register as a Startup</span>
             </button>
           </div>
@@ -1055,7 +1119,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 12. FOOTER CONTENT (5 Columns + Copyright)                                */}
+      {/* 13. FOOTER CONTENT (5 Columns + Copyright)                                */}
       {/* ========================================================================= */}
       <footer className="bg-slate-950 text-slate-400 text-xs py-14 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -1153,10 +1217,10 @@ export const LandingPage: React.FC = () => {
                   setIsLoginModalOpen(false);
                   openPortal('gov', 'dashboard');
                 }}
-                className="p-4 rounded-2xl bg-blue-50/70 border border-blue-200 hover:bg-blue-100/70 cursor-pointer transition-all flex items-center justify-between group"
+                className="p-4 rounded-2xl bg-blue-50 border border-blue-200 hover:bg-blue-100 cursor-pointer transition-all flex items-center justify-between group shadow-2xs"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#1D64EC] text-white flex items-center justify-center text-lg">
+                  <div className="w-10 h-10 rounded-xl bg-[#1D64EC] text-white flex items-center justify-center text-lg shadow-xs">
                     🏛️
                   </div>
                   <div>
@@ -1173,10 +1237,10 @@ export const LandingPage: React.FC = () => {
                   setIsLoginModalOpen(false);
                   openPortal('startup', 'dashboard');
                 }}
-                className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 hover:bg-amber-100/70 cursor-pointer transition-all flex items-center justify-between group"
+                className="p-4 rounded-2xl bg-amber-50 border border-amber-200 hover:bg-amber-100 cursor-pointer transition-all flex items-center justify-between group shadow-2xs"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center text-lg">
+                  <div className="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center text-lg shadow-xs">
                     🚀
                   </div>
                   <div>
@@ -1188,7 +1252,7 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center text-[11px] text-slate-500">
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center text-[11px] text-slate-500 font-medium">
               Single-Sign-On enabled with Aadhaar eSign & National Single Window System.
             </div>
           </div>
@@ -1268,13 +1332,13 @@ export const LandingPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsRegisterModalOpen(false)}
-                  className="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold"
+                  className="px-5 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 rounded-full bg-orange-600 hover:bg-orange-700 text-white font-bold shadow-sm"
+                  className="px-6 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs shadow-sm transition-all"
                 >
                   Create Verified Profile
                 </button>
@@ -1346,13 +1410,13 @@ export const LandingPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsDemoModalOpen(false)}
-                  className="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold"
+                  className="px-5 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 rounded-full bg-[#1D64EC] hover:bg-blue-700 text-white font-bold shadow-sm"
+                  className="px-6 py-2.5 rounded-xl bg-[#1D64EC] hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition-all"
                 >
                   Schedule Department Briefing
                 </button>
