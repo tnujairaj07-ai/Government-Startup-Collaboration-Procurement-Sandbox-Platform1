@@ -7,7 +7,8 @@ import {
   Layers, Download, Scale, Cpu, HelpCircle, Mail, Phone, 
   ExternalLink, ArrowUpRight, Star, Shield, Radio, CheckCheck, 
   Compass, BarChart3, Award, FileSpreadsheet, Paperclip, Send, 
-  X, Info, Flame 
+  X, Info, Flame, AlertCircle, TrendingUp, Lightbulb, Landmark, 
+  FileCheck, ShieldAlert 
 } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
@@ -19,8 +20,8 @@ export const LandingPage: React.FC = () => {
   // Active FAQ Accordion
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  // Active How It Works Tab (All vs Phased)
-  const [howItWorksTab, setHowItWorksTab] = useState<'all' | 'phase1' | 'phase2' | 'phase3'>('all');
+  // Active Feature Tab
+  const [activeFeatureTab, setActiveFeatureTab] = useState<'gov' | 'startup'>('gov');
 
   // Modals
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
@@ -43,57 +44,95 @@ export const LandingPage: React.FC = () => {
     e.preventDefault();
     setIsDemoModalOpen(false);
     addNotification({
-      title: 'Demo Session Scheduled',
-      message: `Thank you Officer ${demoOfficer || 'User'}. A Sandbox briefing for ${demoDept || 'your department'} has been booked.`,
+      title: 'Department Briefing Scheduled',
+      message: `Thank you Officer ${demoOfficer || 'User'}. A briefing session for ${demoDept || 'your department'} has been booked.`,
       portal: 'gov',
       type: 'success'
     });
   };
 
-  const stages = [
-    { num: 1, phase: 'phase1', title: 'Department defines a challenge', desc: 'Outcome-based problem statement, target geographies, budget, and KPIs.' },
-    { num: 2, phase: 'phase1', title: 'Eligibility & constraints are set', desc: 'Mandatory and preferred criteria for startups (DPIIT, experience, certifications).' },
-    { num: 3, phase: 'phase1', title: 'Startups discover the challenge', desc: 'Browse and filter challenges by sector, department, and location.' },
-    { num: 4, phase: 'phase1', title: 'Startups submit proposals', desc: 'Upload solution details, evidence, and compliance documents.' },
-    { num: 5, phase: 'phase1', title: 'AI-assisted shortlisting', desc: 'AI evaluates startups on relevance, technology fit, evidence strength, pilot readiness, and security.' },
-    { num: 6, phase: 'phase1', title: 'Expert evaluation', desc: 'Domain experts review AI-shortlisted startups, add notes, and approve startups for pilot.' },
-    { num: 7, phase: 'phase2', title: 'KPI contract & approval', desc: 'Finalize pilot scope, KPIs, milestones, IP, data, and security clauses; approve contracts via eSign.' },
-    { num: 8, phase: 'phase2', title: 'Controlled pilot launch', desc: 'Deploy solution in defined zones, with sensors, integrations, and baseline data collection.' },
-    { num: 9, phase: 'phase2', title: 'Trusted data collection', desc: 'Continuous telemetry, field logs, and milestone evidence uploaded to the platform.' },
-    { num: 10, phase: 'phase2', title: 'Integrity & anomaly checks', desc: 'Automated checks on data quality, uptime, and KPI calculations.' },
-    { num: 11, phase: 'phase3', title: 'Independent validation', desc: 'Third-party or government validation of KPI results and compliance.' },
-    { num: 12, phase: 'phase3', title: 'Evidence-based decision', desc: 'Based on verified outcomes, decide to Scale, Iterate, or Close.' },
+  // 9 Stages of the End-to-End Flow
+  const workflowStages = [
+    {
+      num: 1,
+      title: 'Problem Identification',
+      desc: 'Departments define outcome-based problem statements with clear KPIs and pilot scope.',
+      icon: '🎯'
+    },
+    {
+      num: 2,
+      title: 'Startup Discovery',
+      desc: 'AI-assisted discovery and shortlisting of DPIIT-recognized startups based on relevance, capability, and evidence.',
+      icon: '🔍'
+    },
+    {
+      num: 3,
+      title: 'Eligibility & Evidence Verification',
+      desc: 'Automated checks for DPIIT status, turnover, and required documents; startups maintain a verified evidence archive.',
+      icon: '📁'
+    },
+    {
+      num: 4,
+      title: 'AI-Assisted Ranking',
+      desc: 'AI evaluates startups across 10 dimensions: problem fit, technology match, evidence strength, pilot readiness, security, and more.',
+      icon: '🤖'
+    },
+    {
+      num: 5,
+      title: 'Expert Evaluation',
+      desc: 'Domain experts review shortlisted startups, examine dossiers, and approve startups for controlled pilots.',
+      icon: '👥'
+    },
+    {
+      num: 6,
+      title: 'Controlled Pilot (Sandbox)',
+      desc: 'Selected startups run time-bound pilots with milestone-based contracts, escrow payments, and real-time telemetry.',
+      icon: '🚀'
+    },
+    {
+      num: 7,
+      title: 'Trusted Data Collection & Validation',
+      desc: 'Pilot data is collected via government and startup systems, with integrity checks and independent validation.',
+      icon: '📊'
+    },
+    {
+      num: 8,
+      title: 'Evidence-Based Decision',
+      desc: 'Based on KPI performance and validation reports, departments decide to Scale, Iterate, or Close.',
+      icon: '⚖️'
+    },
+    {
+      num: 9,
+      title: 'Scale / Procurement',
+      desc: 'Successful pilots transition into wider deployment, fast-track procurement, or GeM-based scale-up.',
+      icon: '⚡'
+    },
   ];
-
-  const filteredStages = stages.filter(s => {
-    if (howItWorksTab === 'all') return true;
-    return s.phase === howItWorksTab;
-  });
 
   const faqs = [
     {
-      q: 'Who can use Mahatech Procure?',
-      a: 'Government departments of Maharashtra can publish challenges and manage pilots. DPIIT-recognized startups (and other eligible entities, as per policy) can register, create profiles, and submit proposals.'
+      q: 'Who can participate as a startup?',
+      a: 'Any DPIIT-recognized startup, MSME, or eligible innovator with a demonstrated technology or product solving state challenges can register, maintain an evidence archive, and respond to open departmental problem statements.'
     },
     {
-      q: 'Is participation limited to large companies?',
-      a: 'No. The platform is designed to be startup-friendly. Eligibility criteria can include relaxed turnover limits and mark early-stage startups as "preferred" or "scored," subject to applicable procurement rules.'
-    },
-    {
-      q: 'How are startups evaluated?',
-      a: 'Through a combination of AI-assisted scoring (on relevance, technology fit, evidence, pilot readiness, security, etc.) and domain expert evaluation. Final pilot approval and scale decisions are made by government authorities.'
-    },
-    {
-      q: 'How do pilots get paid?',
-      a: 'Pilots use escrow-linked milestones. Startups submit evidence for each milestone; after validation, payments are released via PFMS/treasury systems as per contract terms.'
+      q: 'How are proposals evaluated?',
+      a: 'Proposals undergo a 2-tier evaluation: automated AI scoring across 10 objective dimensions (relevance, technology match, evidence strength, pilot readiness, cybersecurity, scalability, etc.) followed by independent domain expert panel reviews.'
     },
     {
       q: 'What happens after a successful pilot?',
-      a: 'Based on verified KPIs and validation, departments can decide to Scale the solution, Iterate with improvements, or Close the pilot. Successful solutions can move to state-wide deployment via GeM and fast-track mechanisms.'
+      a: 'Upon independent validation of milestone KPIs, departments can issue a formal Scale Clearance. Proven solutions can transition directly into wider municipal or statewide deployment, fast-track procurement, or GeM rate-contract listings.'
     },
     {
-      q: 'Is my data secure?',
-      a: 'Yes. The platform follows government-grade security practices, with data hosted in India, role-based access, encryption, and comprehensive audit logs.'
+      q: 'How are payments made to startups?',
+      a: 'Payments are linked to verified milestone deliverables through direct escrow tranches and PFMS/State Treasury integration, eliminating delayed receivables and cash-flow uncertainty.'
+    },
+    {
+      q: 'Is this platform integrated with GeM and State Portals?',
+      a: 'Yes. The sandbox framework connects with the Government e-Marketplace (GeM) Fast-Track Scale Gateway, National Single Window System (NSWS), and Maharashtra state e-procurement portals.'
+    },
+    {
+      q: 'How is data security and IP managed?',
+      a: 'Standardized legal agreements protect background IP while granting the state pilot usage rights. All data is hosted on MeitY-empanelled cloud infrastructure in India and governed by the Maharashtra Cyber Policy v2.0.'
     }
   ];
 
@@ -121,7 +160,7 @@ export const LandingPage: React.FC = () => {
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 font-semibold tracking-wide mt-0.5">
-                Government of Maharashtra • Innovation Marketplace
+                Government of Maharashtra • Innovation Procurement Pathway
               </p>
             </div>
           </div>
@@ -151,7 +190,7 @@ export const LandingPage: React.FC = () => {
       </header>
 
       {/* ========================================================================= */}
-      {/* 2. SUB-NAVBAR CATEGORY BAR (Pill Navigation in Royal Blue / Sky Palette)  */}
+      {/* 2. SUB-NAVBAR CATEGORY BAR                                                */}
       {/* ========================================================================= */}
       <nav className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs py-2.5 px-4">
         <div className="max-w-7xl mx-auto flex items-center justify-center overflow-x-auto custom-scrollbar">
@@ -163,40 +202,52 @@ export const LandingPage: React.FC = () => {
               Home
             </a>
             <a 
-              href="#about" 
+              href="#why-it-matters" 
               className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-[#E8F2FE] text-slate-700 hover:text-[#1D64EC] transition-all"
             >
-              What is it
+              Why This Matters
             </a>
             <a 
-              href="#departments" 
+              href="#solution" 
               className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-[#E8F2FE] text-slate-700 hover:text-[#1D64EC] transition-all"
             >
-              Departments
-            </a>
-            <a 
-              href="#startups" 
-              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-[#E8F2FE] text-slate-700 hover:text-[#1D64EC] transition-all"
-            >
-              Startups
+              Our Solution
             </a>
             <a 
               href="#how-it-works" 
               className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-[#E8F2FE] text-slate-700 hover:text-[#1D64EC] transition-all"
             >
-              How it Works
+              How It Works
             </a>
             <a 
               href="#features" 
               className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-[#E8F2FE] text-slate-700 hover:text-[#1D64EC] transition-all"
             >
-              Features
+              Platform Offers
             </a>
             <a 
-              href="#impact" 
+              href="#outcomes" 
               className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-[#E8F2FE] text-slate-700 hover:text-[#1D64EC] transition-all"
             >
-              Impact
+              Impact & Outcomes
+            </a>
+            <a 
+              href="#who-is-this-for" 
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-[#E8F2FE] text-slate-700 hover:text-[#1D64EC] transition-all"
+            >
+              Who Is This For
+            </a>
+            <a 
+              href="#use-cases" 
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-[#E8F2FE] text-slate-700 hover:text-[#1D64EC] transition-all"
+            >
+              Sample Use Cases
+            </a>
+            <a 
+              href="#compliance" 
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-[#E8F2FE] text-slate-700 hover:text-[#1D64EC] transition-all"
+            >
+              Compliance & Oversight
             </a>
             <a 
               href="#faqs" 
@@ -209,39 +260,70 @@ export const LandingPage: React.FC = () => {
       </nav>
 
       {/* ========================================================================= */}
-      {/* 3. HERO SECTION                                                          */}
+      {/* 3. HERO SECTION (New Headline & Dual Direct Exploration CTAs)             */}
       {/* ========================================================================= */}
-      <section id="hero" className="relative pt-8 pb-16 lg:pt-14 lg:pb-22 overflow-hidden">
+      <section id="hero" className="relative pt-10 pb-16 lg:pt-16 lg:pb-24 overflow-hidden">
         
-        {/* Soft Ambient Mesh Background */}
+        {/* Ambient Glows */}
         <div className="absolute -top-24 right-0 w-[550px] h-[550px] bg-gradient-to-br from-blue-200/50 via-sky-100/30 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
         <div className="absolute top-1/2 -left-24 w-[450px] h-[450px] bg-gradient-to-tr from-sky-100/60 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             
-            {/* Left Column: Hero Text & Search */}
+            {/* Left Column: New Headline, Subheadline & Dual CTAs */}
             <div className="lg:col-span-7 space-y-6 sm:space-y-7">
               
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F2FE] text-[#1D64EC] border border-blue-200 text-xs font-bold shadow-2xs">
                 <span className="w-2 h-2 rounded-full bg-[#1D64EC] animate-ping" />
-                <span>Government Innovation & Sandbox Procurement</span>
+                <span>Maharashtra Innovation Sandbox & Procurement Mechanism</span>
               </div>
 
-              <div className="space-y-3">
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#0F172A] font-display tracking-tight leading-[1.1]">
-                  Mahatech <span className="text-[#1D64EC]">Procure</span>
+              <div className="space-y-3.5">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0F172A] font-display tracking-tight leading-[1.15]">
+                  A Startup-Friendly Public Procurement Mechanism for <span className="text-[#1D64EC]">Maharashtra</span>
                 </h1>
-                <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-800 font-display leading-snug">
-                  A digital marketplace for government innovation challenges and startup solutions.
-                </h2>
-                <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed max-w-2xl">
-                  Mahatech Procure connects Maharashtra’s government departments with vetted startups to solve real public problems—through open challenges, controlled pilots, and evidence-based scale-up.
+                <p className="text-base sm:text-lg text-slate-700 font-semibold leading-snug">
+                  From problem statement to scaled solution — a transparent, end-to-end pathway for government departments to discover, pilot, procure and scale innovative startup solutions.
                 </p>
               </div>
 
+              {/* Primary Dual CTAs */}
+              <div className="flex flex-wrap items-center gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={() => openPortal('gov', 'dashboard')}
+                  className="px-6 py-3.5 rounded-2xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-xs sm:text-sm shadow-action hover:shadow-action-hover flex items-center gap-2 transition-all hover:scale-[1.02]"
+                >
+                  <Building2 className="w-4 h-4 text-blue-200" />
+                  <span>Explore for Departments</span>
+                  <ArrowRight className="w-4 h-4 text-blue-200 ml-1" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => openPortal('startup', 'dashboard')}
+                  className="px-6 py-3.5 rounded-2xl bg-[#0F172A] hover:bg-[#1E293B] text-white font-bold text-xs sm:text-sm shadow-md flex items-center gap-2 transition-all hover:scale-[1.02]"
+                >
+                  <Rocket className="w-4 h-4 text-sky-300" />
+                  <span>Explore for Startups</span>
+                  <ArrowRight className="w-4 h-4 text-sky-300 ml-1" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('how-it-works');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="px-5 py-3.5 rounded-2xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold text-xs sm:text-sm shadow-2xs transition-all"
+                >
+                  Watch How It Works
+                </button>
+              </div>
+
               {/* Search Pill Input */}
-              <form onSubmit={handleSearchSubmit} className="max-w-xl">
+              <form onSubmit={handleSearchSubmit} className="max-w-xl pt-2">
                 <div className="p-1.5 bg-white rounded-2xl border-2 border-blue-200 shadow-md flex items-center gap-2 focus-within:border-[#1D64EC] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all">
                   <Search className="w-5 h-5 text-slate-400 ml-3 shrink-0" />
                   <input
@@ -255,58 +337,62 @@ export const LandingPage: React.FC = () => {
                     type="submit"
                     className="px-5 sm:px-6 py-2.5 rounded-xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-xs sm:text-sm shadow-sm shrink-0 transition-all"
                   >
-                    Explore
+                    Search
                   </button>
                 </div>
               </form>
 
-              {/* Trust Badges */}
+              {/* Trust Badges (Exact 4 Badges as Requested) */}
               <div className="pt-4 border-t border-slate-200 flex flex-wrap items-center gap-4 sm:gap-6 text-xs font-bold text-slate-700">
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-blue-100 text-[#1D64EC] flex items-center justify-center text-[11px] font-black">
-                    ★
+                  <div className="w-6 h-6 rounded-full bg-blue-100 text-[#1D64EC] flex items-center justify-center text-[10px] font-black">
+                    🏛️
                   </div>
                   <span>Government of Maharashtra</span>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-[11px] font-black">
-                    ✓
+                  <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px] font-black">
+                    💡
                   </div>
-                  <span>DPIIT-recognized Startup Friendly</span>
+                  <span>Maharashtra State Innovation Society</span>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center text-[11px]">
-                    🛡️
+                  <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center text-[10px] font-black">
+                    ★
                   </div>
-                  <span>Secure • Transparent • Audit-ready</span>
+                  <span>DPIIT-Recognized Startup Pathway</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center text-[10px] font-black">
+                    🛒
+                  </div>
+                  <span>Integrated with GeM & State Portals</span>
                 </div>
               </div>
 
             </div>
 
-            {/* Right Column: Hero Graphic Card with Original Blue/Mesh Gradient */}
+            {/* Right Column: Hero Graphic Card with Pilot Telemetry Cockpit */}
             <div className="lg:col-span-5 relative flex justify-center lg:justify-end">
               
-              {/* Organic Curved Container Card */}
               <div className="relative w-full max-w-md aspect-[4/4.8] rounded-[40px] bg-gradient-to-br from-[#1D64EC] via-[#2563EB] to-[#0D4CD3] p-3 shadow-2xl overflow-hidden flex flex-col justify-between">
                 
-                {/* Inner White Backdrop */}
                 <div className="absolute inset-2 rounded-[34px] bg-[#FFFFFF] overflow-hidden flex flex-col p-6 justify-between">
                   
-                  {/* Decorative subtle blue glow */}
                   <div className="absolute -bottom-16 -right-16 w-56 h-56 rounded-full bg-gradient-to-tr from-sky-200 to-blue-200 opacity-40 blur-xl" />
                   
                   {/* Top Bar inside card */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="w-3 h-3 rounded-full bg-[#1D64EC]" />
-                      <span className="text-xs font-black text-[#0F172A] font-display">MahaProcure Cockpit</span>
+                      <span className="text-xs font-black text-[#0F172A] font-display">MahaProcure Sandbox</span>
                     </div>
                     <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-200 flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      Live Sandbox
+                      Live Verified Pilot
                     </span>
                   </div>
 
@@ -315,10 +401,10 @@ export const LandingPage: React.FC = () => {
                     <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-slate-200 shadow-xs space-y-2">
                       <div className="flex items-center justify-between text-[11px]">
                         <span className="font-bold text-slate-500">Active Field Pilot</span>
-                        <span className="font-bold text-emerald-700">Pune Zone A</span>
+                        <span className="font-bold text-emerald-700">Pune Municipal Corp</span>
                       </div>
                       <h4 className="font-extrabold text-[#0F172A] text-sm leading-tight">
-                        AI-based Water Leakage Detection
+                        AI-based Water Leakage Detection (Zone A)
                       </h4>
                       <div className="flex items-center justify-between pt-1">
                         <div>
@@ -384,77 +470,180 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 4. WHAT IS MAHATECH PROCURE?                                              */}
+      {/* 4. PROBLEM CONTEXT: WHY THIS MATTERS                                      */}
       {/* ========================================================================= */}
-      <section id="about" className="py-16 sm:py-24 bg-white border-y border-slate-200">
+      <section id="why-it-matters" className="py-16 sm:py-24 bg-white border-y border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <span className="px-3.5 py-1 rounded-full bg-red-50 text-red-700 text-xs font-bold border border-red-200 uppercase tracking-wider">
+              Procurement Friction & Innovation Bottlenecks
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
+              Why This Matters
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed">
+              Government departments across Maharashtra face complex operational challenges — from water loss in urban networks to traffic congestion, healthcare access, and agricultural productivity. Startups have innovative solutions, but the existing procurement system is designed for standard goods and established vendors.
+            </p>
+          </div>
+
+          {/* Dual Struggle Cards: Departments vs Startups */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            {/* Left: Departments Struggle */}
+            <div className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-5 shadow-xs">
+              <div className="flex items-center gap-3 text-red-600">
+                <div className="w-10 h-10 rounded-2xl bg-red-100 flex items-center justify-center font-black">
+                  🏛️
+                </div>
+                <h3 className="text-xl font-extrabold text-[#0F172A] font-display">Departments struggle to:</h3>
+              </div>
+
+              <ul className="space-y-3 text-xs sm:text-sm text-slate-700 font-medium">
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
+                  <span>Formulate clear, outcome-based problem statements</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
+                  <span>Discover and shortlist suitable startups</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
+                  <span>Evaluate novel technologies fairly and quickly</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
+                  <span>Structure controlled pilots with measurable KPIs</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
+                  <span>Manage intellectual property, data, and cybersecurity</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
+                  <span>Measure pilot performance and transition successful solutions into scale</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Right: Startups Struggle */}
+            <div className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-5 shadow-xs">
+              <div className="flex items-center gap-3 text-orange-600">
+                <div className="w-10 h-10 rounded-2xl bg-orange-100 flex items-center justify-center font-black">
+                  🚀
+                </div>
+                <h3 className="text-xl font-extrabold text-[#0F172A] font-display">Startups struggle with:</h3>
+              </div>
+
+              <ul className="space-y-3 text-xs sm:text-sm text-slate-700 font-medium">
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-orange-100 text-orange-700 flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
+                  <span>Eligibility barriers like high turnover and past experience requirements</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-orange-100 text-orange-700 flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
+                  <span>Long, opaque government sales cycles</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-orange-100 text-orange-700 flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
+                  <span>Unclear payment milestones and delayed disbursements</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-orange-100 text-orange-700 flex items-center justify-center text-xs shrink-0 mt-0.5">✕</span>
+                  <span>Limited visibility of departmental demand and procurement pipelines</span>
+                </li>
+              </ul>
+
+              <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold leading-relaxed">
+                The result: good innovations never get tested, and departments continue with sub-optimal systems.
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 5. OUR SOLUTION: STRUCTURED INNOVATION PROCUREMENT PATHWAY                */}
+      {/* ========================================================================= */}
+      <section id="solution" className="py-16 sm:py-24 bg-[#F4F7FC]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           <div className="text-center max-w-3xl mx-auto space-y-3">
             <span className="px-3.5 py-1 rounded-full bg-[#E8F2FE] text-[#1D64EC] text-xs font-bold border border-blue-200 uppercase tracking-wider">
-              Problem-Led Innovation Framework
+              The Architecture of Innovation
             </span>
             <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
-              What is Mahatech Procure?
+              A Structured, Transparent Innovation Procurement Pathway
             </h2>
             <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed">
-              Mahatech Procure is the Government of Maharashtra’s platform for problem-led innovation. Departments publish outcome-based challenges, startups submit solutions, and selected teams run controlled pilots with clear KPIs, escrow-linked payments, and independent validation.
-            </p>
-            <p className="text-xs sm:text-sm text-slate-500 font-medium">
-              Successful pilots move to <strong className="text-[#0F172A]">state-wide scale</strong> via GeM and fast-track procurement, while every step—evaluation, pilot data, payments, and decisions—is recorded with a complete audit trail.
+              This platform provides an end-to-end mechanism designed to be transparent, competitive, and legally compliant, while remaining startup-friendly and practical for government teams.
             </p>
           </div>
 
-          {/* 5 Key Points Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
-            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200/90 space-y-3 hover:shadow-md transition-all">
-              <div className="w-10 h-10 rounded-2xl bg-[#1D64EC] text-white flex items-center justify-center font-bold">
-                🎯
+            {/* Solution for Departments */}
+            <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-[#E8F2FE] text-[#1D64EC] flex items-center justify-center font-bold">
+                  🏛️
+                </div>
+                <div>
+                  <h3 className="text-lg font-extrabold text-[#0F172A]">For Government Departments</h3>
+                  <p className="text-xs text-slate-500">Structured outcome definition and risk-managed sandbox</p>
+                </div>
               </div>
-              <h3 className="font-extrabold text-[#0F172A] text-base">Outcome-Focused Challenges</h3>
-              <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                Defined by measurable public outcomes (e.g. 20% water loss cut or 15 min faster emergency dispatch), not restrictive technology specs.
-              </p>
+
+              <ul className="space-y-3 text-xs sm:text-sm text-slate-700 font-medium">
+                {[
+                  'Identify and publish outcome-based challenges',
+                  'Discover and shortlist eligible, DPIIT-recognized startups',
+                  'Conduct AI-assisted and expert evaluation of solutions',
+                  'Run controlled sandbox pilots with clear KPIs and milestone-based payments',
+                  'Manage IP, data ownership, cybersecurity, and risk through standard clauses',
+                  'Measure pilot performance with independent validation',
+                  'Make evidence-based scale-up or procurement decisions'
+                ].map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-[#1D64EC] shrink-0 mt-0.5" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200/90 space-y-3 hover:shadow-md transition-all">
-              <div className="w-10 h-10 rounded-2xl bg-purple-600 text-white flex items-center justify-center font-bold">
-                🤖
+            {/* Solution for Startups */}
+            <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+                  🚀
+                </div>
+                <div>
+                  <h3 className="text-lg font-extrabold text-[#0F172A]">For Startups & Innovators</h3>
+                  <p className="text-xs text-slate-500">Single window entry and guaranteed milestone payments</p>
+                </div>
               </div>
-              <h3 className="font-extrabold text-[#0F172A] text-base">AI + Expert Shortlisting</h3>
-              <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                Fair, transparent scoring across technical fit, pilot readiness, and security, followed by rigorous domain expert panels.
-              </p>
-            </div>
 
-            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200/90 space-y-3 hover:shadow-md transition-all">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-bold">
-                🛡️
-              </div>
-              <h3 className="font-extrabold text-[#0F172A] text-base">Controlled Escrow Pilots</h3>
-              <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                Manage pilots with defined milestones, IoT telemetry streams, and automated PFMS state treasury tranches.
-              </p>
-            </div>
+              <ul className="space-y-3 text-xs sm:text-sm text-slate-700 font-medium">
+                {[
+                  'A single window to view challenges, submit proposals, and track status',
+                  'A verified company evidence archive to showcase capabilities and past work',
+                  'Clear milestone-based contracts and timely payments via escrow/PFMS',
+                  'Transparency on evaluation, pilot progress, and scale decisions'
+                ].map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
 
-            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200/90 space-y-3 hover:shadow-md transition-all">
-              <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold">
-                📊
+              <div className="p-4 rounded-2xl bg-blue-50 border border-blue-200 text-[#1D64EC] text-xs font-bold leading-relaxed">
+                Empowering founders to solve real public problems with zero bureaucratic bottlenecks.
               </div>
-              <h3 className="font-extrabold text-[#0F172A] text-base">Independent Validation</h3>
-              <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                Empirical verification boards certify field outcomes to support evidence-based Scale, Iterate, or Close decisions.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200/90 space-y-3 hover:shadow-md transition-all md:col-span-2 lg:col-span-2">
-              <div className="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold">
-                📜
-              </div>
-              <h3 className="font-extrabold text-[#0F172A] text-base">Full Forensic Auditability</h3>
-              <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                Every score, contract clause, milestone upload, and payment is permanently timestamped with IP and user IDs under the IT Act 2000.
-              </p>
             </div>
 
           </div>
@@ -463,413 +652,64 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 5. FOR GOVERNMENT DEPARTMENTS                                             */}
+      {/* 6. HOW IT WORKS (9 Clear Stages Horizontal / Grid Journey)                */}
       {/* ========================================================================= */}
-      <section id="departments" className="py-16 sm:py-24 bg-[#F4F7FC]">
+      <section id="how-it-works" className="py-16 sm:py-24 bg-white border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          
-          <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 pb-6 border-b border-slate-200">
-            <div className="max-w-2xl space-y-3">
-              <span className="px-3.5 py-1 rounded-full bg-blue-50 text-[#1D64EC] text-xs font-bold border border-blue-200 uppercase tracking-wider">
-                Government Solutions
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
-                For Government Departments
-              </h2>
-              <p className="text-base text-[#1D64EC] font-extrabold font-display">
-                Publish challenges, run pilots, and scale proven solutions.
-              </p>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-                Departments define public problems in terms of measurable outcomes—such as reduced water loss, faster ambulance response, or improved traffic flow. Mahatech Procure handles the workflow: startup discovery, eligibility checks, AI-assisted ranking, expert evaluation, pilot management, and validation.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setIsDemoModalOpen(true)}
-                className="px-6 py-3 rounded-2xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-xs shadow-md transition-all hover:scale-[1.02]"
-              >
-                Request a Demo
-              </button>
-            </div>
-          </div>
-
-          {/* 5 Government Capabilities */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs">
-            
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3">
-              <span className="w-8 h-8 rounded-xl bg-blue-100 text-[#1D64EC] font-black flex items-center justify-center text-sm">1</span>
-              <h3 className="font-extrabold text-[#0F172A] text-sm">Publish Innovation Challenges</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">
-                Define problem statements, eligibility criteria, evaluation weights, KPIs, and risk levels using structured, guided forms.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3">
-              <span className="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 font-black flex items-center justify-center text-sm">2</span>
-              <h3 className="font-extrabold text-[#0F172A] text-sm">Shortlist Startups with AI + Experts</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">
-                Use AI-assisted evaluation across relevance, technology fit, evidence strength, pilot readiness, and security—followed by domain expert review.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3">
-              <span className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 font-black flex items-center justify-center text-sm">3</span>
-              <h3 className="font-extrabold text-[#0F172A] text-sm">Run Controlled Pilots</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">
-                Manage pilots with clear milestones, escrow-linked payments, telemetry data, and field verification.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3">
-              <span className="w-8 h-8 rounded-xl bg-amber-100 text-amber-900 font-black flex items-center justify-center text-sm">4</span>
-              <h3 className="font-extrabold text-[#0F172A] text-sm">Make Evidence-Based Decisions</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">
-                Decide to <strong>Scale</strong>, <strong>Iterate</strong>, or <strong>Close</strong> based on verified KPIs, independent validation, and compliance checks.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3 md:col-span-2 lg:col-span-2">
-              <span className="w-8 h-8 rounded-xl bg-slate-100 text-slate-900 font-black flex items-center justify-center text-sm">5</span>
-              <h3 className="font-extrabold text-[#0F172A] text-sm">Maintain Full Auditability</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">
-                Every evaluation score, milestone submission, payment, and decision is logged with timestamps, user IDs, and document trails.
-              </p>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 6. FOR STARTUPS                                                           */}
-      {/* ========================================================================= */}
-      <section id="startups" className="py-16 sm:py-24 bg-white border-y border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          
-          <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 pb-6 border-b border-slate-200">
-            <div className="max-w-2xl space-y-3">
-              <span className="px-3.5 py-1 rounded-full bg-blue-50 text-[#1D64EC] text-xs font-bold border border-blue-200 uppercase tracking-wider">
-                Startup Ecosystem
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
-                For Startups & Innovators
-              </h2>
-              <p className="text-base text-[#1D64EC] font-extrabold font-display">
-                Access government challenges, showcase your capability, and win pilot projects.
-              </p>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-                Mahatech Procure gives startups a single window to engage with Maharashtra’s government departments. Create a verified profile, upload your evidence, respond to challenges, and track your proposals from submission to scale.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                onClick={() => openPortal('startup', 'challenges')}
-                className="px-6 py-3 rounded-2xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-xs shadow-md flex items-center gap-2 transition-all hover:scale-[1.02]"
-              >
-                <Compass className="w-4 h-4 text-blue-200" />
-                <span>Browse Challenges & Submit Solution</span>
-              </button>
-            </div>
-          </div>
-
-          {/* 5 Startup Benefits */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs">
-            
-            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-3">
-              <div className="w-8 h-8 rounded-xl bg-[#1D64EC] text-white font-bold flex items-center justify-center">1</div>
-              <h3 className="font-extrabold text-[#0F172A] text-sm">Access to Real Government Problems</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">
-                Browse challenges by sector—water, traffic, health, agriculture, urban services—and find problems that match your solution.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-3">
-              <div className="w-8 h-8 rounded-xl bg-purple-600 text-white font-bold flex items-center justify-center">2</div>
-              <h3 className="font-extrabold text-[#0F172A] text-sm">Verified Company Evidence Archive</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">
-                Upload legal documents, DPIIT certificates, technical docs, case studies, compliance and security proofs in a structured, government-ready format.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-3">
-              <div className="w-8 h-8 rounded-xl bg-blue-600 text-white font-bold flex items-center justify-center">3</div>
-              <h3 className="font-extrabold text-[#0F172A] text-sm">Transparent Proposal Tracking</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">
-                See exactly where your proposal is: under review, shortlisted, in expert evaluation, contract approval, pilot, or scale decision.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-3">
-              <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white font-bold flex items-center justify-center">4</div>
-              <h3 className="font-extrabold text-[#0F172A] text-sm">Managed Pilots with Clear Payments</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">
-                Run pilots with defined milestones, escrow tranches, and PFMS-linked payments. Submit evidence, track approvals, and monitor disbursements.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-3 md:col-span-2 lg:col-span-2">
-              <div className="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold flex items-center justify-center">5</div>
-              <h3 className="font-extrabold text-[#0F172A] text-sm">Pathway to Scale</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">
-                Successful pilots can move to state-wide deployment via GeM and fast-track mechanisms, with all performance evidence attached.
-              </p>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 7. HOW IT WORKS (12 Clear Stages Lifecycle Roadmap)                       */}
-      {/* ========================================================================= */}
-      <section id="how-it-works" className="py-16 sm:py-24 bg-[#F4F7FC]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           
           <div className="text-center max-w-3xl mx-auto space-y-3">
-            <span className="px-3.5 py-1 rounded-full bg-blue-50 text-[#1D64EC] text-xs font-bold border border-blue-200 uppercase tracking-wider">
-              Procurement & Sandbox Progression
+            <span className="px-3.5 py-1 rounded-full bg-[#E8F2FE] text-[#1D64EC] text-xs font-bold border border-blue-200 uppercase tracking-wider">
+              End-to-End Progression
             </span>
             <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
               How It Works
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 font-medium">
-              From problem statement to state-wide scale in 12 clear, verifiable stages.
+            <p className="text-base text-slate-600 font-medium">
+              A simple, stage-wise journey from problem to scale.
             </p>
-
-            {/* Filter Tabs in Original UI Theme */}
-            <div className="flex flex-wrap items-center justify-center gap-2 pt-2 text-xs font-bold">
-              <button
-                type="button"
-                onClick={() => setHowItWorksTab('all')}
-                className={`px-4 py-2 rounded-xl transition-all ${
-                  howItWorksTab === 'all' 
-                    ? 'bg-[#1D64EC] text-white shadow-sm' 
-                    : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
-                }`}
-              >
-                All 12 Stages
-              </button>
-              <button
-                type="button"
-                onClick={() => setHowItWorksTab('phase1')}
-                className={`px-4 py-2 rounded-xl transition-all ${
-                  howItWorksTab === 'phase1' 
-                    ? 'bg-[#1D64EC] text-white shadow-sm' 
-                    : 'bg-white hover:bg-blue-50 text-slate-700 border border-slate-200'
-                }`}
-              >
-                Phase 1: Pre-Pilot (1–6)
-              </button>
-              <button
-                type="button"
-                onClick={() => setHowItWorksTab('phase2')}
-                className={`px-4 py-2 rounded-xl transition-all ${
-                  howItWorksTab === 'phase2' 
-                    ? 'bg-[#1D64EC] text-white shadow-sm' 
-                    : 'bg-white hover:bg-blue-50 text-slate-700 border border-slate-200'
-                }`}
-              >
-                Phase 2: Pilot (7–10)
-              </button>
-              <button
-                type="button"
-                onClick={() => setHowItWorksTab('phase3')}
-                className={`px-4 py-2 rounded-xl transition-all ${
-                  howItWorksTab === 'phase3' 
-                    ? 'bg-[#1D64EC] text-white shadow-sm' 
-                    : 'bg-white hover:bg-blue-50 text-slate-700 border border-slate-200'
-                }`}
-              >
-                Phase 3: Scale (11–12)
-              </button>
-            </div>
           </div>
 
-          {/* 12-Stage Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
-            {filteredStages.map((stg) => (
+          {/* 9 Stage Flow Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {workflowStages.map((stage) => (
               <div 
-                key={stg.num}
-                className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-md transition-all space-y-2 flex flex-col justify-between"
+                key={stage.num}
+                className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 hover:border-[#1D64EC] hover:shadow-md transition-all space-y-3 flex flex-col justify-between"
               >
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   <div className="flex items-center justify-between">
                     <span className="w-8 h-8 rounded-xl bg-[#E8F2FE] text-[#1D64EC] font-black text-xs flex items-center justify-center">
-                      {stg.num}
+                      {stage.num}
                     </span>
-                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
-                      stg.phase === 'phase1' ? 'bg-blue-50 text-[#1D64EC]' :
-                      stg.phase === 'phase2' ? 'bg-purple-50 text-purple-800' : 'bg-emerald-50 text-emerald-800'
-                    }`}>
-                      {stg.phase === 'phase1' ? 'Pre-Pilot' : stg.phase === 'phase2' ? 'Active Pilot' : 'Validation & Scale'}
-                    </span>
+                    <span className="text-xl">{stage.icon}</span>
                   </div>
-                  <h4 className="font-extrabold text-[#0F172A] text-sm leading-snug">{stg.title}</h4>
-                  <p className="text-slate-600 font-medium leading-relaxed">{stg.desc}</p>
+                  <h4 className="font-extrabold text-[#0F172A] text-sm sm:text-base leading-snug">
+                    {stage.title}
+                  </h4>
+                  <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                    {stage.desc}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
 
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 8. KEY FEATURES (8 Grid Cards)                                           */}
-      {/* ========================================================================= */}
-      <section id="features" className="py-16 sm:py-24 bg-white border-y border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          
-          <div className="text-center max-w-3xl mx-auto space-y-3">
-            <span className="px-3.5 py-1 rounded-full bg-blue-50 text-[#1D64EC] text-xs font-bold border border-blue-200 uppercase tracking-wider">
-              Platform Modules
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
-              Key Platform Features
-            </h2>
-            <p className="text-sm sm:text-base text-slate-600 font-medium">
-              Purpose-built tools for government problem-solving, compliance, and startup scale-up.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 text-xs">
-            {[
-              { title: 'Outcome-Based Challenges', icon: '🎯', desc: 'Define problems in terms of public impact—reduced waiting time, lower water loss, better health outcomes.' },
-              { title: 'AI-Assisted Evaluation', icon: '🤖', desc: 'Score startups on relevance, technology fit, evidence strength, pilot readiness, security, scalability, and risk.' },
-              { title: 'Expert Review Workflow', icon: '👥', desc: 'Domain experts evaluate shortlisted startups, add structured notes, and approve pilots with full traceability.' },
-              { title: 'Pilot Management Console', icon: '🚀', desc: 'Track milestones, upload evidence, monitor telemetry, and manage escrow-linked payments in one workspace.' },
-              { title: 'Digital Contract Signer', icon: '✍️', desc: 'Review, eSign, and store government contracts with complete audit trails and versioning.' },
-              { title: 'Company Evidence Archive', icon: '📁', desc: 'Structured repository for legal docs, certifications, case studies, security audits, and financials.' },
-              { title: 'Transparent Audit Trail', icon: '📜', desc: 'Every action—proposal submission, score, milestone approval, payment, and decision—is logged with user, time, and IP.' },
-              { title: 'Scale-Ready Pipeline', icon: '⚡', desc: 'Move successful pilots to state-wide deployment via GeM and fast-track mechanisms, backed by verified data.' },
-            ].map((feat, idx) => (
-              <div key={idx} className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200/90 space-y-2.5 hover:bg-white hover:shadow-md transition-all">
-                <div className="text-2xl">{feat.icon}</div>
-                <h3 className="font-extrabold text-[#0F172A] text-sm">{feat.title}</h3>
-                <p className="text-slate-600 font-medium leading-relaxed">{feat.desc}</p>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 9. IMPACT & USE CASES (5 Sector Cards)                                    */}
-      {/* ========================================================================= */}
-      <section id="impact" className="py-16 sm:py-24 bg-[#F4F7FC]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          
-          <div className="text-center max-w-3xl mx-auto space-y-3">
-            <span className="px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200 uppercase tracking-wider">
-              Quantified Public Impact
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
-              Impact & Use Cases
-            </h2>
-            <p className="text-sm sm:text-base text-slate-600 font-medium">
-              Mahatech Procure is designed for high-impact public problems across Maharashtra.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs">
-            
-            {/* Use Case 1 */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-2xl">💧</span>
-                <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-[#1D64EC] font-bold text-[10px]">Water Resources</span>
-              </div>
-              <h3 className="font-extrabold text-[#0F172A] text-base">Urban Water & Leakage Reduction</h3>
-              <div className="space-y-1.5 text-slate-600 font-medium">
-                <p><strong>Problem:</strong> High non-revenue water (NRW) due to leaks and pressure issues.</p>
-                <p><strong>Solution:</strong> AI + IoT-based acoustic leak detection and pressure optimization.</p>
-              </div>
-              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-bold">
-                Outcome: 18–25% reduction in NRW across pilot zones.
-              </div>
-            </div>
-
-            {/* Use Case 2 */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-2xl">🚦</span>
-                <span className="px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-900 font-bold text-[10px]">Urban Mobility</span>
-              </div>
-              <h3 className="font-extrabold text-[#0F172A] text-base">Traffic & Mobility Optimization</h3>
-              <div className="space-y-1.5 text-slate-600 font-medium">
-                <p><strong>Problem:</strong> Congestion and long waiting times at key intersections.</p>
-                <p><strong>Solution:</strong> AI-based adaptive signal mesh and real-time traffic management.</p>
-              </div>
-              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-bold">
-                Outcome: 15–30% reduction in average waiting time.
-              </div>
-            </div>
-
-            {/* Use Case 3 */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-2xl">🌾</span>
-                <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-900 font-bold text-[10px]">Agriculture</span>
-              </div>
-              <h3 className="font-extrabold text-[#0F172A] text-base">Agriculture & Crop Health</h3>
-              <div className="space-y-1.5 text-slate-600 font-medium">
-                <p><strong>Problem:</strong> Crop loss due to pests, disease, and delayed interventions.</p>
-                <p><strong>Solution:</strong> Drone-based multispectral monitoring and AI-driven advisories.</p>
-              </div>
-              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-bold">
-                Outcome: Early detection, reduced input costs, improved yield.
-              </div>
-            </div>
-
-            {/* Use Case 4 */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-2xl">🏥</span>
-                <span className="px-2.5 py-0.5 rounded-full bg-red-50 text-red-900 font-bold text-[10px]">Public Health</span>
-              </div>
-              <h3 className="font-extrabold text-[#0F172A] text-base">Emergency Health Response</h3>
-              <div className="space-y-1.5 text-slate-600 font-medium">
-                <p><strong>Problem:</strong> Delayed emergency response and ambulance turnaround.</p>
-                <p><strong>Solution:</strong> AI dispatch, route optimization, and hospital ER integration.</p>
-              </div>
-              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-bold">
-                Outcome: Faster response times, better survival rates.
-              </div>
-            </div>
-
-            {/* Use Case 5 */}
-            <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3 md:col-span-2 lg:col-span-2">
-              <div className="flex items-center justify-between">
-                <span className="text-2xl">♻️</span>
-                <span className="px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-900 font-bold text-[10px]">Urban Sanitation</span>
-              </div>
-              <h3 className="font-extrabold text-[#0F172A] text-base">Urban Services & Waste Management</h3>
-              <div className="space-y-1.5 text-slate-600 font-medium">
-                <p><strong>Problem:</strong> Inefficient municipal waste collection and segregation.</p>
-                <p><strong>Solution:</strong> Smart optical bins, dynamic route optimization, and robotics segregation.</p>
-              </div>
-              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-bold">
-                Outcome: Lower operational costs, higher segregation rates.
-              </div>
-            </div>
-
-          </div>
-
-          <div className="text-center pt-2">
+          {/* CTA Below Flow */}
+          <div className="pt-4 text-center flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => openPortal('startup', 'applications')}
+              className="px-6 py-3.5 rounded-2xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-xs shadow-action inline-flex items-center gap-2 transition-all hover:scale-[1.02]"
+            >
+              <span>See a Live Workflow in Proposal Tracker</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
             <button
               type="button"
               onClick={() => openPortal('startup', 'challenges')}
-              className="px-6 py-3.5 rounded-2xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-xs shadow-action hover:shadow-action-hover inline-flex items-center gap-2 transition-all hover:scale-[1.02]"
+              className="px-6 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-all"
             >
-              <Compass className="w-4 h-4 text-blue-200" />
-              <span>Explore Live Challenges</span>
+              View Sample Challenge
             </button>
           </div>
 
@@ -877,63 +717,245 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 10. SECURITY, COMPLIANCE & TRUST                                          */}
+      {/* 7. KEY FEATURES: WHAT THE PLATFORM OFFERS                                  */}
       {/* ========================================================================= */}
-      <section className="py-16 sm:py-24 bg-white border-y border-slate-200">
+      <section id="features" className="py-16 sm:py-24 bg-[#F4F7FC]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <span className="px-3.5 py-1 rounded-full bg-blue-50 text-[#1D64EC] text-xs font-bold border border-blue-200 uppercase tracking-wider">
+              Comprehensive Capabilities
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
+              What the Platform Offers
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 font-medium">
+              Purpose-built tooling tailored for government officers and innovative startups.
+            </p>
+
+            {/* Toggle Switch between Gov & Startup Features */}
+            <div className="flex items-center justify-center gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setActiveFeatureTab('gov')}
+                className={`px-5 py-2.5 rounded-2xl font-bold text-xs transition-all ${
+                  activeFeatureTab === 'gov'
+                    ? 'bg-[#1D64EC] text-white shadow-md'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                🏛️ For Government Departments (7 Modules)
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveFeatureTab('startup')}
+                className={`px-5 py-2.5 rounded-2xl font-bold text-xs transition-all ${
+                  activeFeatureTab === 'startup'
+                    ? 'bg-[#1D64EC] text-white shadow-md'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                🚀 For Startups & Innovators (7 Modules)
+              </button>
+            </div>
+          </div>
+
+          {/* Features Grid based on Active Tab */}
+          {activeFeatureTab === 'gov' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs">
+              
+              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2.5">
+                <span className="w-8 h-8 rounded-xl bg-blue-100 text-[#1D64EC] font-bold flex items-center justify-center">1</span>
+                <h3 className="font-extrabold text-[#0F172A] text-sm">Challenge Creation Wizard</h3>
+                <p className="text-slate-600 font-medium leading-relaxed">
+                  Draft outcome-based problem statements with AI-assisted problem framing, KPI suggestions, and eligibility criteria.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2.5">
+                <span className="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 font-bold flex items-center justify-center">2</span>
+                <h3 className="font-extrabold text-[#0F172A] text-sm">AI-Powered Startup Shortlisting</h3>
+                <p className="text-slate-600 font-medium leading-relaxed">
+                  Automatically rank startups based on problem fit, technology match, evidence strength, pilot readiness, security, and more.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2.5">
+                <span className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center">3</span>
+                <h3 className="font-extrabold text-[#0F172A] text-sm">Expert Evaluation Module</h3>
+                <p className="text-slate-600 font-medium leading-relaxed">
+                  Structured evaluation interface with startup dossiers, scoring rubrics, and clear “Approved / Not Approved” decisions for pilots.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2.5">
+                <span className="w-8 h-8 rounded-xl bg-amber-100 text-amber-900 font-bold flex items-center justify-center">4</span>
+                <h3 className="font-extrabold text-[#0F172A] text-sm">Pilot Management Console</h3>
+                <p className="text-slate-600 font-medium leading-relaxed">
+                  Define milestones, KPIs, data sources, and payment tranches; monitor pilot progress, telemetry, and field alerts in real time.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2.5">
+                <span className="w-8 h-8 rounded-xl bg-blue-100 text-[#1D64EC] font-bold flex items-center justify-center">5</span>
+                <h3 className="font-extrabold text-[#0F172A] text-sm">Digital Contract Signer</h3>
+                <p className="text-slate-600 font-medium leading-relaxed">
+                  Standardized pilot agreements with IP, data, and cybersecurity clauses; Aadhaar/DSC-based eSign with full audit trail.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2.5">
+                <span className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center">6</span>
+                <h3 className="font-extrabold text-[#0F172A] text-sm">Independent Validation & Scale Decision</h3>
+                <p className="text-slate-600 font-medium leading-relaxed">
+                  Capture pilot results, run independent audits, and make evidence-based decisions to scale, iterate, or close.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2.5 md:col-span-2 lg:col-span-3">
+                <span className="w-8 h-8 rounded-xl bg-slate-100 text-slate-900 font-bold flex items-center justify-center">7</span>
+                <h3 className="font-extrabold text-[#0F172A] text-sm">Integration with Government Systems</h3>
+                <p className="text-slate-600 font-medium leading-relaxed">
+                  Aligns with DPIIT startup database, GeM, state e-procurement, and PFMS for payments and compliance.
+                </p>
+              </div>
+
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs">
+              
+              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2.5">
+                <span className="w-8 h-8 rounded-xl bg-blue-100 text-[#1D64EC] font-bold flex items-center justify-center">1</span>
+                <h3 className="font-extrabold text-[#0F172A] text-sm">Challenge Marketplace</h3>
+                <p className="text-slate-600 font-medium leading-relaxed">
+                  Browse all open challenges by department, theme, and location; see eligibility, budget, and timelines at a glance.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2.5">
+                <span className="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 font-bold flex items-center justify-center">2</span>
+                <h3 className="font-extrabold text-[#0F172A] text-sm">Company Evidence Archive</h3>
+                <p className="text-slate-600 font-medium leading-relaxed">
+                  Maintain a verified digital dossier: company documents, DPIIT recognition, technology details, past projects, compliance, and security certifications.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2.5">
+                <span className="w-8 h-8 rounded-xl bg-blue-100 text-[#1D64EC] font-bold flex items-center justify-center">3</span>
+                <h3 className="font-extrabold text-[#0F172A] text-sm">Proposal Tracker</h3>
+                <p className="text-slate-600 font-medium leading-relaxed">
+                  Track every proposal from submission to scale decision with a clear 10-stage lifecycle timeline.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2.5">
+                <span className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center">4</span>
+                <h3 className="font-extrabold text-[#0F172A] text-sm">Active Pilot Workspace</h3>
+                <p className="text-slate-600 font-medium leading-relaxed">
+                  Upload milestone deliverables, telemetry logs, and field reports; track escrow tranches and payments in one place.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2.5">
+                <span className="w-8 h-8 rounded-xl bg-slate-100 text-slate-900 font-bold flex items-center justify-center">5</span>
+                <h3 className="font-extrabold text-[#0F172A] text-sm">Digital Contract Signer</h3>
+                <p className="text-slate-600 font-medium leading-relaxed">
+                  Review and eSign pilot agreements online; download executed contracts and view complete audit trails.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2.5">
+                <span className="w-8 h-8 rounded-xl bg-amber-100 text-amber-900 font-bold flex items-center justify-center">6</span>
+                <h3 className="font-extrabold text-[#0F172A] text-sm">Transparent Payments</h3>
+                <p className="text-slate-600 font-medium leading-relaxed">
+                  Milestone-based escrow/PFMS payments with clear invoices, payment status, and receipts.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-2.5 md:col-span-2 lg:col-span-3">
+                <span className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center">7</span>
+                <h3 className="font-extrabold text-[#0F172A] text-sm">Pathway to Scale</h3>
+                <p className="text-slate-600 font-medium leading-relaxed">
+                  Successful pilots get fast-tracked for wider deployment, with clear routes into state procurement and GeM listings.
+                </p>
+              </div>
+
+            </div>
+          )}
+
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 8. IMPACT & BENEFITS: EXPECTED OUTCOMES                                   */}
+      {/* ========================================================================= */}
+      <section id="outcomes" className="py-16 sm:py-24 bg-white border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           <div className="text-center max-w-3xl mx-auto space-y-3">
             <span className="px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200 uppercase tracking-wider">
-              Sovereign Government Standards
+              Measurable Public Value
             </span>
             <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
-              Security, Compliance & Trust
+              Expected Outcomes
             </h2>
             <p className="text-sm sm:text-base text-slate-600 font-medium">
-              Mahatech Procure is built to meet sovereign government security and compliance requirements.
+              Transformative impact for state administration and high-growth innovators.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
-            <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-2">
-              <ShieldCheck className="w-6 h-6 text-emerald-600" />
-              <h3 className="font-extrabold text-[#0F172A] text-sm">Data Residency</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">
-                All data hosted 100% in India, on MeitY-empanelled cloud infrastructure (Mumbai & Pune availability zones).
-              </p>
+            {/* For Government */}
+            <div className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-blue-100 text-[#1D64EC] flex items-center justify-center font-bold">
+                  🏛️
+                </div>
+                <h3 className="text-lg font-extrabold text-[#0F172A]">For Government</h3>
+              </div>
+
+              <ul className="space-y-3 text-xs sm:text-sm text-slate-700 font-medium">
+                {[
+                  'Faster discovery and testing of innovative solutions',
+                  'Higher quality, lower-risk pilots with measurable KPIs',
+                  'Reduced departmental risk through structured contracts and validation',
+                  'Timely, milestone-based payments to startups',
+                  'Evidence-based procurement and scale-up decisions',
+                  'Reusable templates for problem statements, evaluations, contracts, and IP/data clauses'
+                ].map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-2.5">
+                    <Check className="w-4 h-4 text-[#1D64EC] shrink-0 mt-0.5 font-black" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-2">
-              <Lock className="w-6 h-6 text-[#1D64EC]" />
-              <h3 className="font-extrabold text-[#0F172A] text-sm">State Cyber Standards</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">
-                Alignment with Maharashtra State Cyber Policy v2.0; AES-256 encryption, access control, and audit logging by design.
-              </p>
-            </div>
+            {/* For Startups */}
+            <div className="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                  🚀
+                </div>
+                <h3 className="text-lg font-extrabold text-[#0F172A]">For Startups</h3>
+              </div>
 
-            <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-2">
-              <Users className="w-6 h-6 text-purple-600" />
-              <h3 className="font-extrabold text-[#0F172A] text-sm">Role-Based Access</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">
-                Separate, role-specific cockpits for government department officers and startup founders with granular permissions.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-2">
-              <Activity className="w-6 h-6 text-amber-600" />
-              <h3 className="font-extrabold text-[#0F172A] text-sm">Audit-Ready Design</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">
-                Complete logs of views, edits, scorecards, approvals, payments, and scale decisions under IT Act 2000.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-2 md:col-span-2 lg:col-span-2">
-              <Award className="w-6 h-6 text-blue-600" />
-              <h3 className="font-extrabold text-[#0F172A] text-sm">Startup-Friendly by Design</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">
-                Eligibility and evaluation specifically architected to include early-stage, DPIIT-recognized startups with relaxed turnover thresholds.
-              </p>
+              <ul className="space-y-3 text-xs sm:text-sm text-slate-700 font-medium">
+                {[
+                  'Lower entry barriers for government procurement',
+                  'Clear visibility of departmental demand and challenges',
+                  'Shorter, more transparent sales cycles',
+                  'Timely payments and reduced cash-flow uncertainty',
+                  'Fair, rubric-based evaluation of technology and impact',
+                  'A credible pathway from pilot to scale across departments and districts'
+                ].map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-2.5">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5 font-black" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
           </div>
@@ -942,9 +964,240 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 11. FREQUENTLY ASKED QUESTIONS (FAQs)                                     */}
+      {/* 9. WHO CAN USE THIS: WHO IS THIS FOR?                                     */}
       {/* ========================================================================= */}
-      <section id="faqs" className="py-16 sm:py-24 bg-[#F4F7FC]">
+      <section id="who-is-this-for" className="py-16 sm:py-24 bg-[#F4F7FC]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <span className="px-3.5 py-1 rounded-full bg-purple-50 text-purple-800 text-xs font-bold border border-purple-200 uppercase tracking-wider">
+              Ecosystem Stakeholders
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
+              Who Is This For?
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 font-medium">
+              A unified bridge connecting Maharashtra's public institutions and innovators.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            {/* Government Departments & Agencies */}
+            <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-blue-100 text-[#1D64EC] flex items-center justify-center font-bold">
+                  🏛️
+                </div>
+                <h3 className="text-lg font-extrabold text-[#0F172A]">Government Departments & Agencies</h3>
+              </div>
+
+              <ul className="space-y-3 text-xs sm:text-sm text-slate-700 font-medium">
+                <li className="flex items-start gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#1D64EC] shrink-0 mt-2" />
+                  <span>Line departments (Urban Development, Water Resources, Health, Agriculture, Transport, etc.)</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#1D64EC] shrink-0 mt-2" />
+                  <span>Municipal corporations and urban local bodies</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#1D64EC] shrink-0 mt-2" />
+                  <span>State innovation societies and entrepreneurship cells</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#1D64EC] shrink-0 mt-2" />
+                  <span>Procurement and finance teams managing pilot contracts and payments</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* DPIIT-Recognized Startups */}
+            <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                  🚀
+                </div>
+                <h3 className="text-lg font-extrabold text-[#0F172A]">DPIIT-Recognized Startups</h3>
+              </div>
+
+              <ul className="space-y-3 text-xs sm:text-sm text-slate-700 font-medium">
+                <li className="flex items-start gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0 mt-2" />
+                  <span>Early-stage and growth-stage startups with innovative solutions</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0 mt-2" />
+                  <span>Startups in sectors like water, energy, health, agriculture, mobility, governance, and more</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0 mt-2" />
+                  <span>Startups looking to pilot and scale solutions with government buyers</span>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 10. SAMPLE USE CASES (4 Quantified Case Stories)                          */}
+      {/* ========================================================================= */}
+      <section id="use-cases" className="py-16 sm:py-24 bg-white border-y border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <span className="px-3.5 py-1 rounded-full bg-blue-50 text-[#1D64EC] text-xs font-bold border border-blue-200 uppercase tracking-wider">
+              Proven Ground Results
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
+              Sample Use Cases
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 font-medium">
+              Real-world deployment scenarios delivering measurable public outcomes.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+            
+            {/* Case 1: Urban Water */}
+            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-2xl">💧</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-100 text-[#1D64EC] font-bold text-[10px]">Pune Municipal Corp</span>
+              </div>
+              <h3 className="font-extrabold text-[#0F172A] text-base">1. Urban Water Loss Reduction (Pune)</h3>
+              <div className="space-y-1 text-slate-600 font-medium">
+                <p><strong>Problem:</strong> High non-revenue water (NRW) in urban distribution networks.</p>
+                <p><strong>Solution:</strong> AI-based leak detection and pressure optimization startup.</p>
+              </div>
+              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-bold">
+                Outcome: 18–22% NRW reduction in pilot zones; fast-tracked for city-wide scale.
+              </div>
+            </div>
+
+            {/* Case 2: Traffic */}
+            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-2xl">🚦</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 font-bold text-[10px]">Urban Mobility</span>
+              </div>
+              <h3 className="font-extrabold text-[#0F172A] text-base">2. AI-Based Traffic Signal Optimization</h3>
+              <div className="space-y-1 text-slate-600 font-medium">
+                <p><strong>Problem:</strong> Congestion at high-volume intersections with long waiting times.</p>
+                <p><strong>Solution:</strong> AI-driven adaptive signal control with real-time traffic prediction.</p>
+              </div>
+              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-bold">
+                Outcome: 15–20% reduction in average waiting time in pilot corridors.
+              </div>
+            </div>
+
+            {/* Case 3: Agriculture */}
+            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-2xl">🌾</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-bold text-[10px]">Agriculture Dept</span>
+              </div>
+              <h3 className="font-extrabold text-[#0F172A] text-base">3. Drone-Based Crop Health Monitoring</h3>
+              <div className="space-y-1 text-slate-600 font-medium">
+                <p><strong>Problem:</strong> Limited visibility of crop stress and pest attacks at district level.</p>
+                <p><strong>Solution:</strong> Drone + AI platform for multispectral crop health mapping.</p>
+              </div>
+              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-bold">
+                Outcome: Early detection of stress zones; targeted interventions in pilot blocks.
+              </div>
+            </div>
+
+            {/* Case 4: Smart Lighting */}
+            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-2xl">💡</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-900 font-bold text-[10px]">Smart Cities</span>
+              </div>
+              <h3 className="font-extrabold text-[#0F172A] text-base">4. Smart Street Lighting with Adaptive Control</h3>
+              <div className="space-y-1 text-slate-600 font-medium">
+                <p><strong>Problem:</strong> High energy consumption and poor lighting in certain wards.</p>
+                <p><strong>Solution:</strong> IoT-enabled smart lighting with adaptive brightness and fault detection.</p>
+              </div>
+              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-bold">
+                Outcome: 25–30% energy savings; improved citizen complaints resolution.
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 11. COMPLIANCE & STANDARDS + GOVERNANCE & OVERSIGHT                       */}
+      {/* ========================================================================= */}
+      <section id="compliance" className="py-16 sm:py-24 bg-[#F4F7FC]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            {/* Compliance & Standards */}
+            <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+              <span className="px-3 py-1 rounded-full bg-blue-50 text-[#1D64EC] text-xs font-bold uppercase tracking-wider">
+                Legal & State Standards
+              </span>
+              <h3 className="text-2xl font-black text-[#0F172A] font-display">Compliance & Standards</h3>
+              <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
+                The mechanism is designed to be:
+              </p>
+              <ul className="space-y-2 text-xs text-slate-700 font-semibold">
+                <li className="flex items-center gap-2">✓ Legally compliant with state procurement and financial rules</li>
+                <li className="flex items-center gap-2">✓ Aligned with DPIIT startup recognition and eligibility norms</li>
+                <li className="flex items-center gap-2">✓ Consistent with MeitY cloud and data residency guidelines</li>
+                <li className="flex items-center gap-2">✓ Compliant with Maharashtra State Cyber Policy and CERT-In audits</li>
+                <li className="flex items-center gap-2">✓ Integrated with Government e-Marketplace (GeM) and e-procurement</li>
+              </ul>
+
+              <div className="pt-2 border-t border-slate-100">
+                <strong className="text-xs font-bold text-[#0F172A] block mb-1.5">Standard Templates Provided For:</strong>
+                <p className="text-[11px] text-slate-500 font-medium leading-relaxed">
+                  Problem statements & criteria • Pilot agreements, IP, and data ownership clauses • Cybersecurity & risk management • Milestone payment schedules & validation reports.
+                </p>
+              </div>
+            </div>
+
+            {/* Governance & Oversight */}
+            <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+              <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold uppercase tracking-wider">
+                Institutional Framework
+              </span>
+              <h3 className="text-2xl font-black text-[#0F172A] font-display">Governance & Oversight</h3>
+              
+              <div className="space-y-3 text-xs text-slate-700">
+                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200">
+                  <strong className="text-[#0F172A] block font-bold">Nodal Agency:</strong>
+                  <span>Maharashtra State Innovation Society, Department of Skills, Employment, Entrepreneurship and Innovation</span>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200">
+                  <strong className="text-[#0F172A] block font-bold">Participating Departments:</strong>
+                  <span>Urban Development, Water Resources, Health, Agriculture, Transport, and others</span>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200">
+                  <strong className="text-[#0F172A] block font-bold">Audit & Transparency:</strong>
+                  <span>Complete digital audit trail for evaluations, contracts, payments, and scale decisions under IT Act 2000</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 12. FREQUENTLY ASKED QUESTIONS (FAQs)                                     */}
+      {/* ========================================================================= */}
+      <section id="faqs" className="py-16 sm:py-24 bg-white border-y border-slate-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           
           <div className="text-center space-y-3">
@@ -963,12 +1216,12 @@ export const LandingPage: React.FC = () => {
             {faqs.map((faq, idx) => (
               <div 
                 key={idx}
-                className="rounded-2xl bg-white border border-slate-200 overflow-hidden shadow-2xs transition-all"
+                className="rounded-2xl bg-[#F8FAFC] border border-slate-200 overflow-hidden shadow-2xs transition-all"
               >
                 <button
                   type="button"
                   onClick={() => toggleFaq(idx)}
-                  className="w-full p-4 sm:p-5 text-left font-bold text-[#0F172A] text-sm sm:text-base flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors"
+                  className="w-full p-4 sm:p-5 text-left font-bold text-[#0F172A] text-sm sm:text-base flex items-center justify-between gap-4 hover:bg-slate-100 transition-colors"
                 >
                   <span>{faq.q}</span>
                   {openFaq === idx ? (
@@ -979,7 +1232,7 @@ export const LandingPage: React.FC = () => {
                 </button>
 
                 {openFaq === idx && (
-                  <div className="px-4 sm:px-5 pb-5 pt-1 text-slate-600 text-xs sm:text-sm font-medium leading-relaxed border-t border-slate-100">
+                  <div className="px-4 sm:px-5 pb-5 pt-1 text-slate-600 text-xs sm:text-sm font-medium leading-relaxed border-t border-slate-200/80">
                     {faq.a}
                   </div>
                 )}
@@ -991,7 +1244,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 12. FINAL HEROIC CTA BANNER                                               */}
+      {/* 13. FINAL HEROIC CTA BANNER                                               */}
       {/* ========================================================================= */}
       <section className="py-16 sm:py-20 bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0D4CD3] text-white relative overflow-hidden">
         <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-blue-500/20 blur-3xl" />
@@ -1004,36 +1257,44 @@ export const LandingPage: React.FC = () => {
               Statewide Innovation Sandbox
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-display tracking-tight text-white">
-              Ready to Transform Public Problem-Solving?
+              Ready to Transform Public Procurement in Maharashtra?
             </h2>
             <p className="text-sm sm:text-base text-slate-200 font-medium max-w-2xl mx-auto leading-relaxed">
-              Join Maharashtra’s digital marketplace for innovation challenges and startup solutions.
+              Whether you are a government department looking to solve real operational challenges, or a startup with innovative solutions for the public sector, this platform provides a structured, transparent, and startup-friendly pathway from problem to scale.
             </p>
           </div>
 
-          <div className="pt-2">
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <button
               type="button"
-              onClick={() => openPortal('startup', 'challenges')}
-              className="px-8 py-4 rounded-2xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-sm shadow-xl inline-flex items-center gap-2 transition-all hover:scale-[1.02]"
+              onClick={() => openPortal('gov', 'dashboard')}
+              className="px-6 py-3.5 rounded-2xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-xs sm:text-sm shadow-xl flex items-center gap-2 transition-all hover:scale-[1.02]"
             >
-              <Compass className="w-4 h-4 text-white" />
-              <span>Explore Innovation Challenges</span>
-              <ArrowRight className="w-4 h-4 text-white ml-1" />
+              <Building2 className="w-4 h-4 text-blue-200" />
+              <span>Login as Department</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => openPortal('startup', 'dashboard')}
+              className="px-6 py-3.5 rounded-2xl bg-white hover:bg-slate-100 text-[#0F172A] font-bold text-xs sm:text-sm shadow-xl flex items-center gap-2 transition-all hover:scale-[1.02]"
+            >
+              <Rocket className="w-4 h-4 text-[#1D64EC]" />
+              <span>Login as Startup</span>
             </button>
           </div>
 
           {/* Contact Details */}
           <div className="pt-6 border-t border-white/15 text-xs text-slate-300 space-y-1">
-            <p>For queries, email: <strong className="text-white">support@mahatech.gov.in</strong></p>
-            <p>Helpline: <strong className="text-white">+91-22-2202-9988</strong> (Mon–Fri, 10 AM–6 PM IST)</p>
+            <p>Email: <strong className="text-white">support@mahatech.gov.in</strong> • Helpline: <strong className="text-white">+91-22-2202-9988</strong> (Mon–Fri, 10 AM–6 PM)</p>
+            <p className="text-slate-400 text-[11px]">Documentation: User Guides & Standard Contract Templates Available</p>
           </div>
 
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* 13. FOOTER CONTENT (5 Columns + Copyright)                                */}
+      {/* 14. FOOTER CONTENT (5 Columns + Copyright)                                */}
       {/* ========================================================================= */}
       <footer className="bg-[#0F172A] text-slate-400 text-xs py-14 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -1044,9 +1305,10 @@ export const LandingPage: React.FC = () => {
             <div className="space-y-3">
               <h4 className="font-bold text-white text-xs uppercase tracking-wider font-display">About</h4>
               <ul className="space-y-2 text-slate-400">
-                <li><a href="#about" className="hover:text-white transition-colors">About Mahatech Procure</a></li>
-                <li><a href="#how-it-works" className="hover:text-white transition-colors">Process & Workflow</a></li>
-                <li><a href="#features" className="hover:text-white transition-colors">Security & Compliance</a></li>
+                <li><a href="#why-it-matters" className="hover:text-white transition-colors">Why This Matters</a></li>
+                <li><a href="#solution" className="hover:text-white transition-colors">Our Solution</a></li>
+                <li><a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a></li>
+                <li><a href="#compliance" className="hover:text-white transition-colors">Governance & Oversight</a></li>
               </ul>
             </div>
 
@@ -1056,6 +1318,7 @@ export const LandingPage: React.FC = () => {
               <ul className="space-y-2 text-slate-400">
                 <li><button onClick={() => openPortal('gov', 'challenges')} className="hover:text-white transition-colors text-left">Publish a Challenge</button></li>
                 <li><button onClick={() => openPortal('gov', 'monitor')} className="hover:text-white transition-colors text-left">Pilot Management</button></li>
+                <li><button onClick={() => openPortal('gov', 'contracts')} className="hover:text-white transition-colors text-left">Contract Approval</button></li>
                 <li><button onClick={() => openPortal('gov', 'gem')} className="hover:text-white transition-colors text-left">Scale & GeM</button></li>
               </ul>
             </div>
@@ -1064,9 +1327,10 @@ export const LandingPage: React.FC = () => {
             <div className="space-y-3">
               <h4 className="font-bold text-white text-xs uppercase tracking-wider font-display">For Startups</h4>
               <ul className="space-y-2 text-slate-400">
-                <li><button onClick={() => openPortal('startup', 'challenges')} className="hover:text-white transition-colors text-left">Browse Challenges</button></li>
-                <li><button onClick={() => openPortal('startup', 'passport')} className="hover:text-white transition-colors text-left">Evidence Archive</button></li>
-                <li><button onClick={() => openPortal('startup', 'applications')} className="hover:text-white transition-colors text-left">Proposal & Pilot Tracker</button></li>
+                <li><button onClick={() => openPortal('startup', 'challenges')} className="hover:text-white transition-colors text-left">Challenge Marketplace</button></li>
+                <li><button onClick={() => openPortal('startup', 'passport')} className="hover:text-white transition-colors text-left">Company Evidence Archive</button></li>
+                <li><button onClick={() => openPortal('startup', 'applications')} className="hover:text-white transition-colors text-left">Proposal Tracker</button></li>
+                <li><button onClick={() => openPortal('startup', 'execution')} className="hover:text-white transition-colors text-left">Active Pilot Workspace</button></li>
               </ul>
             </div>
 
@@ -1097,7 +1361,7 @@ export const LandingPage: React.FC = () => {
               <span className="w-2 h-2 rounded-full bg-emerald-500" />
               <span>Mahatech Procure — Problem Statement 26136</span>
             </div>
-            <p>© Government of Maharashtra. All rights reserved.</p>
+            <p>© Government of Maharashtra • Maharashtra State Innovation Society. All rights reserved.</p>
           </div>
 
         </div>
@@ -1112,7 +1376,7 @@ export const LandingPage: React.FC = () => {
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
                 <h3 className="text-base font-black text-[#0F172A] font-display">
-                  Request Department Sandbox Demo
+                  Request Department Sandbox Briefing
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">For Maharashtra Government Officers</p>
               </div>
