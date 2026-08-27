@@ -23,15 +23,7 @@ export const LandingPage: React.FC = () => {
   const [howItWorksTab, setHowItWorksTab] = useState<'all' | 'phase1' | 'phase2' | 'phase3'>('all');
 
   // Modals
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
-
-  // Registration Form State
-  const [regName, setRegName] = useState('');
-  const [regCompany, setRegCompany] = useState('');
-  const [regDpiit, setRegDpiit] = useState('');
-  const [regEmail, setRegEmail] = useState('');
 
   // Demo Form State
   const [demoDept, setDemoDept] = useState('');
@@ -45,18 +37,6 @@ export const LandingPage: React.FC = () => {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     openPortal('startup', 'challenges');
-  };
-
-  const handleRegisterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsRegisterModalOpen(false);
-    addNotification({
-      title: 'Startup Profile Created',
-      message: `Welcome ${regCompany || 'Innovator'}! Your startup profile has been created. Redirecting to Startup Portal.`,
-      portal: 'startup',
-      type: 'success'
-    });
-    openPortal('startup', 'dashboard');
   };
 
   const handleDemoSubmit = (e: React.FormEvent) => {
@@ -118,56 +98,51 @@ export const LandingPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAFBFD] text-[#0A2540] selection:bg-[#FF671F] selection:text-white font-sans antialiased">
+    <div className="min-h-screen bg-[#F4F7FC] text-[#0F172A] selection:bg-[#1D64EC] selection:text-white font-sans antialiased">
       
-      {/* Top Tricolor Brand Accent Line */}
-      <div className="h-1.5 w-full bg-gradient-to-r from-[#FF671F] via-[#FFFFFF] to-[#046A38] shadow-xs" />
-
       {/* ========================================================================= */}
-      {/* 1. TOP GLOBAL NAVBAR (Only Login/Portal Entry Point Here)                 */}
+      {/* 1. TOP GLOBAL NAVBAR                                                     */}
       {/* ========================================================================= */}
-      <header className="bg-white border-b border-slate-200/80 shadow-2xs">
+      <header className="bg-white border-b border-slate-200/80 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
           
-          {/* Brand / Logo with Ashoka / State Colors */}
+          {/* Brand / Logo */}
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#FF671F] via-[#FF8A3D] to-[#FF671F] text-white font-black text-xl flex items-center justify-center shadow-md shadow-orange-500/20">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#1D64EC] via-[#2563EB] to-[#0D4CD3] text-white font-black text-xl flex items-center justify-center shadow-md shadow-blue-500/20">
               🏛️
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-lg sm:text-2xl font-black text-[#0B1E48] font-display tracking-tight leading-none">
-                  Mahatech <span className="text-[#FF671F]">Procure</span>
+                <span className="text-lg sm:text-2xl font-black text-[#0F172A] font-display tracking-tight leading-none">
+                  Mahatech <span className="text-[#1D64EC]">Procure</span>
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-orange-50 text-[#FF671F] text-[10px] font-extrabold uppercase tracking-wider hidden sm:inline-block border border-orange-200">
+                <span className="px-2.5 py-0.5 rounded-full bg-[#E8F2FE] text-[#1D64EC] text-[10px] font-extrabold uppercase tracking-wider hidden sm:inline-block border border-blue-200">
                   Gov Sandbox
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 font-semibold tracking-wide mt-0.5 flex items-center gap-1.5">
-                <span>Government of Maharashtra</span>
-                <span className="w-1 h-1 rounded-full bg-[#046A38]" />
-                <span className="text-[#046A38] font-bold">State Innovation Platform</span>
+              <p className="text-[11px] text-slate-500 font-semibold tracking-wide mt-0.5">
+                Government of Maharashtra • Innovation Marketplace
               </p>
             </div>
           </div>
 
-          {/* Right Top Action Buttons (Single Login/Portal Entry) */}
+          {/* Right Action Buttons */}
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => openPortal('startup', 'challenges')}
-              className="px-4 sm:px-5 py-2.5 rounded-xl bg-orange-50 hover:bg-orange-100 text-[#C2410C] border border-orange-200 font-bold text-xs flex items-center gap-1.5 transition-all shadow-2xs"
+              className="px-4 sm:px-5 py-2.5 rounded-xl bg-[#E8F2FE] hover:bg-[#DDEBFC] text-[#1D64EC] border border-blue-200 font-bold text-xs flex items-center gap-1.5 transition-all shadow-2xs"
             >
-              <Compass className="w-4 h-4 text-[#FF671F]" />
+              <Compass className="w-4 h-4 text-[#1D64EC]" />
               <span>Explore Challenges</span>
             </button>
 
             <button
               type="button"
               onClick={() => openLogin()}
-              className="px-5 sm:px-6 py-2.5 rounded-xl bg-[#0B1E48] hover:bg-[#152C63] text-white font-bold text-xs shadow-md shadow-blue-950/20 flex items-center gap-2 transition-all hover:scale-[1.02]"
+              className="px-5 sm:px-6 py-2.5 rounded-xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-xs shadow-md shadow-blue-500/25 flex items-center gap-2 transition-all hover:scale-[1.02]"
             >
-              <Lock className="w-3.5 h-3.5 text-[#FF8A3D]" />
+              <Lock className="w-3.5 h-3.5" />
               <span>Portal Login</span>
             </button>
           </div>
@@ -176,56 +151,56 @@ export const LandingPage: React.FC = () => {
       </header>
 
       {/* ========================================================================= */}
-      {/* 2. SUB-NAVBAR CATEGORY BAR (Spacious, Clear Section Links)                 */}
+      {/* 2. SUB-NAVBAR CATEGORY BAR (Pill Navigation in Royal Blue / Sky Palette)  */}
       {/* ========================================================================= */}
       <nav className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs py-2.5 px-4">
         <div className="max-w-7xl mx-auto flex items-center justify-center overflow-x-auto custom-scrollbar">
           <div className="flex items-center gap-1.5 sm:gap-2 text-xs font-bold whitespace-nowrap px-2">
             <a 
               href="#hero" 
-              className="px-3.5 py-1.5 rounded-full bg-[#FF671F] text-white shadow-2xs hover:bg-orange-700 transition-all"
+              className="px-3.5 py-1.5 rounded-full bg-[#1D64EC] text-white shadow-2xs hover:bg-[#0D4CD3] transition-all"
             >
               Home
             </a>
             <a 
               href="#about" 
-              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-orange-50 text-slate-700 hover:text-[#FF671F] transition-all"
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-[#E8F2FE] text-slate-700 hover:text-[#1D64EC] transition-all"
             >
               What is it
             </a>
             <a 
               href="#departments" 
-              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-orange-50 text-slate-700 hover:text-[#FF671F] transition-all"
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-[#E8F2FE] text-slate-700 hover:text-[#1D64EC] transition-all"
             >
               Departments
             </a>
             <a 
               href="#startups" 
-              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-orange-50 text-slate-700 hover:text-[#FF671F] transition-all"
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-[#E8F2FE] text-slate-700 hover:text-[#1D64EC] transition-all"
             >
               Startups
             </a>
             <a 
               href="#how-it-works" 
-              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-orange-50 text-slate-700 hover:text-[#FF671F] transition-all"
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-[#E8F2FE] text-slate-700 hover:text-[#1D64EC] transition-all"
             >
               How it Works
             </a>
             <a 
               href="#features" 
-              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-orange-50 text-slate-700 hover:text-[#FF671F] transition-all"
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-[#E8F2FE] text-slate-700 hover:text-[#1D64EC] transition-all"
             >
               Features
             </a>
             <a 
               href="#impact" 
-              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-orange-50 text-slate-700 hover:text-[#FF671F] transition-all"
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-[#E8F2FE] text-slate-700 hover:text-[#1D64EC] transition-all"
             >
               Impact
             </a>
             <a 
               href="#faqs" 
-              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-orange-50 text-slate-700 hover:text-[#FF671F] transition-all"
+              className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-[#E8F2FE] text-slate-700 hover:text-[#1D64EC] transition-all"
             >
               FAQs
             </a>
@@ -234,28 +209,28 @@ export const LandingPage: React.FC = () => {
       </nav>
 
       {/* ========================================================================= */}
-      {/* 3. HERO SECTION (Tiranga Palette & Clean Discovery Focus)                 */}
+      {/* 3. HERO SECTION                                                          */}
       {/* ========================================================================= */}
-      <section id="hero" className="relative pt-8 pb-16 lg:pt-14 lg:pb-20 overflow-hidden">
+      <section id="hero" className="relative pt-8 pb-16 lg:pt-14 lg:pb-22 overflow-hidden">
         
-        {/* Subtle Indian Saffron and Green Glow */}
-        <div className="absolute -top-24 right-0 w-[550px] h-[550px] bg-gradient-to-br from-orange-200/40 via-amber-100/20 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
-        <div className="absolute top-1/2 -left-24 w-[450px] h-[450px] bg-gradient-to-tr from-emerald-100/40 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
+        {/* Soft Ambient Mesh Background */}
+        <div className="absolute -top-24 right-0 w-[550px] h-[550px] bg-gradient-to-br from-blue-200/50 via-sky-100/30 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
+        <div className="absolute top-1/2 -left-24 w-[450px] h-[450px] bg-gradient-to-tr from-sky-100/60 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             
-            {/* Left Column: Hero Headline, Search & Key Badges */}
+            {/* Left Column: Hero Text & Search */}
             <div className="lg:col-span-7 space-y-6 sm:space-y-7">
               
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-50 text-[#C2410C] border border-orange-200 text-xs font-bold shadow-2xs">
-                <span className="w-2 h-2 rounded-full bg-[#FF671F] animate-ping" />
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F2FE] text-[#1D64EC] border border-blue-200 text-xs font-bold shadow-2xs">
+                <span className="w-2 h-2 rounded-full bg-[#1D64EC] animate-ping" />
                 <span>Government Innovation & Sandbox Procurement</span>
               </div>
 
               <div className="space-y-3">
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#0B1E48] font-display tracking-tight leading-[1.1]">
-                  Mahatech <span className="text-[#FF671F]">Procure</span>
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#0F172A] font-display tracking-tight leading-[1.1]">
+                  Mahatech <span className="text-[#1D64EC]">Procure</span>
                 </h1>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-800 font-display leading-snug">
                   A digital marketplace for government innovation challenges and startup solutions.
@@ -267,7 +242,7 @@ export const LandingPage: React.FC = () => {
 
               {/* Search Pill Input */}
               <form onSubmit={handleSearchSubmit} className="max-w-xl">
-                <div className="p-1.5 bg-white rounded-2xl border-2 border-orange-200 shadow-md flex items-center gap-2 focus-within:border-[#FF671F] focus-within:ring-4 focus-within:ring-orange-500/10 transition-all">
+                <div className="p-1.5 bg-white rounded-2xl border-2 border-blue-200 shadow-md flex items-center gap-2 focus-within:border-[#1D64EC] focus-within:ring-4 focus-within:ring-blue-500/10 transition-all">
                   <Search className="w-5 h-5 text-slate-400 ml-3 shrink-0" />
                   <input
                     type="text"
@@ -278,31 +253,31 @@ export const LandingPage: React.FC = () => {
                   />
                   <button
                     type="submit"
-                    className="px-5 sm:px-6 py-2.5 rounded-xl bg-[#FF671F] hover:bg-orange-700 text-white font-bold text-xs sm:text-sm shadow-sm shrink-0 transition-all"
+                    className="px-5 sm:px-6 py-2.5 rounded-xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-xs sm:text-sm shadow-sm shrink-0 transition-all"
                   >
                     Explore
                   </button>
                 </div>
               </form>
 
-              {/* Trust Badges in Indian Flag Colors */}
+              {/* Trust Badges */}
               <div className="pt-4 border-t border-slate-200 flex flex-wrap items-center gap-4 sm:gap-6 text-xs font-bold text-slate-700">
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#FF671F]/15 text-[#C2410C] flex items-center justify-center text-[11px] font-black">
+                  <div className="w-6 h-6 rounded-full bg-blue-100 text-[#1D64EC] flex items-center justify-center text-[11px] font-black">
                     ★
                   </div>
                   <span>Government of Maharashtra</span>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#046A38]/15 text-[#046A38] flex items-center justify-center text-[11px] font-black">
+                  <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-[11px] font-black">
                     ✓
                   </div>
                   <span>DPIIT-recognized Startup Friendly</span>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-[#0B1E48]/15 text-[#0B1E48] flex items-center justify-center text-[11px]">
+                  <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center text-[11px]">
                     🛡️
                   </div>
                   <span>Secure • Transparent • Audit-ready</span>
@@ -311,60 +286,60 @@ export const LandingPage: React.FC = () => {
 
             </div>
 
-            {/* Right Column: Hero Graphic Card with Organic Shapes and Floating Stat Badges */}
+            {/* Right Column: Hero Graphic Card with Original Blue/Mesh Gradient */}
             <div className="lg:col-span-5 relative flex justify-center lg:justify-end">
               
               {/* Organic Curved Container Card */}
-              <div className="relative w-full max-w-md aspect-[4/4.8] rounded-[40px] bg-gradient-to-br from-[#FF671F] via-[#FF8A3D] to-[#046A38] p-3 shadow-2xl overflow-hidden flex flex-col justify-between">
+              <div className="relative w-full max-w-md aspect-[4/4.8] rounded-[40px] bg-gradient-to-br from-[#1D64EC] via-[#2563EB] to-[#0D4CD3] p-3 shadow-2xl overflow-hidden flex flex-col justify-between">
                 
                 {/* Inner White Backdrop */}
                 <div className="absolute inset-2 rounded-[34px] bg-[#FFFFFF] overflow-hidden flex flex-col p-6 justify-between">
                   
-                  {/* Decorative subtle gradient in the corner */}
-                  <div className="absolute -bottom-16 -right-16 w-56 h-56 rounded-full bg-gradient-to-tr from-emerald-200 to-orange-200 opacity-40 blur-xl" />
+                  {/* Decorative subtle blue glow */}
+                  <div className="absolute -bottom-16 -right-16 w-56 h-56 rounded-full bg-gradient-to-tr from-sky-200 to-blue-200 opacity-40 blur-xl" />
                   
                   {/* Top Bar inside card */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="w-3 h-3 rounded-full bg-[#FF671F]" />
-                      <span className="text-xs font-black text-[#0B1E48] font-display">MahaProcure Cockpit</span>
+                      <span className="w-3 h-3 rounded-full bg-[#1D64EC]" />
+                      <span className="text-xs font-black text-[#0F172A] font-display">MahaProcure Cockpit</span>
                     </div>
-                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-[#046A38] text-[10px] font-bold border border-emerald-200 flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#046A38] animate-pulse" />
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-200 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                       Live Sandbox
                     </span>
                   </div>
 
                   {/* Center Mockup: Pilot Cockpit Preview */}
                   <div className="my-auto space-y-3 z-10">
-                    <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 shadow-xs space-y-2">
+                    <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-slate-200 shadow-xs space-y-2">
                       <div className="flex items-center justify-between text-[11px]">
                         <span className="font-bold text-slate-500">Active Field Pilot</span>
-                        <span className="font-bold text-[#046A38]">Pune Zone A</span>
+                        <span className="font-bold text-emerald-700">Pune Zone A</span>
                       </div>
-                      <h4 className="font-extrabold text-[#0B1E48] text-sm leading-tight">
+                      <h4 className="font-extrabold text-[#0F172A] text-sm leading-tight">
                         AI-based Water Leakage Detection
                       </h4>
                       <div className="flex items-center justify-between pt-1">
                         <div>
                           <span className="text-[10px] text-slate-400 font-bold block">NRW LOSS REDUCTION</span>
-                          <strong className="text-lg font-black text-[#046A38] font-display">18.4% Achieved</strong>
+                          <strong className="text-lg font-black text-emerald-800 font-display">18.4% Achieved</strong>
                         </div>
                         <div className="text-right">
                           <span className="text-[10px] text-slate-400 font-bold block">ESCROW RELEASED</span>
-                          <strong className="text-sm font-bold text-[#0B1E48]">INR 10.5 Lakhs</strong>
+                          <strong className="text-sm font-bold text-[#0F172A]">INR 10.5 Lakhs</strong>
                         </div>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2.5 text-xs">
-                      <div className="p-3 rounded-2xl bg-orange-50 border border-orange-200">
-                        <span className="text-[10px] font-bold text-[#C2410C] block">AI SHORTLISTING</span>
-                        <strong className="text-[#0B1E48] font-bold">94/100 Score</strong>
-                      </div>
                       <div className="p-3 rounded-2xl bg-blue-50 border border-blue-200">
-                        <span className="text-[10px] font-bold text-[#0B1E48] block">GEM GATEWAY</span>
-                        <strong className="text-[#0B1E48] font-bold">Fast-Track Scale</strong>
+                        <span className="text-[10px] font-bold text-[#1D64EC] block">AI SHORTLISTING</span>
+                        <strong className="text-[#0F172A] font-bold">94/100 Score</strong>
+                      </div>
+                      <div className="p-3 rounded-2xl bg-purple-50 border border-purple-200">
+                        <span className="text-[10px] font-bold text-purple-900 block">GEM GATEWAY</span>
+                        <strong className="text-[#0F172A] font-bold">Fast-Track Ready</strong>
                       </div>
                     </div>
                   </div>
@@ -372,29 +347,29 @@ export const LandingPage: React.FC = () => {
                   {/* Bottom Strip */}
                   <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 z-10">
                     <span>Verified by Maharashtra Water Board</span>
-                    <strong className="text-[#FF671F] font-bold">Audit Empanelled</strong>
+                    <strong className="text-[#1D64EC] font-bold">Audit Empanelled</strong>
                   </div>
 
                 </div>
 
                 {/* Floating Glassmorphic Stat Pill 1: Top Right */}
-                <div className="absolute -top-3 -right-2 z-20 bg-white/95 backdrop-blur-md p-3 px-4 rounded-2xl border border-orange-200 shadow-xl flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-orange-100 text-[#FF671F] flex items-center justify-center font-bold text-sm">
+                <div className="absolute -top-3 -right-2 z-20 bg-white/95 backdrop-blur-md p-3 px-4 rounded-2xl border border-blue-200 shadow-xl flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-blue-100 text-[#1D64EC] flex items-center justify-center font-bold text-sm">
                     ★
                   </div>
                   <div>
-                    <strong className="text-xs font-black text-[#0B1E48] block">100+ Vetted Startups</strong>
+                    <strong className="text-xs font-black text-[#0F172A] block">100+ Vetted Startups</strong>
                     <span className="text-[10px] text-slate-500 font-semibold">Innovation Partners</span>
                   </div>
                 </div>
 
                 {/* Floating Glassmorphic Stat Pill 2: Bottom Left */}
                 <div className="absolute -bottom-3 -left-3 z-20 bg-white/95 backdrop-blur-md p-3 px-4 rounded-2xl border border-emerald-200 shadow-xl flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-emerald-100 text-[#046A38] flex items-center justify-center font-bold text-sm">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">
                     🏛️
                   </div>
                   <div>
-                    <strong className="text-xs font-black text-[#0B1E48] block">28 Departments</strong>
+                    <strong className="text-xs font-black text-[#0F172A] block">28 Departments</strong>
                     <span className="text-[10px] text-slate-500 font-semibold">Live Sandbox Pilots</span>
                   </div>
                 </div>
@@ -415,68 +390,68 @@ export const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           <div className="text-center max-w-3xl mx-auto space-y-3">
-            <span className="px-3.5 py-1 rounded-full bg-orange-50 text-[#C2410C] text-xs font-bold border border-orange-200 uppercase tracking-wider">
+            <span className="px-3.5 py-1 rounded-full bg-[#E8F2FE] text-[#1D64EC] text-xs font-bold border border-blue-200 uppercase tracking-wider">
               Problem-Led Innovation Framework
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-[#0B1E48] font-display tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
               What is Mahatech Procure?
             </h2>
             <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed">
               Mahatech Procure is the Government of Maharashtra’s platform for problem-led innovation. Departments publish outcome-based challenges, startups submit solutions, and selected teams run controlled pilots with clear KPIs, escrow-linked payments, and independent validation.
             </p>
             <p className="text-xs sm:text-sm text-slate-500 font-medium">
-              Successful pilots move to <strong className="text-[#0B1E48]">state-wide scale</strong> via GeM and fast-track procurement, while every step—evaluation, pilot data, payments, and decisions—is recorded with a complete audit trail.
+              Successful pilots move to <strong className="text-[#0F172A]">state-wide scale</strong> via GeM and fast-track procurement, while every step—evaluation, pilot data, payments, and decisions—is recorded with a complete audit trail.
             </p>
           </div>
 
           {/* 5 Key Points Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
-            <div className="p-6 rounded-3xl bg-orange-50/40 border border-orange-200/80 space-y-3 hover:shadow-md transition-all">
-              <div className="w-10 h-10 rounded-2xl bg-[#FF671F] text-white flex items-center justify-center font-bold">
+            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200/90 space-y-3 hover:shadow-md transition-all">
+              <div className="w-10 h-10 rounded-2xl bg-[#1D64EC] text-white flex items-center justify-center font-bold">
                 🎯
               </div>
-              <h3 className="font-extrabold text-[#0B1E48] text-base">Outcome-Focused Challenges</h3>
+              <h3 className="font-extrabold text-[#0F172A] text-base">Outcome-Focused Challenges</h3>
               <p className="text-xs text-slate-600 leading-relaxed font-medium">
                 Defined by measurable public outcomes (e.g. 20% water loss cut or 15 min faster emergency dispatch), not restrictive technology specs.
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-orange-50/40 border border-orange-200/80 space-y-3 hover:shadow-md transition-all">
-              <div className="w-10 h-10 rounded-2xl bg-[#0B1E48] text-white flex items-center justify-center font-bold">
+            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200/90 space-y-3 hover:shadow-md transition-all">
+              <div className="w-10 h-10 rounded-2xl bg-purple-600 text-white flex items-center justify-center font-bold">
                 🤖
               </div>
-              <h3 className="font-extrabold text-[#0B1E48] text-base">AI + Expert Shortlisting</h3>
+              <h3 className="font-extrabold text-[#0F172A] text-base">AI + Expert Shortlisting</h3>
               <p className="text-xs text-slate-600 leading-relaxed font-medium">
                 Fair, transparent scoring across technical fit, pilot readiness, and security, followed by rigorous domain expert panels.
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-emerald-50/40 border border-emerald-200/80 space-y-3 hover:shadow-md transition-all">
-              <div className="w-10 h-10 rounded-2xl bg-[#046A38] text-white flex items-center justify-center font-bold">
+            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200/90 space-y-3 hover:shadow-md transition-all">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-bold">
                 🛡️
               </div>
-              <h3 className="font-extrabold text-[#0B1E48] text-base">Controlled Escrow Pilots</h3>
+              <h3 className="font-extrabold text-[#0F172A] text-base">Controlled Escrow Pilots</h3>
               <p className="text-xs text-slate-600 leading-relaxed font-medium">
                 Manage pilots with defined milestones, IoT telemetry streams, and automated PFMS state treasury tranches.
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-blue-50/40 border border-blue-200/80 space-y-3 hover:shadow-md transition-all">
-              <div className="w-10 h-10 rounded-2xl bg-[#1D4ED8] text-white flex items-center justify-center font-bold">
+            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200/90 space-y-3 hover:shadow-md transition-all">
+              <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold">
                 📊
               </div>
-              <h3 className="font-extrabold text-[#0B1E48] text-base">Independent Validation</h3>
+              <h3 className="font-extrabold text-[#0F172A] text-base">Independent Validation</h3>
               <p className="text-xs text-slate-600 leading-relaxed font-medium">
                 Empirical verification boards certify field outcomes to support evidence-based Scale, Iterate, or Close decisions.
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-3 hover:shadow-md transition-all md:col-span-2 lg:col-span-2">
-              <div className="w-10 h-10 rounded-2xl bg-[#0B1E48] text-white flex items-center justify-center font-bold">
+            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200/90 space-y-3 hover:shadow-md transition-all md:col-span-2 lg:col-span-2">
+              <div className="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold">
                 📜
               </div>
-              <h3 className="font-extrabold text-[#0B1E48] text-base">Full Forensic Auditability</h3>
+              <h3 className="font-extrabold text-[#0F172A] text-base">Full Forensic Auditability</h3>
               <p className="text-xs text-slate-600 leading-relaxed font-medium">
                 Every score, contract clause, milestone upload, and payment is permanently timestamped with IP and user IDs under the IT Act 2000.
               </p>
@@ -490,18 +465,18 @@ export const LandingPage: React.FC = () => {
       {/* ========================================================================= */}
       {/* 5. FOR GOVERNMENT DEPARTMENTS                                             */}
       {/* ========================================================================= */}
-      <section id="departments" className="py-16 sm:py-24 bg-[#FAFBFD]">
+      <section id="departments" className="py-16 sm:py-24 bg-[#F4F7FC]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 pb-6 border-b border-slate-200">
             <div className="max-w-2xl space-y-3">
-              <span className="px-3.5 py-1 rounded-full bg-blue-50 text-[#0B1E48] text-xs font-bold border border-blue-200 uppercase tracking-wider">
+              <span className="px-3.5 py-1 rounded-full bg-blue-50 text-[#1D64EC] text-xs font-bold border border-blue-200 uppercase tracking-wider">
                 Government Solutions
               </span>
-              <h2 className="text-3xl sm:text-4xl font-black text-[#0B1E48] font-display tracking-tight">
+              <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
                 For Government Departments
               </h2>
-              <p className="text-base text-[#FF671F] font-extrabold font-display">
+              <p className="text-base text-[#1D64EC] font-extrabold font-display">
                 Publish challenges, run pilots, and scale proven solutions.
               </p>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
@@ -513,7 +488,7 @@ export const LandingPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsDemoModalOpen(true)}
-                className="px-6 py-3 rounded-2xl bg-[#0B1E48] hover:bg-[#152C63] text-white font-bold text-xs shadow-md transition-all hover:scale-[1.02]"
+                className="px-6 py-3 rounded-2xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-xs shadow-md transition-all hover:scale-[1.02]"
               >
                 Request a Demo
               </button>
@@ -524,32 +499,32 @@ export const LandingPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs">
             
             <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3">
-              <span className="w-8 h-8 rounded-xl bg-orange-100 text-[#FF671F] font-black flex items-center justify-center text-sm">1</span>
-              <h3 className="font-extrabold text-[#0B1E48] text-sm">Publish Innovation Challenges</h3>
+              <span className="w-8 h-8 rounded-xl bg-blue-100 text-[#1D64EC] font-black flex items-center justify-center text-sm">1</span>
+              <h3 className="font-extrabold text-[#0F172A] text-sm">Publish Innovation Challenges</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
                 Define problem statements, eligibility criteria, evaluation weights, KPIs, and risk levels using structured, guided forms.
               </p>
             </div>
 
             <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3">
-              <span className="w-8 h-8 rounded-xl bg-blue-100 text-[#0B1E48] font-black flex items-center justify-center text-sm">2</span>
-              <h3 className="font-extrabold text-[#0B1E48] text-sm">Shortlist Startups with AI + Experts</h3>
+              <span className="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 font-black flex items-center justify-center text-sm">2</span>
+              <h3 className="font-extrabold text-[#0F172A] text-sm">Shortlist Startups with AI + Experts</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
                 Use AI-assisted evaluation across relevance, technology fit, evidence strength, pilot readiness, and security—followed by domain expert review.
               </p>
             </div>
 
             <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3">
-              <span className="w-8 h-8 rounded-xl bg-emerald-100 text-[#046A38] font-black flex items-center justify-center text-sm">3</span>
-              <h3 className="font-extrabold text-[#0B1E48] text-sm">Run Controlled Pilots</h3>
+              <span className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 font-black flex items-center justify-center text-sm">3</span>
+              <h3 className="font-extrabold text-[#0F172A] text-sm">Run Controlled Pilots</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
                 Manage pilots with clear milestones, escrow-linked payments, telemetry data, and field verification.
               </p>
             </div>
 
             <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3">
-              <span className="w-8 h-8 rounded-xl bg-orange-100 text-[#FF671F] font-black flex items-center justify-center text-sm">4</span>
-              <h3 className="font-extrabold text-[#0B1E48] text-sm">Make Evidence-Based Decisions</h3>
+              <span className="w-8 h-8 rounded-xl bg-amber-100 text-amber-900 font-black flex items-center justify-center text-sm">4</span>
+              <h3 className="font-extrabold text-[#0F172A] text-sm">Make Evidence-Based Decisions</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
                 Decide to <strong>Scale</strong>, <strong>Iterate</strong>, or <strong>Close</strong> based on verified KPIs, independent validation, and compliance checks.
               </p>
@@ -557,7 +532,7 @@ export const LandingPage: React.FC = () => {
 
             <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3 md:col-span-2 lg:col-span-2">
               <span className="w-8 h-8 rounded-xl bg-slate-100 text-slate-900 font-black flex items-center justify-center text-sm">5</span>
-              <h3 className="font-extrabold text-[#0B1E48] text-sm">Maintain Full Auditability</h3>
+              <h3 className="font-extrabold text-[#0F172A] text-sm">Maintain Full Auditability</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
                 Every evaluation score, milestone submission, payment, and decision is logged with timestamps, user IDs, and document trails.
               </p>
@@ -576,13 +551,13 @@ export const LandingPage: React.FC = () => {
           
           <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 pb-6 border-b border-slate-200">
             <div className="max-w-2xl space-y-3">
-              <span className="px-3.5 py-1 rounded-full bg-emerald-50 text-[#046A38] text-xs font-bold border border-emerald-200 uppercase tracking-wider">
+              <span className="px-3.5 py-1 rounded-full bg-blue-50 text-[#1D64EC] text-xs font-bold border border-blue-200 uppercase tracking-wider">
                 Startup Ecosystem
               </span>
-              <h2 className="text-3xl sm:text-4xl font-black text-[#0B1E48] font-display tracking-tight">
+              <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
                 For Startups & Innovators
               </h2>
-              <p className="text-base text-[#FF671F] font-extrabold font-display">
+              <p className="text-base text-[#1D64EC] font-extrabold font-display">
                 Access government challenges, showcase your capability, and win pilot projects.
               </p>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
@@ -594,9 +569,9 @@ export const LandingPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => openPortal('startup', 'challenges')}
-                className="px-6 py-3 rounded-2xl bg-[#046A38] hover:bg-emerald-800 text-white font-bold text-xs shadow-md flex items-center gap-2 transition-all hover:scale-[1.02]"
+                className="px-6 py-3 rounded-2xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-xs shadow-md flex items-center gap-2 transition-all hover:scale-[1.02]"
               >
-                <Compass className="w-4 h-4 text-emerald-200" />
+                <Compass className="w-4 h-4 text-blue-200" />
                 <span>Browse Challenges & Submit Solution</span>
               </button>
             </div>
@@ -605,41 +580,41 @@ export const LandingPage: React.FC = () => {
           {/* 5 Startup Benefits */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs">
             
-            <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-3">
-              <div className="w-8 h-8 rounded-xl bg-[#FF671F] text-white font-bold flex items-center justify-center">1</div>
-              <h3 className="font-extrabold text-[#0B1E48] text-sm">Access to Real Government Problems</h3>
+            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-3">
+              <div className="w-8 h-8 rounded-xl bg-[#1D64EC] text-white font-bold flex items-center justify-center">1</div>
+              <h3 className="font-extrabold text-[#0F172A] text-sm">Access to Real Government Problems</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
                 Browse challenges by sector—water, traffic, health, agriculture, urban services—and find problems that match your solution.
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-3">
-              <div className="w-8 h-8 rounded-xl bg-[#0B1E48] text-white font-bold flex items-center justify-center">2</div>
-              <h3 className="font-extrabold text-[#0B1E48] text-sm">Verified Company Evidence Archive</h3>
+            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-3">
+              <div className="w-8 h-8 rounded-xl bg-purple-600 text-white font-bold flex items-center justify-center">2</div>
+              <h3 className="font-extrabold text-[#0F172A] text-sm">Verified Company Evidence Archive</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
                 Upload legal documents, DPIIT certificates, technical docs, case studies, compliance and security proofs in a structured, government-ready format.
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-3">
-              <div className="w-8 h-8 rounded-xl bg-[#1D4ED8] text-white font-bold flex items-center justify-center">3</div>
-              <h3 className="font-extrabold text-[#0B1E48] text-sm">Transparent Proposal Tracking</h3>
+            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-3">
+              <div className="w-8 h-8 rounded-xl bg-blue-600 text-white font-bold flex items-center justify-center">3</div>
+              <h3 className="font-extrabold text-[#0F172A] text-sm">Transparent Proposal Tracking</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
                 See exactly where your proposal is: under review, shortlisted, in expert evaluation, contract approval, pilot, or scale decision.
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-3">
-              <div className="w-8 h-8 rounded-xl bg-[#046A38] text-white font-bold flex items-center justify-center">4</div>
-              <h3 className="font-extrabold text-[#0B1E48] text-sm">Managed Pilots with Clear Payments</h3>
+            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-3">
+              <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white font-bold flex items-center justify-center">4</div>
+              <h3 className="font-extrabold text-[#0F172A] text-sm">Managed Pilots with Clear Payments</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
                 Run pilots with defined milestones, escrow tranches, and PFMS-linked payments. Submit evidence, track approvals, and monitor disbursements.
               </p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-3 md:col-span-2 lg:col-span-2">
-              <div className="w-8 h-8 rounded-xl bg-[#0B1E48] text-white font-bold flex items-center justify-center">5</div>
-              <h3 className="font-extrabold text-[#0B1E48] text-sm">Pathway to Scale</h3>
+            <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200 space-y-3 md:col-span-2 lg:col-span-2">
+              <div className="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold flex items-center justify-center">5</div>
+              <h3 className="font-extrabold text-[#0F172A] text-sm">Pathway to Scale</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
                 Successful pilots can move to state-wide deployment via GeM and fast-track mechanisms, with all performance evidence attached.
               </p>
@@ -653,28 +628,28 @@ export const LandingPage: React.FC = () => {
       {/* ========================================================================= */}
       {/* 7. HOW IT WORKS (12 Clear Stages Lifecycle Roadmap)                       */}
       {/* ========================================================================= */}
-      <section id="how-it-works" className="py-16 sm:py-24 bg-[#FAFBFD]">
+      <section id="how-it-works" className="py-16 sm:py-24 bg-[#F4F7FC]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           
           <div className="text-center max-w-3xl mx-auto space-y-3">
-            <span className="px-3.5 py-1 rounded-full bg-emerald-50 text-[#046A38] text-xs font-bold border border-emerald-200 uppercase tracking-wider">
+            <span className="px-3.5 py-1 rounded-full bg-blue-50 text-[#1D64EC] text-xs font-bold border border-blue-200 uppercase tracking-wider">
               Procurement & Sandbox Progression
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-[#0B1E48] font-display tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
               How It Works
             </h2>
             <p className="text-sm sm:text-base text-slate-600 font-medium">
               From problem statement to state-wide scale in 12 clear, verifiable stages.
             </p>
 
-            {/* Filter Tabs in Tricolor Theme */}
+            {/* Filter Tabs in Original UI Theme */}
             <div className="flex flex-wrap items-center justify-center gap-2 pt-2 text-xs font-bold">
               <button
                 type="button"
                 onClick={() => setHowItWorksTab('all')}
                 className={`px-4 py-2 rounded-xl transition-all ${
                   howItWorksTab === 'all' 
-                    ? 'bg-[#0B1E48] text-white shadow-sm' 
+                    ? 'bg-[#1D64EC] text-white shadow-sm' 
                     : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
                 }`}
               >
@@ -685,8 +660,8 @@ export const LandingPage: React.FC = () => {
                 onClick={() => setHowItWorksTab('phase1')}
                 className={`px-4 py-2 rounded-xl transition-all ${
                   howItWorksTab === 'phase1' 
-                    ? 'bg-[#FF671F] text-white shadow-sm' 
-                    : 'bg-white hover:bg-orange-50 text-slate-700 border border-slate-200'
+                    ? 'bg-[#1D64EC] text-white shadow-sm' 
+                    : 'bg-white hover:bg-blue-50 text-slate-700 border border-slate-200'
                 }`}
               >
                 Phase 1: Pre-Pilot (1–6)
@@ -696,7 +671,7 @@ export const LandingPage: React.FC = () => {
                 onClick={() => setHowItWorksTab('phase2')}
                 className={`px-4 py-2 rounded-xl transition-all ${
                   howItWorksTab === 'phase2' 
-                    ? 'bg-[#0B1E48] text-white shadow-sm' 
+                    ? 'bg-[#1D64EC] text-white shadow-sm' 
                     : 'bg-white hover:bg-blue-50 text-slate-700 border border-slate-200'
                 }`}
               >
@@ -707,8 +682,8 @@ export const LandingPage: React.FC = () => {
                 onClick={() => setHowItWorksTab('phase3')}
                 className={`px-4 py-2 rounded-xl transition-all ${
                   howItWorksTab === 'phase3' 
-                    ? 'bg-[#046A38] text-white shadow-sm' 
-                    : 'bg-white hover:bg-emerald-50 text-slate-700 border border-slate-200'
+                    ? 'bg-[#1D64EC] text-white shadow-sm' 
+                    : 'bg-white hover:bg-blue-50 text-slate-700 border border-slate-200'
                 }`}
               >
                 Phase 3: Scale (11–12)
@@ -725,17 +700,17 @@ export const LandingPage: React.FC = () => {
               >
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="w-8 h-8 rounded-xl bg-orange-100 text-[#C2410C] font-black text-xs flex items-center justify-center">
+                    <span className="w-8 h-8 rounded-xl bg-[#E8F2FE] text-[#1D64EC] font-black text-xs flex items-center justify-center">
                       {stg.num}
                     </span>
                     <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
-                      stg.phase === 'phase1' ? 'bg-orange-50 text-[#C2410C]' :
-                      stg.phase === 'phase2' ? 'bg-blue-50 text-[#0B1E48]' : 'bg-emerald-50 text-[#046A38]'
+                      stg.phase === 'phase1' ? 'bg-blue-50 text-[#1D64EC]' :
+                      stg.phase === 'phase2' ? 'bg-purple-50 text-purple-800' : 'bg-emerald-50 text-emerald-800'
                     }`}>
                       {stg.phase === 'phase1' ? 'Pre-Pilot' : stg.phase === 'phase2' ? 'Active Pilot' : 'Validation & Scale'}
                     </span>
                   </div>
-                  <h4 className="font-extrabold text-[#0B1E48] text-sm leading-snug">{stg.title}</h4>
+                  <h4 className="font-extrabold text-[#0F172A] text-sm leading-snug">{stg.title}</h4>
                   <p className="text-slate-600 font-medium leading-relaxed">{stg.desc}</p>
                 </div>
               </div>
@@ -752,10 +727,10 @@ export const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           <div className="text-center max-w-3xl mx-auto space-y-3">
-            <span className="px-3.5 py-1 rounded-full bg-blue-50 text-[#0B1E48] text-xs font-bold border border-blue-200 uppercase tracking-wider">
+            <span className="px-3.5 py-1 rounded-full bg-blue-50 text-[#1D64EC] text-xs font-bold border border-blue-200 uppercase tracking-wider">
               Platform Modules
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-[#0B1E48] font-display tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
               Key Platform Features
             </h2>
             <p className="text-sm sm:text-base text-slate-600 font-medium">
@@ -774,9 +749,9 @@ export const LandingPage: React.FC = () => {
               { title: 'Transparent Audit Trail', icon: '📜', desc: 'Every action—proposal submission, score, milestone approval, payment, and decision—is logged with user, time, and IP.' },
               { title: 'Scale-Ready Pipeline', icon: '⚡', desc: 'Move successful pilots to state-wide deployment via GeM and fast-track mechanisms, backed by verified data.' },
             ].map((feat, idx) => (
-              <div key={idx} className="p-6 rounded-3xl bg-slate-50/70 border border-slate-200 space-y-2.5 hover:bg-white hover:shadow-md transition-all">
+              <div key={idx} className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-200/90 space-y-2.5 hover:bg-white hover:shadow-md transition-all">
                 <div className="text-2xl">{feat.icon}</div>
-                <h3 className="font-extrabold text-[#0B1E48] text-sm">{feat.title}</h3>
+                <h3 className="font-extrabold text-[#0F172A] text-sm">{feat.title}</h3>
                 <p className="text-slate-600 font-medium leading-relaxed">{feat.desc}</p>
               </div>
             ))}
@@ -788,14 +763,14 @@ export const LandingPage: React.FC = () => {
       {/* ========================================================================= */}
       {/* 9. IMPACT & USE CASES (5 Sector Cards)                                    */}
       {/* ========================================================================= */}
-      <section id="impact" className="py-16 sm:py-24 bg-[#FAFBFD]">
+      <section id="impact" className="py-16 sm:py-24 bg-[#F4F7FC]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           <div className="text-center max-w-3xl mx-auto space-y-3">
-            <span className="px-3.5 py-1 rounded-full bg-emerald-50 text-[#046A38] text-xs font-bold border border-emerald-200 uppercase tracking-wider">
+            <span className="px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200 uppercase tracking-wider">
               Quantified Public Impact
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-[#0B1E48] font-display tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
               Impact & Use Cases
             </h2>
             <p className="text-sm sm:text-base text-slate-600 font-medium">
@@ -809,14 +784,14 @@ export const LandingPage: React.FC = () => {
             <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-2xl">💧</span>
-                <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-[#0B1E48] font-bold text-[10px]">Water Resources</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-[#1D64EC] font-bold text-[10px]">Water Resources</span>
               </div>
-              <h3 className="font-extrabold text-[#0B1E48] text-base">Urban Water & Leakage Reduction</h3>
+              <h3 className="font-extrabold text-[#0F172A] text-base">Urban Water & Leakage Reduction</h3>
               <div className="space-y-1.5 text-slate-600 font-medium">
                 <p><strong>Problem:</strong> High non-revenue water (NRW) due to leaks and pressure issues.</p>
                 <p><strong>Solution:</strong> AI + IoT-based acoustic leak detection and pressure optimization.</p>
               </div>
-              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-[#046A38] font-bold">
+              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-bold">
                 Outcome: 18–25% reduction in NRW across pilot zones.
               </div>
             </div>
@@ -825,14 +800,14 @@ export const LandingPage: React.FC = () => {
             <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-2xl">🚦</span>
-                <span className="px-2.5 py-0.5 rounded-full bg-orange-50 text-[#C2410C] font-bold text-[10px]">Urban Mobility</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-900 font-bold text-[10px]">Urban Mobility</span>
               </div>
-              <h3 className="font-extrabold text-[#0B1E48] text-base">Traffic & Mobility Optimization</h3>
+              <h3 className="font-extrabold text-[#0F172A] text-base">Traffic & Mobility Optimization</h3>
               <div className="space-y-1.5 text-slate-600 font-medium">
                 <p><strong>Problem:</strong> Congestion and long waiting times at key intersections.</p>
                 <p><strong>Solution:</strong> AI-based adaptive signal mesh and real-time traffic management.</p>
               </div>
-              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-[#046A38] font-bold">
+              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-bold">
                 Outcome: 15–30% reduction in average waiting time.
               </div>
             </div>
@@ -841,14 +816,14 @@ export const LandingPage: React.FC = () => {
             <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-2xl">🌾</span>
-                <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-[#046A38] font-bold text-[10px]">Agriculture</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-900 font-bold text-[10px]">Agriculture</span>
               </div>
-              <h3 className="font-extrabold text-[#0B1E48] text-base">Agriculture & Crop Health</h3>
+              <h3 className="font-extrabold text-[#0F172A] text-base">Agriculture & Crop Health</h3>
               <div className="space-y-1.5 text-slate-600 font-medium">
                 <p><strong>Problem:</strong> Crop loss due to pests, disease, and delayed interventions.</p>
                 <p><strong>Solution:</strong> Drone-based multispectral monitoring and AI-driven advisories.</p>
               </div>
-              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-[#046A38] font-bold">
+              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-bold">
                 Outcome: Early detection, reduced input costs, improved yield.
               </div>
             </div>
@@ -859,12 +834,12 @@ export const LandingPage: React.FC = () => {
                 <span className="text-2xl">🏥</span>
                 <span className="px-2.5 py-0.5 rounded-full bg-red-50 text-red-900 font-bold text-[10px]">Public Health</span>
               </div>
-              <h3 className="font-extrabold text-[#0B1E48] text-base">Emergency Health Response</h3>
+              <h3 className="font-extrabold text-[#0F172A] text-base">Emergency Health Response</h3>
               <div className="space-y-1.5 text-slate-600 font-medium">
                 <p><strong>Problem:</strong> Delayed emergency response and ambulance turnaround.</p>
                 <p><strong>Solution:</strong> AI dispatch, route optimization, and hospital ER integration.</p>
               </div>
-              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-[#046A38] font-bold">
+              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-bold">
                 Outcome: Faster response times, better survival rates.
               </div>
             </div>
@@ -875,12 +850,12 @@ export const LandingPage: React.FC = () => {
                 <span className="text-2xl">♻️</span>
                 <span className="px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-900 font-bold text-[10px]">Urban Sanitation</span>
               </div>
-              <h3 className="font-extrabold text-[#0B1E48] text-base">Urban Services & Waste Management</h3>
+              <h3 className="font-extrabold text-[#0F172A] text-base">Urban Services & Waste Management</h3>
               <div className="space-y-1.5 text-slate-600 font-medium">
                 <p><strong>Problem:</strong> Inefficient municipal waste collection and segregation.</p>
                 <p><strong>Solution:</strong> Smart optical bins, dynamic route optimization, and robotics segregation.</p>
               </div>
-              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-[#046A38] font-bold">
+              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-bold">
                 Outcome: Lower operational costs, higher segregation rates.
               </div>
             </div>
@@ -891,9 +866,9 @@ export const LandingPage: React.FC = () => {
             <button
               type="button"
               onClick={() => openPortal('startup', 'challenges')}
-              className="px-6 py-3.5 rounded-2xl bg-[#FF671F] hover:bg-orange-700 text-white font-bold text-xs shadow-md inline-flex items-center gap-2 transition-all hover:scale-[1.02]"
+              className="px-6 py-3.5 rounded-2xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-xs shadow-action hover:shadow-action-hover inline-flex items-center gap-2 transition-all hover:scale-[1.02]"
             >
-              <Compass className="w-4 h-4 text-orange-200" />
+              <Compass className="w-4 h-4 text-blue-200" />
               <span>Explore Live Challenges</span>
             </button>
           </div>
@@ -908,10 +883,10 @@ export const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           <div className="text-center max-w-3xl mx-auto space-y-3">
-            <span className="px-3.5 py-1 rounded-full bg-emerald-50 text-[#046A38] text-xs font-bold border border-emerald-200 uppercase tracking-wider">
+            <span className="px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200 uppercase tracking-wider">
               Sovereign Government Standards
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-[#0B1E48] font-display tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
               Security, Compliance & Trust
             </h2>
             <p className="text-sm sm:text-base text-slate-600 font-medium">
@@ -922,40 +897,40 @@ export const LandingPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-xs">
             
             <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-2">
-              <ShieldCheck className="w-6 h-6 text-[#046A38]" />
-              <h3 className="font-extrabold text-[#0B1E48] text-sm">Data Residency</h3>
+              <ShieldCheck className="w-6 h-6 text-emerald-600" />
+              <h3 className="font-extrabold text-[#0F172A] text-sm">Data Residency</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
                 All data hosted 100% in India, on MeitY-empanelled cloud infrastructure (Mumbai & Pune availability zones).
               </p>
             </div>
 
             <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-2">
-              <Lock className="w-6 h-6 text-[#FF671F]" />
-              <h3 className="font-extrabold text-[#0B1E48] text-sm">State Cyber Standards</h3>
+              <Lock className="w-6 h-6 text-[#1D64EC]" />
+              <h3 className="font-extrabold text-[#0F172A] text-sm">State Cyber Standards</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
                 Alignment with Maharashtra State Cyber Policy v2.0; AES-256 encryption, access control, and audit logging by design.
               </p>
             </div>
 
             <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-2">
-              <Users className="w-6 h-6 text-[#0B1E48]" />
-              <h3 className="font-extrabold text-[#0B1E48] text-sm">Role-Based Access</h3>
+              <Users className="w-6 h-6 text-purple-600" />
+              <h3 className="font-extrabold text-[#0F172A] text-sm">Role-Based Access</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
                 Separate, role-specific cockpits for government department officers and startup founders with granular permissions.
               </p>
             </div>
 
             <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-2">
-              <Activity className="w-6 h-6 text-[#FF671F]" />
-              <h3 className="font-extrabold text-[#0B1E48] text-sm">Audit-Ready Design</h3>
+              <Activity className="w-6 h-6 text-amber-600" />
+              <h3 className="font-extrabold text-[#0F172A] text-sm">Audit-Ready Design</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
                 Complete logs of views, edits, scorecards, approvals, payments, and scale decisions under IT Act 2000.
               </p>
             </div>
 
             <div className="p-6 rounded-3xl bg-slate-50 border border-slate-200 space-y-2 md:col-span-2 lg:col-span-2">
-              <Award className="w-6 h-6 text-[#046A38]" />
-              <h3 className="font-extrabold text-[#0B1E48] text-sm">Startup-Friendly by Design</h3>
+              <Award className="w-6 h-6 text-blue-600" />
+              <h3 className="font-extrabold text-[#0F172A] text-sm">Startup-Friendly by Design</h3>
               <p className="text-slate-600 font-medium leading-relaxed">
                 Eligibility and evaluation specifically architected to include early-stage, DPIIT-recognized startups with relaxed turnover thresholds.
               </p>
@@ -969,14 +944,14 @@ export const LandingPage: React.FC = () => {
       {/* ========================================================================= */}
       {/* 11. FREQUENTLY ASKED QUESTIONS (FAQs)                                     */}
       {/* ========================================================================= */}
-      <section id="faqs" className="py-16 sm:py-24 bg-[#FAFBFD]">
+      <section id="faqs" className="py-16 sm:py-24 bg-[#F4F7FC]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           
           <div className="text-center space-y-3">
-            <span className="px-3.5 py-1 rounded-full bg-orange-50 text-[#C2410C] text-xs font-bold border border-orange-200 uppercase tracking-wider">
+            <span className="px-3.5 py-1 rounded-full bg-blue-50 text-[#1D64EC] text-xs font-bold border border-blue-200 uppercase tracking-wider">
               Answers & Help
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-[#0B1E48] font-display tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] font-display tracking-tight">
               Frequently Asked Questions
             </h2>
             <p className="text-sm sm:text-base text-slate-600 font-medium">
@@ -993,11 +968,11 @@ export const LandingPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => toggleFaq(idx)}
-                  className="w-full p-4 sm:p-5 text-left font-bold text-[#0B1E48] text-sm sm:text-base flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors"
+                  className="w-full p-4 sm:p-5 text-left font-bold text-[#0F172A] text-sm sm:text-base flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors"
                 >
                   <span>{faq.q}</span>
                   {openFaq === idx ? (
-                    <ChevronUp className="w-5 h-5 text-[#FF671F] shrink-0" />
+                    <ChevronUp className="w-5 h-5 text-[#1D64EC] shrink-0" />
                   ) : (
                     <ChevronDown className="w-5 h-5 text-slate-400 shrink-0" />
                   )}
@@ -1018,14 +993,14 @@ export const LandingPage: React.FC = () => {
       {/* ========================================================================= */}
       {/* 12. FINAL HEROIC CTA BANNER                                               */}
       {/* ========================================================================= */}
-      <section className="py-16 sm:py-20 bg-gradient-to-br from-[#0B1E48] via-[#0D2459] to-[#046A38] text-white relative overflow-hidden">
-        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-[#FF671F]/20 blur-3xl" />
-        <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-[#046A38]/30 blur-3xl" />
+      <section className="py-16 sm:py-20 bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0D4CD3] text-white relative overflow-hidden">
+        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-blue-500/20 blur-3xl" />
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-indigo-500/20 blur-3xl" />
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6 relative z-10">
           
           <div className="space-y-3">
-            <span className="px-3.5 py-1 rounded-full bg-white/10 text-orange-200 text-xs font-bold border border-white/20 uppercase tracking-wider">
+            <span className="px-3.5 py-1 rounded-full bg-white/10 text-blue-200 text-xs font-bold border border-white/20 uppercase tracking-wider">
               Statewide Innovation Sandbox
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-display tracking-tight text-white">
@@ -1040,7 +1015,7 @@ export const LandingPage: React.FC = () => {
             <button
               type="button"
               onClick={() => openPortal('startup', 'challenges')}
-              className="px-8 py-4 rounded-2xl bg-[#FF671F] hover:bg-orange-700 text-white font-bold text-sm shadow-xl inline-flex items-center gap-2 transition-all hover:scale-[1.02]"
+              className="px-8 py-4 rounded-2xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-sm shadow-xl inline-flex items-center gap-2 transition-all hover:scale-[1.02]"
             >
               <Compass className="w-4 h-4 text-white" />
               <span>Explore Innovation Challenges</span>
@@ -1060,7 +1035,7 @@ export const LandingPage: React.FC = () => {
       {/* ========================================================================= */}
       {/* 13. FOOTER CONTENT (5 Columns + Copyright)                                */}
       {/* ========================================================================= */}
-      <footer className="bg-[#07132C] text-slate-400 text-xs py-14 border-t border-slate-800">
+      <footer className="bg-[#0F172A] text-slate-400 text-xs py-14 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
@@ -1119,7 +1094,7 @@ export const LandingPage: React.FC = () => {
 
           <div className="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#046A38]" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
               <span>Mahatech Procure — Problem Statement 26136</span>
             </div>
             <p>© Government of Maharashtra. All rights reserved.</p>
@@ -1129,84 +1104,14 @@ export const LandingPage: React.FC = () => {
       </footer>
 
       {/* ========================================================================= */}
-      {/* MODAL 1: ACCESS PORTALS / ROLE SELECTOR (Single Centralized Login)        */}
-      {/* ========================================================================= */}
-      {isLoginModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 border border-slate-200 shadow-2xl">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div>
-                <h3 className="text-lg font-black text-[#0B1E48] font-display">
-                  Select Your Portal
-                </h3>
-                <p className="text-xs text-slate-500 mt-0.5">Government of Maharashtra Sandbox Gateway</p>
-              </div>
-              <button
-                onClick={() => setIsLoginModalOpen(false)}
-                className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {/* Government Portal Choice */}
-              <div 
-                onClick={() => {
-                  setIsLoginModalOpen(false);
-                  openPortal('gov', 'dashboard');
-                }}
-                className="p-4 rounded-2xl bg-blue-50 border border-blue-200 hover:bg-blue-100 cursor-pointer transition-all flex items-center justify-between group shadow-2xs"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#0B1E48] text-white flex items-center justify-center text-lg shadow-xs">
-                    🏛️
-                  </div>
-                  <div>
-                    <strong className="text-[#0B1E48] text-sm font-bold block">Government Department Portal</strong>
-                    <span className="text-[11px] text-slate-500">Publish challenges, score proposals & manage pilots</span>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-[#0B1E48] group-hover:translate-x-1 transition-transform" />
-              </div>
-
-              {/* Startup Portal Choice */}
-              <div 
-                onClick={() => {
-                  setIsLoginModalOpen(false);
-                  openPortal('startup', 'dashboard');
-                }}
-                className="p-4 rounded-2xl bg-orange-50 border border-orange-200 hover:bg-orange-100 cursor-pointer transition-all flex items-center justify-between group shadow-2xs"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#FF671F] text-white flex items-center justify-center text-lg shadow-xs">
-                    🚀
-                  </div>
-                  <div>
-                    <strong className="text-[#0B1E48] text-sm font-bold block">Startup & Founder Portal</strong>
-                    <span className="text-[11px] text-slate-500">Submit solutions, evidence archive & eSign contracts</span>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-[#FF671F] group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-
-            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center text-[11px] text-slate-500 font-medium">
-              Single-Sign-On enabled with Aadhaar eSign & National Single Window System.
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================================= */}
-      {/* MODAL 2: REQUEST A DEMO (GOVERNMENT DEPARTMENTS)                         */}
+      {/* MODAL: REQUEST A DEMO (GOVERNMENT DEPARTMENTS)                             */}
       {/* ========================================================================= */}
       {isDemoModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/60 backdrop-blur-sm animate-in fade-in">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 border border-slate-200 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
-                <h3 className="text-base font-black text-[#0B1E48] font-display">
+                <h3 className="text-base font-black text-[#0F172A] font-display">
                   Request Department Sandbox Demo
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">For Maharashtra Government Officers</p>
@@ -1221,7 +1126,7 @@ export const LandingPage: React.FC = () => {
 
             <form onSubmit={handleDemoSubmit} className="space-y-3 text-xs">
               <div>
-                <label className="block font-bold text-[#0B1E48] mb-1">Department / Municipal Body *</label>
+                <label className="block font-bold text-[#0F172A] mb-1">Department / Municipal Body *</label>
                 <input
                   type="text"
                   required
@@ -1233,7 +1138,7 @@ export const LandingPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-bold text-[#0B1E48] mb-1">Nodal Officer Name *</label>
+                <label className="block font-bold text-[#0F172A] mb-1">Nodal Officer Name *</label>
                 <input
                   type="text"
                   required
@@ -1245,7 +1150,7 @@ export const LandingPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-bold text-[#0B1E48] mb-1">Government Official Email (.gov.in / .nic.in) *</label>
+                <label className="block font-bold text-[#0F172A] mb-1">Government Official Email (.gov.in / .nic.in) *</label>
                 <input
                   type="email"
                   required
@@ -1260,13 +1165,13 @@ export const LandingPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsDemoModalOpen(false)}
-                  className="px-5 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs transition-colors"
+                  className="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-xl bg-[#0B1E48] hover:bg-[#152C63] text-white font-bold text-xs shadow-sm transition-all"
+                  className="px-6 py-2 rounded-full bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold shadow-action"
                 >
                   Schedule Department Briefing
                 </button>

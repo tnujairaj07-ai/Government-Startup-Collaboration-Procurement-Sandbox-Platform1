@@ -121,14 +121,11 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0A2540] flex flex-col justify-between selection:bg-[#FF671F] selection:text-white font-sans antialiased relative overflow-hidden">
+    <div className="min-h-screen bg-[#F4F7FC] text-[#0F172A] flex flex-col justify-between selection:bg-[#1D64EC] selection:text-white font-sans antialiased relative overflow-hidden">
       
-      {/* Top Tricolor Brand Band */}
-      <div className="h-1.5 w-full bg-gradient-to-r from-[#FF671F] via-[#FFFFFF] to-[#046A38] shadow-xs" />
-
-      {/* Decorative Warm Ambient Background Circles (Inspired by Reference Design) */}
-      <div className="absolute -top-32 -left-32 w-[550px] h-[550px] bg-gradient-to-br from-orange-100/60 via-amber-100/30 to-transparent rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 -right-32 w-[550px] h-[550px] bg-gradient-to-bl from-blue-100/50 via-emerald-100/30 to-transparent rounded-full blur-3xl pointer-events-none" />
+      {/* Decorative Ambient Radial Mesh Glows (Original UI Aesthetics) */}
+      <div className="absolute -top-32 -left-32 w-[550px] h-[550px] bg-gradient-to-br from-blue-100/70 via-sky-100/40 to-transparent rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 -right-32 w-[550px] h-[550px] bg-gradient-to-bl from-sky-100/60 via-blue-100/30 to-transparent rounded-full blur-3xl pointer-events-none" />
 
       {/* ========================================================================= */}
       {/* HEADER / NAVIGATION BAR                                                  */}
@@ -142,15 +139,15 @@ export const LoginPage: React.FC = () => {
           }}
           className="flex items-center gap-3 cursor-pointer group"
         >
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#FF671F] via-[#FF8A3D] to-[#FF671F] text-white font-black text-lg flex items-center justify-center shadow-md shadow-orange-500/20 group-hover:scale-105 transition-transform">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#1D64EC] via-[#2563EB] to-[#0D4CD3] text-white font-black text-lg flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
             🏛️
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xl font-black text-[#0B1E48] font-display tracking-tight leading-none">
-                Mahatech <span className="text-[#FF671F]">Procure</span>
+              <span className="text-xl font-black text-[#0F172A] font-display tracking-tight leading-none">
+                Mahatech <span className="text-[#1D64EC]">Procure</span>
               </span>
-              <span className="px-2 py-0.5 rounded-full bg-orange-50 text-[#FF671F] text-[9px] font-extrabold uppercase tracking-wider border border-orange-200">
+              <span className="px-2 py-0.5 rounded-full bg-[#E8F2FE] text-[#1D64EC] text-[9px] font-extrabold uppercase tracking-wider border border-blue-200">
                 Gov Gateway
               </span>
             </div>
@@ -167,7 +164,7 @@ export const LoginPage: React.FC = () => {
             setIsLoginPage(false);
             setIsLandingPage(true);
           }}
-          className="px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 hover:text-[#0B1E48] border border-slate-200 text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all"
+          className="px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 hover:text-[#0F172A] border border-slate-200 text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Landing Page</span>
@@ -186,11 +183,11 @@ export const LoginPage: React.FC = () => {
           <div className="lg:col-span-4 space-y-6 lg:pr-4">
             
             <div className="space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-[#0B1E48] border border-blue-200 text-[11px] font-bold">
-                <span className="w-2 h-2 rounded-full bg-[#046A38] animate-pulse" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E8F2FE] text-[#1D64EC] border border-blue-200 text-[11px] font-bold">
+                <span className="w-2 h-2 rounded-full bg-[#1D64EC] animate-pulse" />
                 <span>Single Sovereign Sandbox Gateway</span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-black text-[#0B1E48] font-display tracking-tight leading-snug">
+              <h1 className="text-2xl sm:text-3xl font-black text-[#0F172A] font-display tracking-tight leading-snug">
                 A digital marketplace for government innovation challenges and startup solutions.
               </h1>
               <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
@@ -198,7 +195,7 @@ export const LoginPage: React.FC = () => {
               </p>
             </div>
 
-            {/* Trust Indicators in Indian Flag Colors */}
+            {/* Trust Indicators in Original UI Palette */}
             <div className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-3.5">
               <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">
                 Trust & Sovereign Compliance
@@ -206,21 +203,21 @@ export const LoginPage: React.FC = () => {
 
               <div className="space-y-2.5 text-xs font-bold text-slate-700">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-6 h-6 rounded-full bg-[#FF671F]/15 text-[#C2410C] flex items-center justify-center text-[10px] font-black shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-blue-100 text-[#1D64EC] flex items-center justify-center text-[10px] font-black shrink-0">
                     ★
                   </div>
                   <span>Government of Maharashtra Certified</span>
                 </div>
 
                 <div className="flex items-center gap-2.5">
-                  <div className="w-6 h-6 rounded-full bg-[#046A38]/15 text-[#046A38] flex items-center justify-center text-[10px] font-black shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px] font-black shrink-0">
                     ✓
                   </div>
                   <span>DPIIT-recognized Startup Friendly</span>
                 </div>
 
                 <div className="flex items-center gap-2.5">
-                  <div className="w-6 h-6 rounded-full bg-[#0B1E48]/15 text-[#0B1E48] flex items-center justify-center text-[10px] shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center text-[10px] shrink-0">
                     🛡️
                   </div>
                   <span>Secure • Transparent • Audit-ready</span>
@@ -240,7 +237,7 @@ export const LoginPage: React.FC = () => {
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }, 100);
                 }}
-                className="text-xs font-bold text-[#FF671F] hover:text-orange-700 flex items-center gap-1.5 group transition-colors"
+                className="text-xs font-bold text-[#1D64EC] hover:text-[#0D4CD3] flex items-center gap-1.5 group transition-colors"
               >
                 <span>New to Mahatech Procure? Learn how it works</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
@@ -257,7 +254,7 @@ export const LoginPage: React.FC = () => {
               
               {/* Header inside Card */}
               <div className="text-center space-y-1 pb-1">
-                <h2 className="text-2xl font-black text-[#0B1E48] font-display tracking-tight">
+                <h2 className="text-2xl font-black text-[#0F172A] font-display tracking-tight">
                   Sign in to Mahatech Procure
                 </h2>
                 <p className="text-xs text-slate-500 font-medium">
@@ -272,8 +269,8 @@ export const LoginPage: React.FC = () => {
                   onClick={() => setLoginType('gov')}
                   className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all ${
                     loginType === 'gov'
-                      ? 'bg-[#0B1E48] text-white shadow-md'
-                      : 'text-slate-600 hover:text-[#0B1E48]'
+                      ? 'bg-[#1D64EC] text-white shadow-md shadow-blue-500/20'
+                      : 'text-slate-600 hover:text-[#1D64EC]'
                   }`}
                 >
                   <Building2 className="w-3.5 h-3.5" />
@@ -285,8 +282,8 @@ export const LoginPage: React.FC = () => {
                   onClick={() => setLoginType('startup')}
                   className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all ${
                     loginType === 'startup'
-                      ? 'bg-[#FF671F] text-white shadow-md'
-                      : 'text-slate-600 hover:text-[#FF671F]'
+                      ? 'bg-[#0D4CD3] text-white shadow-md shadow-blue-600/20'
+                      : 'text-slate-600 hover:text-[#1D64EC]'
                   }`}
                 >
                   <Rocket className="w-3.5 h-3.5" />
@@ -304,7 +301,7 @@ export const LoginPage: React.FC = () => {
 
               {successMessage && (
                 <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-semibold flex items-center gap-2.5 animate-in fade-in">
-                  <CheckCircle2 className="w-4 h-4 text-[#046A38] shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <p className="leading-snug">{successMessage}</p>
                 </div>
               )}
@@ -325,7 +322,7 @@ export const LoginPage: React.FC = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder={loginType === 'gov' ? 'name@maharashtra.gov.in' : 'founder@yourstartup.com'}
-                      className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-[#0B1E48] focus:bg-white text-xs font-semibold text-navy-950 outline-none transition-all"
+                      className="w-full pl-10 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-[#1D64EC] focus:bg-white text-xs font-semibold text-navy-950 outline-none transition-all"
                     />
                   </div>
                   <span className="text-[10px] text-slate-400 font-medium block">
@@ -343,7 +340,7 @@ export const LoginPage: React.FC = () => {
                         setForgotEmail(email);
                         setIsForgotPasswordModalOpen(true);
                       }}
-                      className="text-[11px] font-bold text-[#FF671F] hover:underline"
+                      className="text-[11px] font-bold text-[#1D64EC] hover:underline"
                     >
                       Forgot password?
                     </button>
@@ -356,7 +353,7 @@ export const LoginPage: React.FC = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter your password"
-                      className="w-full pl-10 pr-11 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-[#0B1E48] focus:bg-white text-xs font-semibold text-navy-950 outline-none transition-all"
+                      className="w-full pl-10 pr-11 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-[#1D64EC] focus:bg-white text-xs font-semibold text-navy-950 outline-none transition-all"
                     />
                     <button
                       type="button"
@@ -373,7 +370,7 @@ export const LoginPage: React.FC = () => {
                   <label className="block text-xs font-bold text-slate-800">Security Verification</label>
                   <div className="flex items-center gap-2">
                     {/* Visual Captcha Box */}
-                    <div className="h-11 px-4 rounded-xl bg-slate-900 text-[#FF8A3D] font-mono font-black text-sm tracking-widest flex items-center justify-center select-none shadow-inner border border-slate-700">
+                    <div className="h-11 px-4 rounded-xl bg-[#0F172A] text-[#8BB9FE] font-mono font-black text-sm tracking-widest flex items-center justify-center select-none shadow-inner border border-slate-700">
                       {captchaCode}
                     </div>
 
@@ -393,7 +390,7 @@ export const LoginPage: React.FC = () => {
                       value={captchaInput}
                       onChange={(e) => setCaptchaInput(e.target.value)}
                       placeholder="Enter code above"
-                      className="flex-1 px-3.5 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-[#0B1E48] focus:bg-white text-xs font-semibold text-navy-950 outline-none uppercase font-mono transition-all"
+                      className="flex-1 px-3.5 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-[#1D64EC] focus:bg-white text-xs font-semibold text-navy-950 outline-none uppercase font-mono transition-all"
                     />
                   </div>
                 </div>
@@ -405,7 +402,7 @@ export const LoginPage: React.FC = () => {
                     id="rememberMe"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 rounded text-[#0B1E48] focus:ring-0 cursor-pointer"
+                    className="w-4 h-4 rounded text-[#1D64EC] focus:ring-0 cursor-pointer"
                   />
                   <label htmlFor="rememberMe" className="text-xs font-semibold text-slate-600 cursor-pointer">
                     Remember me on this browser
@@ -416,11 +413,7 @@ export const LoginPage: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`w-full py-3.5 rounded-2xl text-white font-bold text-xs sm:text-sm shadow-md flex items-center justify-center gap-2 transition-all hover:scale-[1.01] ${
-                    loginType === 'gov'
-                      ? 'bg-[#0B1E48] hover:bg-[#152C63] shadow-blue-950/20'
-                      : 'bg-[#FF671F] hover:bg-orange-700 shadow-orange-600/20'
-                  }`}
+                  className="w-full py-3.5 rounded-2xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-xs sm:text-sm shadow-action hover:shadow-action-hover flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
                 >
                   {isLoading ? (
                     <>
@@ -439,20 +432,20 @@ export const LoginPage: React.FC = () => {
               </form>
 
               {/* Demo 1-Click Auto-Fill Fast Pass */}
-              <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
-                <span className="text-[11px] font-bold text-slate-500">Quick Test Credentials:</span>
+              <div className="p-3 rounded-2xl bg-[#E8F2FE]/70 border border-blue-200 flex items-center justify-between text-xs">
+                <span className="text-[11px] font-bold text-slate-600">Quick Test Credentials:</span>
                 <div className="flex items-center gap-1.5">
                   <button
                     type="button"
                     onClick={() => handleQuickDemoFill('gov')}
-                    className="px-2.5 py-1 rounded-lg bg-blue-100 hover:bg-blue-200 text-[#0B1E48] font-bold text-[10px] transition-colors"
+                    className="px-2.5 py-1 rounded-lg bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-[10px] transition-colors"
                   >
                     Gov Officer
                   </button>
                   <button
                     type="button"
                     onClick={() => handleQuickDemoFill('startup')}
-                    className="px-2.5 py-1 rounded-lg bg-orange-100 hover:bg-orange-200 text-[#C2410C] font-bold text-[10px] transition-colors"
+                    className="px-2.5 py-1 rounded-lg bg-[#0F172A] hover:bg-slate-800 text-white font-bold text-[10px] transition-colors"
                   >
                     Startup Founder
                   </button>
@@ -471,7 +464,7 @@ export const LoginPage: React.FC = () => {
                     onClick={() => handleQuickDemoFill('gov')}
                     className="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 flex items-center justify-center gap-2 transition-colors"
                   >
-                    <span>🇮🇳 Jan Parichay (National Single Sign-On / DSC)</span>
+                    <span>🏛️ Jan Parichay (National Single Sign-On / DSC)</span>
                   </button>
                 ) : (
                   <button
@@ -501,7 +494,7 @@ export const LoginPage: React.FC = () => {
           <div className="lg:col-span-3 space-y-6">
             
             <div className="space-y-2">
-              <h3 className="text-lg font-black text-[#0B1E48] font-display tracking-tight">
+              <h3 className="text-lg font-black text-[#0F172A] font-display tracking-tight">
                 Need help with access?
               </h3>
               <p className="text-xs text-slate-500 font-medium">
@@ -511,8 +504,8 @@ export const LoginPage: React.FC = () => {
 
             {/* Help Card for Government Users */}
             <div className="p-5 rounded-3xl bg-white border border-slate-200 shadow-2xs space-y-3">
-              <div className="flex items-center gap-2 text-[#0B1E48] font-bold text-xs">
-                <Building2 className="w-4 h-4 text-[#0B1E48]" />
+              <div className="flex items-center gap-2 text-[#1D64EC] font-bold text-xs">
+                <Building2 className="w-4 h-4 text-[#1D64EC]" />
                 <span>For Government Users</span>
               </div>
               <p className="text-[11px] text-slate-600 leading-relaxed font-medium">
@@ -522,7 +515,7 @@ export const LoginPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsAccessModalOpen(true)}
-                className="w-full py-2 px-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-[#0B1E48] border border-blue-200 text-xs font-bold transition-all text-center"
+                className="w-full py-2 px-3 rounded-xl bg-[#E8F2FE] hover:bg-[#DDEBFC] text-[#1D64EC] border border-blue-200 text-xs font-bold transition-all text-center"
               >
                 Request Government Access
               </button>
@@ -530,8 +523,8 @@ export const LoginPage: React.FC = () => {
 
             {/* Help Card for Startups */}
             <div className="p-5 rounded-3xl bg-white border border-slate-200 shadow-2xs space-y-3">
-              <div className="flex items-center gap-2 text-[#C2410C] font-bold text-xs">
-                <Rocket className="w-4 h-4 text-[#FF671F]" />
+              <div className="flex items-center gap-2 text-[#1D64EC] font-bold text-xs">
+                <Rocket className="w-4 h-4 text-[#1D64EC]" />
                 <span>For Startups</span>
               </div>
               <p className="text-[11px] text-slate-600 leading-relaxed font-medium">
@@ -540,7 +533,7 @@ export const LoginPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleQuickDemoFill('startup')}
-                className="w-full py-2 px-3 rounded-xl bg-orange-50 hover:bg-orange-100 text-[#C2410C] border border-orange-200 text-xs font-bold transition-all text-center"
+                className="w-full py-2 px-3 rounded-xl bg-[#E8F2FE] hover:bg-[#DDEBFC] text-[#1D64EC] border border-blue-200 text-xs font-bold transition-all text-center"
               >
                 Register as a Startup
               </button>
@@ -548,7 +541,7 @@ export const LoginPage: React.FC = () => {
 
             {/* Contact & Support Section */}
             <div className="p-5 rounded-3xl bg-slate-50 border border-slate-200 space-y-3 text-xs">
-              <strong className="text-[#0B1E48] font-bold block text-xs">Technical Support Cell</strong>
+              <strong className="text-[#0F172A] font-bold block text-xs">Technical Support Cell</strong>
               <div className="space-y-1.5 text-slate-600 font-medium text-[11px]">
                 <p className="flex items-center gap-1.5">
                   <Mail className="w-3.5 h-3.5 text-slate-400" />
@@ -561,9 +554,9 @@ export const LoginPage: React.FC = () => {
               </div>
 
               <div className="pt-2 border-t border-slate-200 space-y-1 text-[11px] font-bold text-slate-500">
-                <p className="hover:text-[#0B1E48] cursor-pointer">User Guides & FAQs →</p>
-                <p className="hover:text-[#0B1E48] cursor-pointer">Privacy Policy →</p>
-                <p className="hover:text-[#0B1E48] cursor-pointer">Terms of Use →</p>
+                <p className="hover:text-[#1D64EC] cursor-pointer">User Guides & FAQs →</p>
+                <p className="hover:text-[#1D64EC] cursor-pointer">Privacy Policy →</p>
+                <p className="hover:text-[#1D64EC] cursor-pointer">Terms of Use →</p>
               </div>
             </div>
 
@@ -576,7 +569,7 @@ export const LoginPage: React.FC = () => {
       {/* FOOTER                                                                    */}
       {/* ========================================================================= */}
       <footer className="py-4 px-6 text-xs text-slate-500 border-t border-slate-200 bg-white flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto w-full">
-        <p className="font-semibold text-[#0B1E48]">Mahatech Procure — Problem Statement 26136</p>
+        <p className="font-semibold text-[#0F172A]">Mahatech Procure — Problem Statement 26136</p>
         <p className="text-[11px] text-slate-400">
           Government of Maharashtra • From Challenge to Scale
         </p>
@@ -590,7 +583,7 @@ export const LoginPage: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 border border-slate-200 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
-                <h3 className="text-base font-black text-[#0B1E48] font-display">
+                <h3 className="text-base font-black text-[#0F172A] font-display">
                   Request Government Onboarding Access
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">For Maharashtra Government Officers</p>
@@ -605,7 +598,7 @@ export const LoginPage: React.FC = () => {
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="block font-bold text-[#0B1E48] mb-1">Department / Urban Body *</label>
+                <label className="block font-bold text-[#0F172A] mb-1">Department / Urban Body *</label>
                 <input
                   type="text"
                   placeholder="e.g. Urban Development Dept / PMC"
@@ -614,7 +607,7 @@ export const LoginPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-bold text-[#0B1E48] mb-1">Officer Name *</label>
+                <label className="block font-bold text-[#0F172A] mb-1">Officer Name *</label>
                 <input
                   type="text"
                   placeholder="e.g. Shri Rajesh Deshmukh"
@@ -623,7 +616,7 @@ export const LoginPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-bold text-[#0B1E48] mb-1">Official Govt Email (.gov.in) *</label>
+                <label className="block font-bold text-[#0F172A] mb-1">Official Govt Email (.gov.in) *</label>
                 <input
                   type="email"
                   placeholder="name@maharashtra.gov.in"
@@ -650,7 +643,7 @@ export const LoginPage: React.FC = () => {
                       type: 'success'
                     });
                   }}
-                  className="px-5 py-2 rounded-xl bg-[#0B1E48] hover:bg-[#152C63] text-white font-bold shadow-sm"
+                  className="px-5 py-2 rounded-xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold shadow-action"
                 >
                   Submit Request
                 </button>
@@ -668,7 +661,7 @@ export const LoginPage: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 border border-slate-200 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
-                <h3 className="text-base font-black text-[#0B1E48] font-display">
+                <h3 className="text-base font-black text-[#0F172A] font-display">
                   Reset Account Password
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">Receive a secure reset link</p>
@@ -683,7 +676,7 @@ export const LoginPage: React.FC = () => {
 
             <form onSubmit={handleForgotPasswordSubmit} className="space-y-3 text-xs">
               <div>
-                <label className="block font-bold text-[#0B1E48] mb-1">Registered Email ID *</label>
+                <label className="block font-bold text-[#0F172A] mb-1">Registered Email ID *</label>
                 <input
                   type="email"
                   required
@@ -704,7 +697,7 @@ export const LoginPage: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#FF671F] hover:bg-orange-700 text-white font-bold shadow-sm"
+                  className="px-5 py-2 rounded-xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold shadow-action"
                 >
                   Send Reset Link
                 </button>
