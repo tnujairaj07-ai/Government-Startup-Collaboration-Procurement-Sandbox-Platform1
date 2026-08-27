@@ -64,8 +64,9 @@ const MainContent: React.FC = () => {
           case 'applications':
             return <ApplicationTracker />;
           case 'execution':
-          case 'gem':
             return <ExecutionWorkspace />;
+          case 'gem':
+            return <ComingSoon title="GeM Fast-Track Scale Gateway" category="Government e-Marketplace Integration" />;
           case 'contracts':
             return <DigitalContractSigner />;
           case 'settings':
