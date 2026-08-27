@@ -37,7 +37,7 @@ export const Header: React.FC = () => {
       case 'startup':
         switch (activeTab) {
           case 'dashboard': return 'Founder Command Workspace';
-          case 'passport': return 'Verified Evidence Passport';
+          case 'passport': return 'Company Evidence Archive & Verified Profile';
           case 'challenges': return 'Explore Government Challenges';
           case 'applications': return 'Proposal & Application Tracker';
           case 'execution': return 'Active Pilot Execution Workspace';

@@ -3,7 +3,7 @@ import {
   LayoutDashboard, FilePlus2, Compass, ClipboardCheck, 
   Scale, Activity, ShieldCheck, Layers, FileSignature, 
   Rocket, FolderSearch, Ticket, FileSpreadsheet, Settings, 
-  Award, History, Shield, Users, LogOut, LucideIcon, Bot, ShoppingCart 
+  Award, History, Shield, Users, LogOut, LucideIcon, Bot, ShoppingCart, FolderArchive 
 } from 'lucide-react';
 import { usePlatform } from '../../context/PlatformContext';
 import clsx from 'clsx';
@@ -61,7 +61,7 @@ export const Sidebar: React.FC = () => {
             title: 'STARTUP PORTAL',
             items: [
               { id: 'dashboard', label: 'Startup Dashboard', icon: LayoutDashboard },
-              { id: 'passport', label: 'Evidence Passport', icon: Ticket },
+              { id: 'passport', label: 'Evidence Archive', icon: FolderArchive },
               { id: 'challenges', label: 'Explore Challenges', badge: activeChallengesCount, icon: FolderSearch },
             ]
           },
