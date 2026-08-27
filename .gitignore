@@ -1,26 +1,4 @@
-# Dependencies
-node_modules
-node_modules/
-.venv/
-env/
-venv/
-
-# Build artifacts
-dist
-dist/
-dist-ssr
-build/
-.vite
-.vite/
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.pytest_cache/
-
-# Logs & Environment
+﻿# Logs
 logs
 *.log
 npm-debug.log*
@@ -28,11 +6,10 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+
+node_modules
+dist
+dist-ssr
 *.local
 
 # Editor directories and files
@@ -40,9 +17,14 @@ lerna-debug.log*
 !.vscode/extensions.json
 .idea
 .DS_Store
-Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Vite cache
+.vite
+.env
+.env.*
+!.env.example
