@@ -5,1010 +5,675 @@ import {
   ArrowUpRight, ChevronRight, FileText, CheckCircle2, Clock, Sparkles, 
   Building2, User, Globe, Mail, Phone, ExternalLink, Download, 
   ShieldCheck, AlertTriangle, Scale, DollarSign, Award, ArrowRight, 
-  Check, Eye, Shield, Layers, FileCheck 
+  Check, Eye, Shield, Layers, FileCheck, Search, ChevronLeft, Calendar, 
+  Edit3, Briefcase, MapPin, Hash, Users, Activity, Sparkle
 } from 'lucide-react';
 import { StatusBadge } from '../common/StatusBadge';
 
 export const StartupDashboard: React.FC = () => {
   const { currentStartup, setActiveTab, addNotification } = usePlatform();
 
-  const [isFullProfileModalOpen, setIsFullProfileModalOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<'all' | 'proposals' | 'pilots' | 'scaled'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedInvoiceModal, setSelectedInvoiceModal] = useState<any | null>(null);
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
 
-  // Founder and Startup Profile Details
-  const founderProfile = {
+  // Founder Profile Data
+  const founder = {
     name: 'Ms. Anjali Patil',
-    designation: 'Founder & CEO',
-    companyName: 'AquaSense Technologies Pvt. Ltd.',
-    dpiitNumber: 'DIPP12345',
+    role: 'Founder & CEO',
+    company: 'AquaSense Technologies Pvt. Ltd.',
+    status: 'Recognized Startup',
+    dpiitNo: 'DIPP12345',
     userId: 'STARTUP-MH-2024-0187',
-    headquarters: 'Pune, Maharashtra',
-    yearOfIncorporation: '2021',
-    sector: 'Water Tech, AI/ML, IoT',
-    teamSize: '12 Employees',
-    website: 'https://aquasense.tech',
-    websiteLabel: 'aquasense.tech',
-    description: 'AI-based water leakage detection and pressure optimization for municipal networks.',
-    dpiitStatus: 'Recognized Startup',
-    mhPresence: 'Registered & Operating',
+    gender: 'Female',
     email: 'anjali@aquasense.tech',
     phone: '+91-98220 54321',
+    address: 'Viman Nagar, Pune, Maharashtra, India',
+    experience: '8+ Years (Water IoT)',
+    sector: 'Water Tech, AI/ML & Smart IoT',
     cin: 'U72900PN2021PTC198421',
-    gstin: '27AABCA1234F1Z5'
+    gstin: '27AABCA1234F1Z5',
+    teamSize: '12 Members',
+    incorporationYear: '2021',
+    website: 'aquasense.tech',
+    complianceScore: '92 / 100'
   };
 
-  // Section 3A: Active Proposals
-  const activeProposals = [
+  // Engagements (Proposals, Pilots, Scaled) for the middle grid
+  const engagements = [
     {
-      id: 'PROP-001',
-      challenge: 'PS2: Smart Water Loss Reduction in Urban Networks',
-      department: 'Urban Dev. & Water Resources',
-      submittedOn: '15 Jul 2026',
+      id: 'ENG-1',
+      type: 'proposal',
+      title: 'PS2: Smart Water Loss Reduction',
+      department: 'Urban Development & Water Resources',
+      timeBadge: '15 Jul 2026',
       status: 'Shortlisted',
+      statusColor: 'emerald',
       stage: 'Expert Evaluation',
-      badgeVariant: 'violet' as const
+      kpiText: 'Target: ≥20% NRW Reduction',
+      actionLabel: 'View Proposal',
+      tabTarget: 'applications'
     },
     {
-      id: 'PROP-002',
-      challenge: 'PS5: AI-based Stormwater Flood Prediction',
-      department: 'Urban Dev. & Water Resources',
-      submittedOn: '02 Aug 2026',
-      status: 'Under Review',
-      stage: 'AI Evaluation',
-      badgeVariant: 'blue' as const
-    },
-    {
-      id: 'PROP-003',
-      challenge: 'Smart Street Lighting & Dynamic Dimming',
-      department: 'Municipal Administration',
-      submittedOn: '10 Jun 2026',
-      status: 'Shortlisted',
-      stage: 'Pilot Approval',
-      badgeVariant: 'emerald' as const
-    },
-    {
-      id: 'PROP-004',
-      challenge: 'CropCare AI – Drone Multispectral Monitoring',
-      department: 'Agriculture Department',
-      submittedOn: '20 May 2026',
-      status: 'Not Shortlisted',
-      stage: 'Closed',
-      badgeVariant: 'slate' as const
-    }
-  ];
-
-  // Section 3B: Pilots in Progress
-  const activePilots = [
-    {
-      id: 'PILOT-001',
-      name: 'Pune Zone A – Water Leakage Detection',
+      id: 'ENG-2',
+      type: 'pilot',
+      title: 'Pune Zone A – Water Leakage Pilot',
       department: 'Urban Dev. / Pune Municipal Corp.',
-      milestone: 'M2 (3-Month Review)',
+      timeBadge: '05 Sep 2026 (Due)',
       status: 'On Track',
-      dueDate: '05 Sep 2026',
-      kpi: '18.4% NRW reduction (verified)'
+      statusColor: 'emerald',
+      stage: 'M2 – 3-Month Review',
+      kpiText: '18.4% verified NRW reduction',
+      actionLabel: 'Submit M2',
+      tabTarget: 'execution'
     },
     {
-      id: 'PILOT-002',
-      name: 'Nashik Feeder – Smart Pressure Management',
+      id: 'ENG-3',
+      type: 'proposal',
+      title: 'PS5: Stormwater Flood Prediction AI',
+      department: 'Urban Development & Water Resources',
+      timeBadge: '02 Aug 2026',
+      status: 'Under Review',
+      statusColor: 'blue',
+      stage: 'AI Shortlisting Evaluation',
+      kpiText: 'Sub-15 min flood alert latency',
+      actionLabel: 'View Details',
+      tabTarget: 'applications'
+    },
+    {
+      id: 'ENG-4',
+      type: 'pilot',
+      title: 'Nashik Feeder – Smart Pressure Mgmt',
       department: 'Urban Dev. / Nashik Division',
-      milestone: 'M1 (Sensor Assembly & Rigging)',
+      timeBadge: '12 Sep 2026 (Due)',
       status: 'On Track',
-      dueDate: '12 Sep 2026',
-      kpi: '12.0% pressure surge damping'
-    }
-  ];
-
-  // Section 3C: Solutions Scaled
-  const scaledSolutions = [
-    {
-      id: 'SCALE-001',
-      name: 'Pune Zone A – Water Leakage Detection & Telemetry',
-      department: 'Department of Urban Development & Water Resources',
-      status: 'Scaled',
-      gemStatus: 'GeM Ready',
-      impact: '18.4% NRW reduction across 120 km municipal pipeline (420 ML water saved)'
-    }
-  ];
-
-  // Section 4B: Invoices & Payments
-  const recentInvoices = [
-    {
-      invoiceNo: 'INV-2026-042',
-      pilot: 'CropCare AI – Drone Monitoring',
-      amount: 'INR 8.5 Lakhs',
-      issueDate: '10 Aug 2026',
-      dueDate: '25 Aug 2026',
-      status: 'Paid',
-      statusVariant: 'emerald' as const
+      statusColor: 'emerald',
+      stage: 'M1 – Sensor Assembly',
+      kpiText: '12% pressure surge damping',
+      actionLabel: 'Monitor Pilot',
+      tabTarget: 'execution'
     },
     {
-      invoiceNo: 'INV-2026-037',
-      pilot: 'Pune Zone A – Water Leakage (M2)',
-      amount: 'INR 14.0 Lakhs',
-      issueDate: '01 Aug 2026',
-      dueDate: '16 Aug 2026',
-      status: 'Paid',
-      statusVariant: 'emerald' as const
+      id: 'ENG-5',
+      type: 'proposal',
+      title: 'Smart Street Lighting Dynamic Dimming',
+      department: 'Municipal Administration',
+      timeBadge: '10 Jun 2026',
+      status: 'Shortlisted',
+      statusColor: 'emerald',
+      stage: 'Pilot Clearance Approval',
+      kpiText: '35% energy conservation',
+      actionLabel: 'View Bid',
+      tabTarget: 'applications'
     },
     {
-      invoiceNo: 'INV-2026-045',
-      pilot: 'Nashik – Smart Pressure Mgmt.',
-      amount: 'INR 6.0 Lakhs',
-      issueDate: '20 Aug 2026',
-      dueDate: '05 Sep 2026',
-      status: 'Pending',
-      statusVariant: 'amber' as const
+      id: 'ENG-6',
+      type: 'scaled',
+      title: 'Pune Zone A – Scaled Telemetry',
+      department: 'Urban Development & Water Resources',
+      timeBadge: 'Scaled Solution',
+      status: 'GeM Ready',
+      statusColor: 'purple',
+      stage: 'Fast-Track Procurement',
+      kpiText: '120 km municipal pipeline scaled',
+      actionLabel: 'GeM Catalog',
+      tabTarget: 'gem'
     }
   ];
 
-  // Section 5: Recent Updates & Notices
-  const recentUpdates = [
-    { text: 'Your proposal for “Smart Street Lighting” is shortlisted.', time: 'Today', type: 'violet' as const, category: 'Proposal Update' },
-    { text: 'Milestone M2 for “Water Leakage Pilot” is due in 5 days.', time: '2 hours ago', type: 'warning' as const, category: 'Milestone SLA' },
-    { text: 'Invoice #INV-2026-042 for “CropCare AI” has been paid.', time: 'Yesterday', type: 'success' as const, category: 'Treasury Disbursal' },
-    { text: 'New challenge published: “AI-based Stormwater Flood Prediction”', time: '3 days ago', type: 'info' as const, category: 'Innovation Call' },
-    { text: 'Compliance filing reminder: Annual DPIIT update due in 15 days.', time: 'Last week', type: 'warning' as const, category: 'Statutory Notice' }
+  // Milestone timeline slots
+  const milestoneSlots = [
+    { label: 'M1: Sensor Rigging', status: 'completed', time: 'Completed' },
+    { label: 'M2: 3-Month Review', status: 'active', time: 'Due 05 Sep' },
+    { label: 'M3: Telemetry Audit', status: 'upcoming', time: 'Due 15 Nov' },
+    { label: 'GeM PAC Scale', status: 'ready', time: 'Fast-Track' },
+    { label: 'DPIIT Annual Filing', status: 'pending', time: 'Due 10 Sep' }
   ];
 
-  const handleDownloadStartupSummary = () => {
-    addNotification({
-      title: 'Startup Summary Dossier Generated',
-      message: 'Downloading official executive capability dossier for AquaSense Technologies (PDF).',
-      portal: 'startup',
-      type: 'success'
-    });
-  };
+  // Invoices data
+  const invoices = [
+    { id: 'INV-2026-042', project: 'CropCare AI – Drone Monitoring', amount: '₹8.5 Lakhs', status: 'Paid', date: '10 Aug 2026' },
+    { id: 'INV-2026-037', project: 'Pune Zone A – Water Leakage (M2)', amount: '₹14.0 Lakhs', status: 'Paid', date: '01 Aug 2026' },
+    { id: 'INV-2026-045', project: 'Nashik – Smart Pressure Mgmt.', amount: '₹6.0 Lakhs', status: 'Pending', date: '20 Aug 2026' }
+  ];
+
+  const filteredEngagements = engagements.filter(item => {
+    if (activeFilter === 'proposals' && item.type !== 'proposal') return false;
+    if (activeFilter === 'pilots' && item.type !== 'pilot') return false;
+    if (activeFilter === 'scaled' && item.type !== 'scaled') return false;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      return item.title.toLowerCase().includes(q) || item.department.toLowerCase().includes(q);
+    }
+    return true;
+  });
 
   return (
     <div className="space-y-6">
       
-      {/* ========================================================================= */}
-      {/* SECTION 1: FOUNDER & STARTUP PROFILE BAND */}
-      {/* ========================================================================= */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6">
-        
-        {/* Top Profile Header */}
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-6 border-b border-slate-100">
-          
-          {/* Left: Founder / CEO Profile */}
-          <div className="flex items-start sm:items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-xl font-bold font-display shadow-md shrink-0">
-              AP
-            </div>
-            <div>
-              <div className="flex flex-wrap items-center gap-2 mb-1">
-                <h1 className="text-xl sm:text-2xl font-extrabold text-navy-900 font-display">
-                  {founderProfile.name}
-                </h1>
-                <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-200 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  {founderProfile.dpiitStatus}
-                </span>
-              </div>
-              
-              <p className="text-xs font-semibold text-emerald-700">
-                {founderProfile.designation} • {founderProfile.companyName}
-              </p>
-              
-              <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-500 mt-1 font-medium">
-                <span className="flex items-center gap-1">
-                  <Building2 className="w-3 h-3 text-slate-400" />
-                  HQ: {founderProfile.headquarters}
-                </span>
-                <span>•</span>
-                <span className="font-mono text-slate-400">DPIIT: {founderProfile.dpiitNumber}</span>
-                <span>•</span>
-                <span className="font-mono text-slate-400">UID: {founderProfile.userId}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Right: Contact & Action */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto shrink-0">
-            <div className="text-left sm:text-right text-xs space-y-0.5">
-              <span className="text-[10px] uppercase font-bold text-slate-400 block">State Registration</span>
-              <p className="font-bold text-navy-900 text-[11px]">{founderProfile.mhPresence}</p>
-              <div className="flex items-center sm:justify-end gap-2 text-slate-500 text-[11px] pt-1">
-                <Mail className="w-3 h-3 text-slate-400" />
-                <span>{founderProfile.email}</span>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setIsFullProfileModalOpen(true)}
-              className="px-4 py-2 rounded-full bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 font-bold text-xs transition-colors flex items-center gap-1.5 shadow-2xs"
-            >
-              <User className="w-3.5 h-3.5" />
-              <span>View Full Profile</span>
-            </button>
-          </div>
-
+      {/* Top Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-black text-navy-900 font-display tracking-tight">
+            Founder & Startup Profile
+          </h1>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Command cockpit for active state innovation challenges, live pilots, milestones, and treasury disbursals.
+          </p>
         </div>
 
-        {/* Middle: Startup Profile Summary Strip */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 text-xs">
-          <div className="md:col-span-4 p-4 rounded-2xl bg-emerald-50/70 border border-emerald-100 space-y-1">
-            <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider block">Domain & Core Focus</span>
-            <p className="font-bold text-navy-900 leading-snug">{founderProfile.sector}</p>
-            <a 
-              href={founderProfile.website} 
-              target="_blank" 
-              rel="noreferrer" 
-              className="text-[11px] text-[#1D64EC] font-semibold hover:underline inline-flex items-center gap-1 pt-1"
-            >
-              <Globe className="w-3 h-3" />
-              <span>{founderProfile.websiteLabel}</span>
-            </a>
-          </div>
-
-          <div className="md:col-span-8 p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Solution Capability Summary</span>
-            <p className="text-slate-700 font-medium leading-relaxed">
-              {founderProfile.description}
-            </p>
-            <div className="flex flex-wrap items-center gap-4 text-[11px] text-slate-500 pt-1 font-medium">
-              <span>Incorporation: <strong>{founderProfile.yearOfIncorporation}</strong></span>
-              <span>•</span>
-              <span>Team Size: <strong>{founderProfile.teamSize}</strong></span>
-              <span>•</span>
-              <span>CIN: <strong className="font-mono text-slate-600">{founderProfile.cin}</strong></span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      {/* ========================================================================= */}
-      {/* SECTION 2: KEY METRICS (7 KPI Cards) */}
-      {/* ========================================================================= */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-bold text-navy-900 font-display">
-            Startup Overview – AquaSense Technologies
-          </h2>
-          <span className="text-xs font-bold text-slate-400 font-mono">Real-time Sandbox Telemetry</span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-3">
-          
-          {/* Card 1: Active Proposals */}
-          <div 
-            onClick={() => setActiveTab('applications')}
-            className="bg-white rounded-3xl p-4.5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-emerald-500/40 transition-all cursor-pointer group"
-          >
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Active Proposals</span>
-            <div className="text-2xl font-extrabold text-navy-900 font-display">4</div>
-            <p className="text-[10px] text-[#1D64EC] font-semibold mt-1">2 review, 1 shortlisted</p>
-            <div className="pt-2.5 mt-2.5 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400 group-hover:text-[#1D64EC]">
-              <span>View Proposals</span>
-              <ArrowRight className="w-3 h-3" />
-            </div>
-          </div>
-
-          {/* Card 2: Pilots in Progress */}
-          <div 
-            onClick={() => setActiveTab('execution')}
-            className="bg-white rounded-3xl p-4.5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-emerald-500/40 transition-all cursor-pointer group"
-          >
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Pilots in Progress</span>
-            <div className="text-2xl font-extrabold text-emerald-800 font-display">2</div>
-            <p className="text-[10px] text-amber-700 font-semibold mt-1">1 due for M2 review</p>
-            <div className="pt-2.5 mt-2.5 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400 group-hover:text-emerald-700">
-              <span>Monitor Pilots</span>
-              <ArrowRight className="w-3 h-3" />
-            </div>
-          </div>
-
-          {/* Card 3: Solutions Scaled */}
-          <div 
-            onClick={() => setActiveTab('gem')}
-            className="bg-white rounded-3xl p-4.5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-emerald-500/40 transition-all cursor-pointer group"
-          >
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Solutions Scaled</span>
-            <div className="text-2xl font-extrabold text-navy-900 font-display">1</div>
-            <p className="text-[10px] text-purple-700 font-semibold mt-1">Pune Zone A Leakage</p>
-            <div className="pt-2.5 mt-2.5 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400 group-hover:text-purple-700">
-              <span>View Scaled</span>
-              <ArrowRight className="w-3 h-3" />
-            </div>
-          </div>
-
-          {/* Card 4: Revenue from Gov Pilots */}
-          <div 
-            onClick={() => setActiveTab('contracts')}
-            className="bg-white rounded-3xl p-4.5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-emerald-500/40 transition-all cursor-pointer group"
-          >
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Revenue (YTD)</span>
-            <div className="text-xl font-extrabold text-navy-900 font-display">₹68 Lakhs</div>
-            <p className="text-[10px] text-emerald-700 font-semibold mt-1">Invoices paid: 85%</p>
-            <div className="pt-2.5 mt-2.5 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400 group-hover:text-emerald-700">
-              <span>View Invoices</span>
-              <ArrowRight className="w-3 h-3" />
-            </div>
-          </div>
-
-          {/* Card 5: Escrow Released */}
-          <div 
-            onClick={() => setActiveTab('contracts')}
-            className="bg-white rounded-3xl p-4.5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-emerald-500/40 transition-all cursor-pointer group"
-          >
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Escrow Released</span>
-            <div className="text-xl font-extrabold text-navy-900 font-display">₹58 Lakhs</div>
-            <p className="text-[10px] text-slate-600 font-semibold mt-1">Across 2 pilots</p>
-            <div className="pt-2.5 mt-2.5 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400 group-hover:text-navy-900">
-              <span>View Escrow</span>
-              <ArrowRight className="w-3 h-3" />
-            </div>
-          </div>
-
-          {/* Card 6: GeM Fast-Track Status */}
-          <div 
-            onClick={() => setActiveTab('gem')}
-            className="bg-white rounded-3xl p-4.5 border border-purple-200 shadow-xs hover:shadow-md transition-all cursor-pointer group bg-purple-50/20"
-          >
-            <span className="text-[10px] font-bold text-purple-700 uppercase tracking-wider block mb-1">GeM Status</span>
-            <div className="text-lg font-extrabold text-purple-900 font-display">GeM Ready</div>
-            <p className="text-[10px] text-purple-700 font-semibold mt-1">Fast-Track Catalog</p>
-            <div className="pt-2.5 mt-2.5 border-t border-purple-200 flex items-center justify-between text-[10px] font-bold text-purple-700 group-hover:underline">
-              <span>View Scale</span>
-              <ArrowRight className="w-3 h-3" />
-            </div>
-          </div>
-
-          {/* Card 7: Compliance Score */}
-          <div 
-            onClick={() => {
-              const el = document.getElementById('compliance-section');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="bg-white rounded-3xl p-4.5 border border-slate-200/80 shadow-xs hover:shadow-md transition-all cursor-pointer group"
-          >
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Compliance</span>
-            <div className="text-2xl font-extrabold text-emerald-800 font-display">92/100</div>
-            <p className="text-[10px] text-emerald-700 font-semibold mt-1">DPIIT & CERT-In</p>
-            <div className="pt-2.5 mt-2.5 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400 group-hover:text-emerald-700">
-              <span>View Score</span>
-              <ArrowRight className="w-3 h-3" />
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* SECTION 3: ACTIVE PIPELINE (Proposals, Pilots, Scale) */}
-      {/* ========================================================================= */}
-      <div className="space-y-6">
-        
-        {/* Subsection A: Active Proposals */}
-        <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs space-y-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
-            <div>
-              <h3 className="text-base font-bold text-navy-900 font-display">
-                Active Proposals
-              </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Track all submitted innovation bids and their lifecycle review stages.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setActiveTab('challenges')}
-              className="px-4 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs border border-emerald-200 transition-colors flex items-center gap-1.5"
-            >
-              <Rocket className="w-3.5 h-3.5" />
-              <span>Explore New Calls</span>
-            </button>
-          </div>
-
-          <div className="overflow-x-auto rounded-2xl border border-slate-200">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="bg-slate-50 text-navy-900 border-b border-slate-200">
-                  <th className="py-3 px-4 font-bold">Challenge / Problem Statement</th>
-                  <th className="py-3 px-4 font-bold">Department</th>
-                  <th className="py-3 px-4 font-bold">Submitted On</th>
-                  <th className="py-3 px-4 font-bold">Status</th>
-                  <th className="py-3 px-4 font-bold">Current Stage</th>
-                  <th className="py-3 px-4 font-bold text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
-                {activeProposals.map((prop) => (
-                  <tr key={prop.id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="py-3.5 px-4 font-bold text-navy-900 max-w-xs">
-                      {prop.challenge}
-                    </td>
-                    <td className="py-3.5 px-4 text-slate-600 font-medium whitespace-nowrap">
-                      {prop.department}
-                    </td>
-                    <td className="py-3.5 px-4 text-slate-500 whitespace-nowrap">
-                      {prop.submittedOn}
-                    </td>
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      <StatusBadge label={prop.status} variant={prop.badgeVariant} size="sm" />
-                    </td>
-                    <td className="py-3.5 px-4 font-semibold text-navy-900 whitespace-nowrap">
-                      {prop.stage}
-                    </td>
-                    <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <button
-                          type="button"
-                          onClick={() => setActiveTab('applications')}
-                          className="px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] transition-colors"
-                        >
-                          View
-                        </button>
-                        {prop.status === 'Shortlisted' && (
-                          <button
-                            type="button"
-                            onClick={() => setActiveTab('passport')}
-                            className="px-3 py-1 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-[11px] border border-emerald-200 transition-colors"
-                          >
-                            Upload Evidence
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="pt-1 flex justify-end">
-            <button
-              type="button"
-              onClick={() => setActiveTab('applications')}
-              className="text-xs font-bold text-[#1D64EC] hover:underline flex items-center gap-1"
-            >
-              <span>View All Proposals</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-
-        {/* 2-Column: Pilots in Progress & Scaled Solutions */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          
-          {/* Subsection B: Pilots in Progress (7 cols) */}
-          <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs flex flex-col justify-between space-y-4">
-            <div>
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                <div>
-                  <h3 className="text-base font-bold text-navy-900 font-display">
-                    Pilots in Progress
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Monitor live telemetry milestones, test telemetry, and deliverables.
-                  </p>
-                </div>
-                <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[11px] font-bold border border-emerald-200">
-                  2 Active Pilots
-                </span>
-              </div>
-
-              <div className="space-y-3 pt-2">
-                {activePilots.map((p) => (
-                  <div key={p.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2 text-xs">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-bold text-navy-900 text-sm">{p.name}</h4>
-                      <StatusBadge label={p.status} variant="emerald" size="sm" />
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-500">
-                      <span>Dept: <strong>{p.department}</strong></span>
-                      <span>•</span>
-                      <span>Milestone: <strong className="text-navy-900">{p.milestone}</strong></span>
-                    </div>
-
-                    <div className="p-2.5 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
-                      <span className="text-emerald-700 font-bold">Key KPI: {p.kpi}</span>
-                      <span className="text-amber-800 font-semibold">Due: {p.dueDate}</span>
-                    </div>
-
-                    <div className="pt-2 flex items-center justify-end gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab('execution')}
-                        className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] transition-colors"
-                      >
-                        View Pilot Details
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab('execution')}
-                        className="px-4 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-2xs transition-colors flex items-center gap-1"
-                      >
-                        <Upload className="w-3 h-3" />
-                        <span>Submit Milestone</span>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Active Pilot Highlight Box */}
-              <div className="p-3.5 rounded-2xl bg-emerald-50/80 border border-emerald-200 text-xs mt-3 flex items-start justify-between gap-2 text-emerald-900">
-                <div>
-                  <strong className="block font-bold">Active Pilot Status:</strong>
-                  <p className="leading-relaxed mt-0.5">Pune Zone A (Water Leakage) running with <strong className="text-emerald-800">18.4% verified NRW reduction</strong>.</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('execution')}
-                  className="text-[11px] font-bold text-emerald-800 hover:underline shrink-0 whitespace-nowrap mt-1"
-                >
-                  View Pilot Report →
-                </button>
-              </div>
-            </div>
-
-            <div className="pt-3 border-t border-slate-100">
-              <button
-                type="button"
-                onClick={() => setActiveTab('execution')}
-                className="text-xs font-bold text-[#1D64EC] hover:underline flex items-center gap-1"
-              >
-                <span>Monitor All Pilots</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-
-          {/* Subsection C: Solutions Scaled & Fast-Track Scale (5 cols) */}
-          <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs flex flex-col justify-between space-y-4">
-            <div>
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                <div>
-                  <h3 className="text-base font-bold text-navy-900 font-display">
-                    Solutions Scaled
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Fast-track scale and GeM direct procurement catalog.
-                  </p>
-                </div>
-                <span className="px-3 py-1 rounded-full bg-purple-50 text-purple-800 text-[11px] font-bold border border-purple-200">
-                  1 Scaled
-                </span>
-              </div>
-
-              <div className="space-y-3 pt-2">
-                {scaledSolutions.map((sol) => (
-                  <div key={sol.id} className="p-4 rounded-2xl bg-purple-50/40 border border-purple-200/70 space-y-2.5 text-xs">
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <h4 className="font-bold text-navy-900 text-sm leading-snug">{sol.name}</h4>
-                        <p className="text-[11px] text-slate-500 mt-0.5">{sol.department}</p>
-                      </div>
-                      <span className="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 font-bold text-[10px] border border-purple-200 shrink-0">
-                        {sol.gemStatus}
-                      </span>
-                    </div>
-
-                    <p className="text-slate-700 leading-relaxed font-medium bg-white p-2.5 rounded-xl border border-purple-100">
-                      <strong>Impact: </strong>{sol.impact}
-                    </p>
-
-                    <div className="pt-1 flex items-center justify-between">
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab('gem')}
-                        className="px-3 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold text-[11px] transition-colors"
-                      >
-                        View Scale Report
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab('gem')}
-                        className="px-3.5 py-1.5 rounded-full bg-purple-600 hover:bg-purple-700 text-white font-bold text-[11px] shadow-2xs transition-colors flex items-center gap-1"
-                      >
-                        <ShieldCheck className="w-3 h-3" />
-                        <span>View GeM Listing</span>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="pt-3 border-t border-slate-100">
-              <button
-                type="button"
-                onClick={() => setActiveTab('gem')}
-                className="text-xs font-bold text-purple-700 hover:underline flex items-center gap-1"
-              >
-                <span>View All Scaled Solutions</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
-      {/* ========================================================================= */}
-      {/* SECTION 4: FINANCIALS & PAYMENTS */}
-      {/* ========================================================================= */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-5">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
-          <div>
-            <h2 className="text-base font-bold text-navy-900 font-display">
-              Financials & Payments
-            </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Track invoices, PFMS treasury disbursements, and milestone escrow releases from government pilots.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => setActiveTab('contracts')}
-            className="px-4 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors flex items-center gap-1"
-          >
-            <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Invoicing Center</span>
-          </button>
-        </div>
-
-        {/* 4 Summary Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 text-xs">
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Invoiced (YTD)</span>
-            <strong className="text-xl font-extrabold text-navy-900 font-display block mt-0.5">INR 80.0 Lakhs</strong>
-            <span className="text-[10px] text-slate-500 font-medium">3 Invoices Submitted</span>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-100">
-            <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider block">Total Paid (YTD)</span>
-            <strong className="text-xl font-extrabold text-emerald-900 font-display block mt-0.5">INR 68.0 Lakhs</strong>
-            <span className="text-[10px] text-emerald-700 font-medium">Direct Bank Transfer</span>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-100">
-            <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider block">Pending Payments</span>
-            <strong className="text-xl font-extrabold text-amber-900 font-display block mt-0.5">INR 12.0 Lakhs</strong>
-            <span className="text-[10px] text-amber-700 font-medium">Under Treasury Verification</span>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Escrow Released</span>
-            <strong className="text-xl font-extrabold text-navy-900 font-display block mt-0.5">INR 58.0 Lakhs</strong>
-            <span className="text-[10px] text-slate-500 font-medium">Across 2 active pilots</span>
-          </div>
-        </div>
-
-        {/* Recent Invoices Table */}
-        <div className="overflow-x-auto rounded-2xl border border-slate-200">
-          <table className="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr className="bg-slate-50 text-navy-900 border-b border-slate-200">
-                <th className="py-3 px-4 font-bold">Invoice No.</th>
-                <th className="py-3 px-4 font-bold">Pilot / Contract</th>
-                <th className="py-3 px-4 font-bold">Amount</th>
-                <th className="py-3 px-4 font-bold">Issue Date</th>
-                <th className="py-3 px-4 font-bold">Due Date</th>
-                <th className="py-3 px-4 font-bold">Status</th>
-                <th className="py-3 px-4 font-bold text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
-              {recentInvoices.map((inv) => (
-                <tr key={inv.invoiceNo} className="hover:bg-slate-50/60 transition-colors">
-                  <td className="py-3.5 px-4 font-mono font-bold text-[#1D64EC]">
-                    {inv.invoiceNo}
-                  </td>
-                  <td className="py-3.5 px-4 font-medium text-navy-900">
-                    {inv.pilot}
-                  </td>
-                  <td className="py-3.5 px-4 font-extrabold text-navy-900">
-                    {inv.amount}
-                  </td>
-                  <td className="py-3.5 px-4 text-slate-500">
-                    {inv.issueDate}
-                  </td>
-                  <td className="py-3.5 px-4 text-slate-500">
-                    {inv.dueDate}
-                  </td>
-                  <td className="py-3.5 px-4">
-                    <StatusBadge label={inv.status} variant={inv.statusVariant} size="sm" />
-                  </td>
-                  <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                    <div className="flex items-center justify-end gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => setSelectedInvoiceModal(inv)}
-                        className="px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] transition-colors"
-                      >
-                        View
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => addNotification({ title: 'Invoice Downloaded', message: `Downloaded copy of ${inv.invoiceNo} (PDF)`, portal: 'startup', type: 'info' })}
-                        className="px-2.5 py-1 rounded-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 text-[11px]"
-                      >
-                        <Download className="w-3 h-3" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="pt-1 flex justify-end">
-          <button
-            type="button"
-            onClick={() => setActiveTab('contracts')}
-            className="text-xs font-bold text-[#1D64EC] hover:underline flex items-center gap-1"
-          >
-            <span>View All Invoices & Payments</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* SECTION 5 & 6: RECENT UPDATES & QUICK ACTIONS */}
-      {/* ========================================================================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
-        {/* Left: Recent Updates & Notices (7 cols) */}
-        <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-            <div>
-              <h3 className="text-base font-bold text-navy-900 font-display">
-                Recent Updates & Notices
-              </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Official notices, milestone deadlines, and payment confirmations.
-              </p>
-            </div>
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          </div>
-
-          <div className="space-y-3">
-            {recentUpdates.map((act, idx) => (
-              <div
-                key={idx}
-                className="p-3.5 rounded-2xl bg-slate-50/70 border border-slate-100 flex items-center justify-between gap-3 hover:bg-emerald-50/40 transition-colors"
-              >
-                <div className="flex items-start gap-3">
-                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
-                    act.type === 'success' ? 'bg-emerald-50 text-emerald-600' :
-                    act.type === 'warning' ? 'bg-amber-50 text-amber-600' :
-                    act.type === 'violet' ? 'bg-purple-50 text-purple-600' : 'bg-blue-50 text-[#1D64EC]'
-                  }`}>
-                    {act.type === 'success' ? <CheckCircle2 className="w-4 h-4" /> :
-                     act.type === 'warning' ? <Clock className="w-4 h-4" /> :
-                     act.type === 'violet' ? <Sparkles className="w-4 h-4" /> : <FileText className="w-4 h-4 text-[#1D64EC]" />}
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-navy-900 leading-snug">{act.text}</p>
-                    <div className="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5 font-medium">
-                      <span>{act.time}</span>
-                      <span>•</span>
-                      <span className="text-slate-600 font-semibold">{act.category}</span>
-                    </div>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-slate-300 shrink-0" />
-              </div>
-            ))}
-          </div>
-
-          <div className="pt-2">
-            <button
-              type="button"
-              onClick={() => setActiveTab('applications')}
-              className="text-xs font-bold text-[#1D64EC] hover:underline flex items-center gap-1"
-            >
-              <span>View All Updates & Notices</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-
-        {/* Right: Quick Actions & Deadlines (5 cols) */}
-        <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs flex flex-col justify-between space-y-4">
-          <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h3 className="text-base font-bold text-navy-900 font-display">
-                Quick Actions
-              </h3>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Founder Tools</span>
-            </div>
-
-            <div className="space-y-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setActiveTab('challenges')}
-                className="w-full p-2.5 px-3.5 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200/80 text-navy-900 font-bold text-xs flex items-center justify-between transition-all group"
-              >
-                <div className="flex items-center gap-2.5">
-                  <Rocket className="w-4 h-4 text-emerald-600" />
-                  <span>Explore Challenges</span>
-                </div>
-                <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-600" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('passport')}
-                className="w-full p-2.5 px-3.5 rounded-xl bg-slate-50 hover:bg-purple-50 border border-slate-200/80 text-navy-900 font-bold text-xs flex items-center justify-between transition-all group"
-              >
-                <div className="flex items-center gap-2.5">
-                  <Ticket className="w-4 h-4 text-purple-600" />
-                  <span>Update Evidence Passport</span>
-                </div>
-                <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-purple-600" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('execution')}
-                className="w-full p-2.5 px-3.5 rounded-xl bg-slate-50 hover:bg-amber-50 border border-slate-200/80 text-navy-900 font-bold text-xs flex items-center justify-between transition-all group"
-              >
-                <div className="flex items-center gap-2.5">
-                  <Upload className="w-4 h-4 text-amber-600" />
-                  <span>Submit Milestone (M2 Due)</span>
-                </div>
-                <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('contracts')}
-                className="w-full p-2.5 px-3.5 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200/80 text-navy-900 font-bold text-xs flex items-center justify-between transition-all group"
-              >
-                <div className="flex items-center gap-2.5">
-                  <FileSignature className="w-4 h-4 text-[#1D64EC]" />
-                  <span>View Contracts & Invoices</span>
-                </div>
-                <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#1D64EC]" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setIsFullProfileModalOpen(true)}
-                className="w-full p-2.5 px-3.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-navy-900 font-bold text-xs flex items-center justify-between transition-all group"
-              >
-                <div className="flex items-center gap-2.5">
-                  <Building2 className="w-4 h-4 text-slate-600" />
-                  <span>Manage Company Profile</span>
-                </div>
-                <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600" />
-              </button>
-            </div>
-
-            {/* Upcoming Deadlines Mini List */}
-            <div className="pt-3 border-t border-slate-100 space-y-1.5">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Upcoming Deadlines</span>
-              <div className="space-y-1 text-[11px]">
-                <div className="p-2 rounded-xl bg-amber-50 text-amber-900 border border-amber-200 font-semibold flex items-center justify-between">
-                  <span>M2 – Water Leakage Pilot</span>
-                  <span className="font-bold">05 Sep 2026</span>
-                </div>
-                <div className="p-2 rounded-xl bg-blue-50 text-blue-900 border border-blue-200 font-semibold flex items-center justify-between">
-                  <span>DPIIT Annual Update</span>
-                  <span className="font-bold">10 Sep 2026</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-3 border-t border-slate-100">
-            <button
-              type="button"
-              onClick={handleDownloadStartupSummary}
-              className="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>Download Startup Summary (PDF)</span>
-            </button>
-          </div>
-        </div>
-
-      </div>
-
-      {/* ========================================================================= */}
-      {/* SECTION 7: COMPLIANCE & READINESS */}
-      {/* ========================================================================= */}
-      <div id="compliance-section" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-5">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
-          <div>
-            <h2 className="text-base font-bold text-navy-900 font-display">
-              Compliance & Statutory Readiness
-            </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
-              State procurement clearances, cybersecurity audits, and DPIIT verification status.
-            </p>
-          </div>
-          <span className="px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200 flex items-center gap-1">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Pilot Compliance Score: 92/100</span>
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-          
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-navy-900">DPIIT Recognition</span>
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            </div>
-            <p className="text-slate-600">Certificate No: <strong className="font-mono text-navy-900">DIPP12345</strong></p>
-            <span className="text-[10px] text-emerald-700 font-semibold block">Recognized Startup (Active)</span>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-navy-900">Annual DPIIT Filing</span>
-              <AlertTriangle className="w-4 h-4 text-amber-600" />
-            </div>
-            <p className="text-slate-600">Filed up to: <strong className="text-navy-900">FY 2024–25</strong></p>
-            <span className="text-[10px] text-amber-700 font-semibold block">FY 2025–26 update due in 15 days</span>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-navy-900">Tax & GST Filing</span>
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            </div>
-            <p className="text-slate-600">GSTIN: <strong className="font-mono text-navy-900">27AABCA1234F1Z5</strong></p>
-            <span className="text-[10px] text-emerald-700 font-semibold block">GST Returns Cleared (Monthly)</span>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-navy-900">CERT-In & Security</span>
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            </div>
-            <p className="text-slate-600">Audit Level 3: <strong className="text-navy-900">Done (12 Mar 2026)</strong></p>
-            <span className="text-[10px] text-purple-700 font-semibold block">ISO 27001 Certification in progress</span>
-          </div>
-
-        </div>
-
-        <div className="pt-1 flex justify-end">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => setActiveTab('passport')}
-            className="text-xs font-bold text-emerald-700 hover:underline flex items-center gap-1"
+            className="px-4 py-2 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-navy-900 font-bold text-xs shadow-xs flex items-center gap-2 transition-all"
           >
-            <span>View Full Verified Evidence Passport & Compliance Dossier</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <Ticket className="w-3.5 h-3.5 text-purple-600" />
+            <span>Evidence Passport</span>
+          </button>
+          
+          <button
+            type="button"
+            onClick={() => setActiveTab('challenges')}
+            className="px-4 py-2 rounded-2xl bg-[#1D64EC] hover:bg-blue-700 text-white font-bold text-xs shadow-xs flex items-center gap-2 transition-all"
+          >
+            <Rocket className="w-3.5 h-3.5" />
+            <span>Explore Challenges</span>
           </button>
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* MODAL 1: FULL FOUNDER & COMPANY PROFILE MODAL */}
-      {/* ========================================================================= */}
-      {isFullProfileModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-900/50 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 border border-slate-200 shadow-2xl">
-            <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-100">
+      {/* Main 2-Column Grid matching reference profile */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        {/* ========================================================================= */}
+        {/* LEFT COLUMN: TALL FOUNDER & STARTUP PROFILE CARD (Col 1-4)                 */}
+        {/* ========================================================================= */}
+        <div className="lg:col-span-4 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs space-y-6 lg:sticky lg:top-24">
+          
+          {/* Top Profile Header */}
+          <div className="flex items-start justify-between">
+            <div className="flex items-start gap-4">
+              <div className="w-16 h-16 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-xl font-black font-display shadow-md shrink-0 border-2 border-white">
+                AP
+              </div>
+              <div className="space-y-1">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-200">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  {founder.status}
+                </span>
+                <h2 className="text-lg font-black text-navy-900 font-display leading-tight">
+                  {founder.name}
+                </h2>
+                <p className="text-xs text-slate-500 font-semibold">
+                  {founder.role}
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsEditProfileOpen(true)}
+              className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors shrink-0"
+              title="Edit Profile"
+            >
+              <Edit3 className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Quick Action Icon Strip */}
+          <div className="flex items-center gap-2 pt-1">
+            <a
+              href={`tel:${founder.phone}`}
+              className="p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 transition-colors flex items-center justify-center"
+              title="Call Founder"
+            >
+              <Phone className="w-4 h-4" />
+            </a>
+            <a
+              href={`mailto:${founder.email}`}
+              className="p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 transition-colors flex items-center justify-center"
+              title="Email Founder"
+            >
+              <Mail className="w-4 h-4" />
+            </a>
+            <button
+              type="button"
+              onClick={() => setActiveTab('passport')}
+              className="flex-1 py-2 px-3 rounded-xl bg-[#1D64EC] hover:bg-blue-700 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-2xs"
+            >
+              <FileCheck className="w-3.5 h-3.5" />
+              <span>Full Dossier</span>
+            </button>
+          </div>
+
+          {/* Key-Value Information List matching reference layout */}
+          <div className="divide-y divide-slate-100 text-xs space-y-3 pt-2">
+            
+            <div className="flex items-center justify-between pt-3">
+              <span className="text-slate-400 font-medium flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-slate-400" />
+                Company Name
+              </span>
+              <strong className="text-navy-900 font-bold text-right truncate max-w-[170px]">
+                {founder.company}
+              </strong>
+            </div>
+
+            <div className="flex items-center justify-between pt-3">
+              <span className="text-slate-400 font-medium flex items-center gap-2">
+                <Briefcase className="w-4 h-4 text-purple-500" />
+                Domain & Sector
+              </span>
+              <span className="font-bold text-navy-900 text-right truncate max-w-[170px]">
+                {founder.sector}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between pt-3">
+              <span className="text-slate-400 font-medium flex items-center gap-2">
+                <Hash className="w-4 h-4 text-emerald-500" />
+                DPIIT Reg. No.
+              </span>
+              <strong className="font-mono font-bold text-emerald-700">
+                {founder.dpiitNo}
+              </strong>
+            </div>
+
+            <div className="flex items-center justify-between pt-3">
+              <span className="text-slate-400 font-medium flex items-center gap-2">
+                <User className="w-4 h-4 text-blue-500" />
+                User ID
+              </span>
+              <span className="font-mono text-slate-600 font-semibold text-right">
+                {founder.userId}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between pt-3">
+              <span className="text-slate-400 font-medium flex items-center gap-2">
+                <Mail className="w-4 h-4 text-slate-400" />
+                Email
+              </span>
+              <span className="text-slate-700 font-medium truncate max-w-[180px]">
+                {founder.email}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between pt-3">
+              <span className="text-slate-400 font-medium flex items-center gap-2">
+                <Phone className="w-4 h-4 text-slate-400" />
+                Phone Number
+              </span>
+              <span className="text-slate-700 font-medium">
+                {founder.phone}
+              </span>
+            </div>
+
+            <div className="flex items-start justify-between pt-3">
+              <span className="text-slate-400 font-medium flex items-center gap-2 shrink-0">
+                <MapPin className="w-4 h-4 text-red-400" />
+                Headquarters
+              </span>
+              <span className="text-slate-700 font-medium text-right leading-snug">
+                {founder.address}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between pt-3">
+              <span className="text-slate-400 font-medium flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-slate-400" />
+                Incorporation
+              </span>
+              <strong className="text-navy-900 font-bold">
+                {founder.incorporationYear} ({founder.teamSize})
+              </strong>
+            </div>
+
+            <div className="flex items-center justify-between pt-3">
+              <span className="text-slate-400 font-medium flex items-center gap-2">
+                <Globe className="w-4 h-4 text-[#1D64EC]" />
+                Website
+              </span>
+              <a 
+                href={`https://${founder.website}`}
+                target="_blank" 
+                rel="noreferrer" 
+                className="text-[#1D64EC] font-bold hover:underline inline-flex items-center gap-1"
+              >
+                <span>{founder.website}</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+
+            <div className="flex items-center justify-between pt-3">
+              <span className="text-slate-400 font-medium flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                Compliance Score
+              </span>
+              <strong className="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200">
+                {founder.complianceScore}
+              </strong>
+            </div>
+
+          </div>
+
+          {/* Startup Description Note */}
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-600 leading-relaxed">
+            <strong className="text-navy-900 block mb-0.5">Solution Scope:</strong>
+            AI-based water leakage detection, acoustic edge telemetry, and pressure optimization for municipal supply mains.
+          </div>
+
+        </div>
+
+        {/* ========================================================================= */}
+        {/* RIGHT COLUMN: METRICS + ENGAGEMENT CARDS + SCHEDULE (Col 5-12)             */}
+        {/* ========================================================================= */}
+        <div className="lg:col-span-8 space-y-6">
+          
+          {/* 1. TOP METRICS ROW: 3 Spacious, Non-Overflowing Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            
+            {/* Metric 1: Active Proposals */}
+            <div 
+              onClick={() => setActiveTab('applications')}
+              className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-blue-500/40 transition-all cursor-pointer group"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  ACTIVE PROPOSALS
+                </span>
+                <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+              </div>
+              <div className="text-3xl font-black text-navy-900 font-display">
+                4
+              </div>
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 mt-2">
+                <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-[11px] font-bold border border-emerald-200">
+                  1 Shortlisted
+                </span>
+                <span className="text-[11px] text-slate-500">2 in review</span>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-1">Across Urban Dev & Municipal Depts</p>
+            </div>
+
+            {/* Metric 2: Pilots in Progress */}
+            <div 
+              onClick={() => setActiveTab('execution')}
+              className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-emerald-500/40 transition-all cursor-pointer group"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  PILOTS IN PROGRESS
+                </span>
+                <span className="p-1 rounded-lg bg-emerald-50 text-emerald-600">
+                  <Activity className="w-3.5 h-3.5" />
+                </span>
+              </div>
+              <div className="text-3xl font-black text-emerald-800 font-display">
+                2
+              </div>
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-800 mt-2">
+                <span className="px-2 py-0.5 rounded-md bg-amber-50 text-[11px] font-bold border border-amber-200">
+                  M2 Due in 5 Days
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-1">Pune Zone A (18.4% NRW) & Nashik</p>
+            </div>
+
+            {/* Metric 3: Gov Revenue (YTD) */}
+            <div 
+              onClick={() => setActiveTab('contracts')}
+              className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-purple-500/40 transition-all cursor-pointer group"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  REVENUE (YTD)
+                </span>
+                <span className="p-1 rounded-lg bg-purple-50 text-purple-600">
+                  <DollarSign className="w-3.5 h-3.5" />
+                </span>
+              </div>
+              <div className="text-3xl font-black text-navy-900 font-display">
+                ₹68 Lakhs
+              </div>
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-purple-800 mt-2">
+                <span className="px-2 py-0.5 rounded-md bg-purple-50 text-[11px] font-bold border border-purple-200">
+                  85% Paid Out
+                </span>
+                <span className="text-[11px] text-slate-500">₹58L Escrow</span>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-1">Treasury PFMS direct transfer</p>
+            </div>
+
+          </div>
+
+          {/* 2. ENGAGEMENTS CARD GRID (Matching reference "Today Patient" Card Grid) */}
+          <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs space-y-4">
+            
+            {/* Header with Search and Filter Pills */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-lg font-bold font-display shadow-sm">
-                  AP
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-navy-900 font-display">
-                    {founderProfile.name}
-                  </h3>
-                  <p className="text-xs text-slate-500">{founderProfile.designation} • {founderProfile.companyName}</p>
-                </div>
+                <h3 className="text-lg font-black text-navy-900 font-display">
+                  Active Engagements
+                </h3>
+                <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs font-bold">
+                  {filteredEngagements.length} Total
+                </span>
               </div>
 
+              {/* Search Bar */}
+              <div className="flex items-center gap-2">
+                <div className="relative">
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search challenges, pilots..."
+                    className="pl-8 pr-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-navy-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1D64EC]/20 focus:border-[#1D64EC]"
+                  />
+                </div>
+
+                {/* Filter Checkboxes/Pills */}
+                <div className="hidden sm:flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-bold text-slate-600">
+                  <button
+                    type="button"
+                    onClick={() => setActiveFilter('all')}
+                    className={`px-2.5 py-1 rounded-lg transition-all ${activeFilter === 'all' ? 'bg-white text-navy-900 shadow-xs' : 'hover:text-navy-900'}`}
+                  >
+                    All
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveFilter('proposals')}
+                    className={`px-2.5 py-1 rounded-lg transition-all ${activeFilter === 'proposals' ? 'bg-white text-navy-900 shadow-xs' : 'hover:text-navy-900'}`}
+                  >
+                    Proposals
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveFilter('pilots')}
+                    className={`px-2.5 py-1 rounded-lg transition-all ${activeFilter === 'pilots' ? 'bg-white text-navy-900 shadow-xs' : 'hover:text-navy-900'}`}
+                  >
+                    Pilots
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveFilter('scaled')}
+                    className={`px-2.5 py-1 rounded-lg transition-all ${activeFilter === 'scaled' ? 'bg-white text-navy-900 shadow-xs' : 'hover:text-navy-900'}`}
+                  >
+                    Scaled
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* 6 Cards Grid (Matching the 6 appointment cards layout in the reference image) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
+              {filteredEngagements.map((item) => (
+                <div
+                  key={item.id}
+                  className="p-4 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:border-[#1D64EC]/40 hover:bg-white transition-all shadow-2xs flex flex-col justify-between space-y-3 group"
+                >
+                  <div className="space-y-2">
+                    {/* Top status & due time badge */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-slate-500 font-mono">
+                        {item.timeBadge}
+                      </span>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                        item.statusColor === 'emerald' ? 'bg-emerald-100/80 text-emerald-800' :
+                        item.statusColor === 'blue' ? 'bg-blue-100/80 text-[#1D64EC]' :
+                        item.statusColor === 'purple' ? 'bg-purple-100/80 text-purple-800' : 'bg-slate-200 text-slate-700'
+                      }`}>
+                        {item.status}
+                      </span>
+                    </div>
+
+                    {/* Title & Department */}
+                    <div>
+                      <h4 className="text-xs font-bold text-navy-900 leading-snug group-hover:text-[#1D64EC] transition-colors">
+                        {item.title}
+                      </h4>
+                      <p className="text-[11px] text-slate-500 mt-0.5 truncate">
+                        {item.department}
+                      </p>
+                    </div>
+
+                    {/* Stage & KPI Text */}
+                    <div className="p-2 rounded-xl bg-white border border-slate-100 space-y-0.5 text-[11px]">
+                      <span className="text-slate-400 block text-[10px] font-bold uppercase">Current Stage</span>
+                      <strong className="text-navy-900 block font-semibold">{item.stage}</strong>
+                      <span className="text-emerald-700 font-medium block">{item.kpiText}</span>
+                    </div>
+                  </div>
+
+                  {/* Bottom Action Button */}
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab(item.tabTarget)}
+                    className="w-full py-1.5 rounded-xl bg-slate-100 hover:bg-[#1D64EC] hover:text-white text-slate-700 font-bold text-[11px] transition-all flex items-center justify-center gap-1 shadow-2xs"
+                  >
+                    <span>{item.actionLabel}</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Bottom pagination / link */}
+            <div className="pt-2 flex items-center justify-between text-xs text-slate-500 border-t border-slate-100">
+              <span>Showing {filteredEngagements.length} verified government engagements</span>
               <button
-                onClick={() => setIsFullProfileModalOpen(false)}
+                type="button"
+                onClick={() => setActiveTab('applications')}
+                className="font-bold text-[#1D64EC] hover:underline flex items-center gap-1"
+              >
+                <span>View Full Pipeline</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+          </div>
+
+          {/* 3. MILESTONES & TIMELINE SLOTS (Matching Availability Bar in Reference Image) */}
+          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base font-bold text-navy-900 font-display">
+                  Milestone & Compliance Schedule
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Tap milestone blocks to inspect deliverable verification status or submit telemetry proofs.
+                </p>
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-200">
+                SLA Milestones
+              </span>
+            </div>
+
+            {/* Milestone Slot Chips matching the time slots in reference */}
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+              {milestoneSlots.map((slot, idx) => (
+                <div
+                  key={idx}
+                  onClick={() => setActiveTab('execution')}
+                  className={`p-3 rounded-2xl text-center cursor-pointer transition-all border ${
+                    slot.status === 'active'
+                      ? 'bg-[#1D64EC] text-white border-[#1D64EC] shadow-sm font-bold scale-[1.02]'
+                      : slot.status === 'ready'
+                      ? 'bg-purple-600 text-white border-purple-600 font-bold shadow-sm'
+                      : slot.status === 'completed'
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100 font-semibold'
+                      : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 font-semibold'
+                  }`}
+                >
+                  <div className="text-[11px] font-bold leading-tight truncate">
+                    {slot.label}
+                  </div>
+                  <div className={`text-[10px] mt-1 ${
+                    slot.status === 'active' || slot.status === 'ready' ? 'text-white/80' : 'text-slate-400'
+                  }`}>
+                    {slot.time}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 4. FINANCIALS & RECENT INVOICES STRIP */}
+          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <h3 className="text-base font-bold text-navy-900 font-display">
+                Recent Invoices & Disbursals
+              </h3>
+              <button
+                type="button"
+                onClick={() => setActiveTab('contracts')}
+                className="text-xs font-bold text-[#1D64EC] hover:underline flex items-center gap-1"
+              >
+                <span>View All Invoices</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              {invoices.map((inv) => (
+                <div key={inv.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono font-bold text-[#1D64EC]">{inv.id}</span>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                      inv.status === 'Paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                    }`}>
+                      {inv.status}
+                    </span>
+                  </div>
+                  <p className="font-bold text-navy-900 truncate">{inv.project}</p>
+                  <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+                    <strong className="text-navy-900 text-xs">{inv.amount}</strong>
+                    <span>{inv.date}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* Edit Profile Modal */}
+      {isEditProfileOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-900/50 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 border border-slate-200 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <h3 className="text-base font-bold text-navy-900 font-display">
+                Edit Founder & Company Profile
+              </h3>
+              <button
+                onClick={() => setIsEditProfileOpen(false)}
                 className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs"
               >
                 ×
@@ -1016,100 +681,65 @@ export const StartupDashboard: React.FC = () => {
             </div>
 
             <div className="space-y-3 text-xs">
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">Corporate Entity Details</span>
-                <p className="font-bold text-navy-900">{founderProfile.companyName}</p>
-                <p className="text-slate-600">CIN: {founderProfile.cin} • Registered in {founderProfile.yearOfIncorporation}</p>
-                <p className="text-slate-600">Headquarters: {founderProfile.headquarters}</p>
-              </div>
-
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">DPIIT & Procurement Accreditation</span>
-                <p className="font-bold text-emerald-700">DPIIT Startup Certificate: {founderProfile.dpiitNumber}</p>
-                <p className="text-slate-600">Eligible for prior turnover and experience relaxations under Maharashtra State Innovation Procurement Rules.</p>
-              </div>
-
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">Authorized Signatory & Contact</span>
-                <p className="text-slate-700 font-medium">Official Contact: {founderProfile.email} | {founderProfile.phone}</p>
-                <p className="text-emerald-700 font-bold">UIDAI Aadhaar Verified Signatory</p>
-              </div>
-            </div>
-
-            <div className="pt-2 border-t border-slate-100 flex justify-end">
-              <button
-                type="button"
-                onClick={() => setIsFullProfileModalOpen(false)}
-                className="px-5 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================================= */}
-      {/* MODAL 2: INVOICE DETAILS MODAL */}
-      {/* ========================================================================= */}
-      {selectedInvoiceModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-900/50 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-4 border border-slate-200 shadow-2xl">
-            <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-100">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Invoice Details</span>
-                <h3 className="text-lg font-bold text-navy-900 font-display mt-0.5">
-                  {selectedInvoiceModal.invoiceNo}
-                </h3>
+                <label className="block font-bold text-navy-900 mb-1">Founder / CEO Name</label>
+                <input
+                  type="text"
+                  defaultValue={founder.name}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-navy-900"
+                />
               </div>
-              <button
-                onClick={() => setSelectedInvoiceModal(null)}
-                className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs"
-              >
-                ×
-              </button>
+
+              <div>
+                <label className="block font-bold text-navy-900 mb-1">Official Contact Email</label>
+                <input
+                  type="email"
+                  defaultValue={founder.email}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-navy-900"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-navy-900 mb-1">Phone Number</label>
+                <input
+                  type="text"
+                  defaultValue={founder.phone}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-navy-900"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-navy-900 mb-1">Company Website</label>
+                <input
+                  type="text"
+                  defaultValue={founder.website}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-navy-900"
+                />
+              </div>
             </div>
 
-            <div className="space-y-3 text-xs text-slate-700">
-              <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">Pilot Deliverable</span>
-                <strong className="text-navy-900 block">{selectedInvoiceModal.pilot}</strong>
-                <p className="text-slate-500">Billed to Department of Urban Development & Water Resources</p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 text-center">
-                <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-100">
-                  <span className="text-[10px] text-emerald-800 uppercase block font-bold">Total Amount</span>
-                  <strong className="text-base font-extrabold text-emerald-900">{selectedInvoiceModal.amount}</strong>
-                </div>
-                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100">
-                  <span className="text-[10px] text-slate-500 uppercase block font-bold">Status</span>
-                  <strong className="text-base font-extrabold text-navy-900">{selectedInvoiceModal.status}</strong>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-                <span>Issued: {selectedInvoiceModal.issueDate}</span>
-                <span>Due: {selectedInvoiceModal.dueDate}</span>
-              </div>
-            </div>
-
-            <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+            <div className="pt-2 border-t border-slate-100 flex items-center justify-end gap-2">
               <button
                 type="button"
-                onClick={() => addNotification({ title: 'Invoice Downloaded', message: `Downloaded copy of ${selectedInvoiceModal.invoiceNo} (PDF)`, portal: 'startup', type: 'info' })}
-                className="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1"
+                onClick={() => setIsEditProfileOpen(false)}
+                className="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs"
               >
-                <Download className="w-3.5 h-3.5" />
-                <span>Download PDF</span>
+                Cancel
               </button>
-
               <button
                 type="button"
-                onClick={() => setSelectedInvoiceModal(null)}
-                className="px-5 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs"
+                onClick={() => {
+                  setIsEditProfileOpen(false);
+                  addNotification({
+                    title: 'Profile Updated',
+                    message: 'Founder profile changes saved in session.',
+                    portal: 'startup',
+                    type: 'success'
+                  });
+                }}
+                className="px-5 py-2 rounded-full bg-[#1D64EC] hover:bg-blue-700 text-white font-bold text-xs"
               >
-                Close
+                Save Changes
               </button>
             </div>
           </div>
