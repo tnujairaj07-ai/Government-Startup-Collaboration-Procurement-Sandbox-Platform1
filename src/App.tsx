@@ -16,7 +16,7 @@ import { PilotTelemetryMonitor } from './components/gov/PilotTelemetryMonitor';
 
 // Startup Portal Components
 import { StartupDashboard } from './components/startup/StartupDashboard';
-import { EvidencePassport } from './components/startup/EvidencePassport';
+import { CompanyEvidenceArchive } from './components/startup/CompanyEvidenceArchive';
 import { ChallengeExplorer } from './components/startup/ChallengeExplorer';
 import { ApplicationTracker } from './components/startup/ApplicationTracker';
 import { DigitalContractSigner } from './components/startup/DigitalContractSigner';
@@ -58,7 +58,7 @@ const MainContent: React.FC = () => {
           case 'dashboard':
             return <StartupDashboard />;
           case 'passport':
-            return <EvidencePassport />;
+            return <CompanyEvidenceArchive />;
           case 'challenges':
             return <ChallengeExplorer />;
           case 'applications':

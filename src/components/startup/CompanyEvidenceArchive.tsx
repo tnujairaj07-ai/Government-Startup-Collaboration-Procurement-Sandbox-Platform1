@@ -22,7 +22,7 @@ interface ArchiveDoc {
   size: string;
 }
 
-export const EvidencePassport: React.FC = () => {
+export const CompanyEvidenceArchive: React.FC = () => {
   const { currentStartup, addNotification } = usePlatform();
 
   // Active Category Tab
