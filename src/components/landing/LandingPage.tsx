@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
-  const { openPortal, challenges, addNotification } = usePlatform();
+  const { openPortal, openLogin, challenges, addNotification } = usePlatform();
 
   // Search input state
   const [heroSearch, setHeroSearch] = useState('');
@@ -164,7 +164,7 @@ export const LandingPage: React.FC = () => {
 
             <button
               type="button"
-              onClick={() => setIsLoginModalOpen(true)}
+              onClick={() => openLogin()}
               className="px-5 sm:px-6 py-2.5 rounded-xl bg-[#0B1E48] hover:bg-[#152C63] text-white font-bold text-xs shadow-md shadow-blue-950/20 flex items-center gap-2 transition-all hover:scale-[1.02]"
             >
               <Lock className="w-3.5 h-3.5 text-[#FF8A3D]" />

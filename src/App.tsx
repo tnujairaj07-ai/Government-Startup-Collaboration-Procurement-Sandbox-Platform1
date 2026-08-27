@@ -22,9 +22,10 @@ import { ApplicationTracker } from './components/startup/ApplicationTracker';
 import { DigitalContractSigner } from './components/startup/DigitalContractSigner';
 import { ExecutionWorkspace } from './components/startup/ExecutionWorkspace';
 import { LandingPage } from './components/landing/LandingPage';
+import { LoginPage } from './components/auth/LoginPage';
 
 const MainContent: React.FC = () => {
-  const { currentRole, activeTab, isLandingPage } = usePlatform();
+  const { currentRole, activeTab, isLandingPage, isLoginPage } = usePlatform();
 
   const renderContent = () => {
     switch (currentRole) {
@@ -83,6 +84,14 @@ const MainContent: React.FC = () => {
       <div className="min-h-screen">
         <LandingPage />
         <SearchCommand />
+      </div>
+    );
+  }
+
+  if (isLoginPage) {
+    return (
+      <div className="min-h-screen">
+        <LoginPage />
       </div>
     );
   }

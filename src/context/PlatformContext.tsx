@@ -50,6 +50,9 @@ interface PlatformContextType {
   setIsCommandPaletteOpen: (open: boolean) => void;
   isLandingPage: boolean;
   setIsLandingPage: (isLanding: boolean) => void;
+  isLoginPage: boolean;
+  setIsLoginPage: (isLogin: boolean) => void;
+  openLogin: (defaultRole?: PortalRole) => void;
   openPortal: (role: PortalRole, tab?: string) => void;
 }
 
@@ -57,6 +60,7 @@ const PlatformContext = createContext<PlatformContextType | undefined>(undefined
 
 export const PlatformProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isLandingPage, setIsLandingPage] = useState<boolean>(true);
+  const [isLoginPage, setIsLoginPage] = useState<boolean>(false);
   const [currentRole, setCurrentRoleState] = useState<PortalRole>('gov');
   const [activeTab, setActiveTabState] = useState<string>('dashboard');
 
@@ -91,10 +95,22 @@ export const PlatformProvider: React.FC<{ children: ReactNode }> = ({ children }
     setActiveTabState('dashboard');
   };
 
+  const openLogin = (defaultRole?: PortalRole) => {
+    if (defaultRole) {
+      setCurrentRoleState(defaultRole);
+    }
+    setIsLandingPage(false);
+    setIsLoginPage(true);
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e) {}
+  };
+
   const openPortal = (role: PortalRole, tab: string = 'dashboard') => {
     setCurrentRoleState(role);
     setActiveTabState(tab);
     setIsLandingPage(false);
+    setIsLoginPage(false);
     try {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (e) {}
@@ -418,6 +434,9 @@ export const PlatformProvider: React.FC<{ children: ReactNode }> = ({ children }
         setIsCommandPaletteOpen,
         isLandingPage,
         setIsLandingPage,
+        isLoginPage,
+        setIsLoginPage,
+        openLogin,
         openPortal
       }}
     >
