@@ -10,7 +10,7 @@ import { PortalRole } from '../../types';
 
 export const LoginPage: React.FC = () => {
   const { 
-    currentRole, setCurrentRole, openPortal, 
+    currentRole, openPortal, 
     setIsLandingPage, setIsLoginPage, addNotification 
   } = usePlatform();
 
@@ -22,91 +22,35 @@ export const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
-  const [captchaInput, setCaptchaInput] = useState('');
-  const [captchaCode, setCaptchaCode] = useState('7K9X2');
-
-  // Status & Feedback
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   // Modals
   const [isAccessModalOpen, setIsAccessModalOpen] = useState(false);
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
 
-  // Generate random 5-character Captcha
-  const refreshCaptcha = () => {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let result = '';
-    for (let i = 0; i < 5; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    setCaptchaCode(result);
-    setCaptchaInput('');
-  };
-
   useEffect(() => {
-    refreshCaptcha();
-    // Auto-fill default demo credentials when switching tabs
+    // Set default frontend placeholder values when switching tabs
     if (loginType === 'gov') {
       setEmail('rajesh.deshmukh@maharashtra.gov.in');
       setPassword('GovMaha@2026');
     } else {
-      setEmail('anjali.patil@aquasense.ai');
+      setEmail('founder@aquasense.ai');
       setPassword('Startup@2026');
     }
-    setErrorMessage(null);
-    setSuccessMessage(null);
   }, [loginType]);
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMessage(null);
-    setSuccessMessage(null);
+  // Direct login on button click (no validation or captcha code needed for frontend)
+  const handleDirectLogin = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
 
-    // Basic Captcha check (case-insensitive)
-    if (captchaInput.trim().toUpperCase() !== captchaCode.toUpperCase()) {
-      setErrorMessage('Invalid captcha code. Please enter the characters shown in the box.');
-      refreshCaptcha();
-      return;
-    }
+    addNotification({
+      title: `Welcome ${loginType === 'gov' ? 'Shri Rajesh Deshmukh' : 'Ms. Anjali Patil'}`,
+      message: `Successfully signed in to the ${loginType === 'gov' ? 'Government Department Portal' : 'Startup Cockpit'}.`,
+      portal: loginType,
+      type: 'success'
+    });
 
-    if (!email || !password) {
-      setErrorMessage('Please enter your official email ID and password.');
-      return;
-    }
-
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-      setSuccessMessage('Authentication verified. Redirecting to your dashboard...');
-      
-      addNotification({
-        title: `Welcome ${loginType === 'gov' ? 'Shri Rajesh Deshmukh' : 'Ms. Anjali Patil'}`,
-        message: `Successfully authenticated into the ${loginType === 'gov' ? 'Government Department Portal' : 'Startup Cockpit'}.`,
-        portal: loginType,
-        type: 'success'
-      });
-
-      setTimeout(() => {
-        openPortal(loginType, 'dashboard');
-      }, 700);
-    }, 900);
-  };
-
-  const handleQuickDemoFill = (role: PortalRole) => {
-    setLoginType(role);
-    if (role === 'gov') {
-      setEmail('rajesh.deshmukh@maharashtra.gov.in');
-      setPassword('GovMaha@2026');
-    } else {
-      setEmail('anjali.patil@aquasense.ai');
-      setPassword('Startup@2026');
-    }
-    setCaptchaInput(captchaCode);
-    setErrorMessage(null);
+    openPortal(loginType, 'dashboard');
   };
 
   const handleForgotPasswordSubmit = (e: React.FormEvent) => {
@@ -114,7 +58,7 @@ export const LoginPage: React.FC = () => {
     setIsForgotPasswordModalOpen(false);
     addNotification({
       title: 'Password Reset Link Sent',
-      message: `A secure verification link has been dispatched to ${forgotEmail || 'your registered email'}.`,
+      message: `A password reset link has been dispatched to ${forgotEmail || 'your registered email'}.`,
       portal: loginType,
       type: 'info'
     });
@@ -123,7 +67,7 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#F4F7FC] text-[#0F172A] flex flex-col justify-between selection:bg-[#1D64EC] selection:text-white font-sans antialiased relative overflow-hidden">
       
-      {/* Decorative Ambient Radial Mesh Glows (Original UI Aesthetics) */}
+      {/* Decorative Ambient Mesh Glows */}
       <div className="absolute -top-32 -left-32 w-[550px] h-[550px] bg-gradient-to-br from-blue-100/70 via-sky-100/40 to-transparent rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/2 -right-32 w-[550px] h-[550px] bg-gradient-to-bl from-sky-100/60 via-blue-100/30 to-transparent rounded-full blur-3xl pointer-events-none" />
 
@@ -247,7 +191,7 @@ export const LoginPage: React.FC = () => {
           </div>
 
           {/* --------------------------------------------------------------------- */}
-          {/* PART 2: LOGIN FORM (Center / Main Card - Matching Reference Styling)   */}
+          {/* PART 2: LOGIN FORM (Center / Main Card - Instant 1-Click Access)       */}
           {/* --------------------------------------------------------------------- */}
           <div className="lg:col-span-5">
             <div className="bg-white rounded-[36px] border border-slate-200/90 shadow-xl p-6 sm:p-8 space-y-6 relative overflow-hidden">
@@ -258,7 +202,7 @@ export const LoginPage: React.FC = () => {
                   Sign in to Mahatech Procure
                 </h2>
                 <p className="text-xs text-slate-500 font-medium">
-                  Choose your login type and continue.
+                  Choose your login type and click to enter directly.
                 </p>
               </div>
 
@@ -291,23 +235,8 @@ export const LoginPage: React.FC = () => {
                 </button>
               </div>
 
-              {/* Feedback Banners */}
-              {errorMessage && (
-                <div className="p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-800 text-xs font-semibold flex items-start gap-2.5 animate-in fade-in">
-                  <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-                  <p className="leading-snug">{errorMessage}</p>
-                </div>
-              )}
-
-              {successMessage && (
-                <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-semibold flex items-center gap-2.5 animate-in fade-in">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <p className="leading-snug">{successMessage}</p>
-                </div>
-              )}
-
               {/* Login Form */}
-              <form onSubmit={handleLoginSubmit} className="space-y-4">
+              <form onSubmit={handleDirectLogin} className="space-y-4">
                 
                 {/* Email Field */}
                 <div className="space-y-1.5">
@@ -318,7 +247,6 @@ export const LoginPage: React.FC = () => {
                     <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5 pointer-events-none" />
                     <input
                       type="email"
-                      required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder={loginType === 'gov' ? 'name@maharashtra.gov.in' : 'founder@yourstartup.com'}
@@ -349,7 +277,6 @@ export const LoginPage: React.FC = () => {
                     <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5 pointer-events-none" />
                     <input
                       type={showPassword ? 'text' : 'password'}
-                      required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter your password"
@@ -362,36 +289,6 @@ export const LoginPage: React.FC = () => {
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
-                  </div>
-                </div>
-
-                {/* Captcha Field */}
-                <div className="space-y-1.5 pt-1">
-                  <label className="block text-xs font-bold text-slate-800">Security Verification</label>
-                  <div className="flex items-center gap-2">
-                    {/* Visual Captcha Box */}
-                    <div className="h-11 px-4 rounded-xl bg-[#0F172A] text-[#8BB9FE] font-mono font-black text-sm tracking-widest flex items-center justify-center select-none shadow-inner border border-slate-700">
-                      {captchaCode}
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={refreshCaptcha}
-                      className="w-11 h-11 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors"
-                      title="Refresh Captcha Code"
-                    >
-                      <RefreshCw className="w-4 h-4" />
-                    </button>
-
-                    <input
-                      type="text"
-                      required
-                      maxLength={6}
-                      value={captchaInput}
-                      onChange={(e) => setCaptchaInput(e.target.value)}
-                      placeholder="Enter code above"
-                      className="flex-1 px-3.5 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:border-[#1D64EC] focus:bg-white text-xs font-semibold text-navy-950 outline-none uppercase font-mono transition-all"
-                    />
                   </div>
                 </div>
 
@@ -409,59 +306,28 @@ export const LoginPage: React.FC = () => {
                   </label>
                 </div>
 
-                {/* Primary Submit Button */}
+                {/* Primary Submit Button (Direct Entry on Click) */}
                 <button
                   type="submit"
-                  disabled={isLoading}
                   className="w-full py-3.5 rounded-2xl bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-xs sm:text-sm shadow-action hover:shadow-action-hover flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
                 >
-                  {isLoading ? (
-                    <>
-                      <RefreshCw className="w-4 h-4 animate-spin" />
-                      <span>Verifying Credentials...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Lock className="w-4 h-4" />
-                      <span>{loginType === 'gov' ? 'Sign In as Government User' : 'Sign In as Startup'}</span>
-                      <ArrowRight className="w-4 h-4 ml-1" />
-                    </>
-                  )}
+                  <Lock className="w-4 h-4" />
+                  <span>{loginType === 'gov' ? 'Sign In as Government User' : 'Sign In as Startup'}</span>
+                  <ArrowRight className="w-4 h-4 ml-1" />
                 </button>
 
               </form>
 
-              {/* Demo 1-Click Auto-Fill Fast Pass */}
-              <div className="p-3 rounded-2xl bg-[#E8F2FE]/70 border border-blue-200 flex items-center justify-between text-xs">
-                <span className="text-[11px] font-bold text-slate-600">Quick Test Credentials:</span>
-                <div className="flex items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => handleQuickDemoFill('gov')}
-                    className="px-2.5 py-1 rounded-lg bg-[#1D64EC] hover:bg-[#0D4CD3] text-white font-bold text-[10px] transition-colors"
-                  >
-                    Gov Officer
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleQuickDemoFill('startup')}
-                    className="px-2.5 py-1 rounded-lg bg-[#0F172A] hover:bg-slate-800 text-white font-bold text-[10px] transition-colors"
-                  >
-                    Startup Founder
-                  </button>
-                </div>
-              </div>
-
-              {/* Secondary SSO Options */}
+              {/* Secondary SSO Options (Direct Click Access) */}
               <div className="space-y-2 pt-1 border-t border-slate-100">
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block text-center">
-                  Or continue with verified SSO
+                  Or sign in directly with SSO
                 </span>
 
                 {loginType === 'gov' ? (
                   <button
                     type="button"
-                    onClick={() => handleQuickDemoFill('gov')}
+                    onClick={() => handleDirectLogin()}
                     className="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 flex items-center justify-center gap-2 transition-colors"
                   >
                     <span>🏛️ Jan Parichay (National Single Sign-On / DSC)</span>
@@ -469,7 +335,7 @@ export const LoginPage: React.FC = () => {
                 ) : (
                   <button
                     type="button"
-                    onClick={() => handleQuickDemoFill('startup')}
+                    onClick={() => handleDirectLogin()}
                     className="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 flex items-center justify-center gap-2 transition-colors"
                   >
                     <span>🚀 Continue with DPIIT-linked Startup India SSO</span>
@@ -532,7 +398,10 @@ export const LoginPage: React.FC = () => {
               </p>
               <button
                 type="button"
-                onClick={() => handleQuickDemoFill('startup')}
+                onClick={() => {
+                  setLoginType('startup');
+                  handleDirectLogin();
+                }}
                 className="w-full py-2 px-3 rounded-xl bg-[#E8F2FE] hover:bg-[#DDEBFC] text-[#1D64EC] border border-blue-200 text-xs font-bold transition-all text-center"
               >
                 Register as a Startup
