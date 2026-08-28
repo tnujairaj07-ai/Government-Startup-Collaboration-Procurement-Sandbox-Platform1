@@ -29,14 +29,8 @@ export const LoginPage: React.FC = () => {
   const [forgotEmail, setForgotEmail] = useState('');
 
   useEffect(() => {
-    // Set default frontend placeholder values when switching tabs
-    if (loginType === 'gov') {
-      setEmail('rajesh.deshmukh@maharashtra.gov.in');
-      setPassword('GovMaha@2026');
-    } else {
-      setEmail('founder@aquasense.ai');
-      setPassword('Startup@2026');
-    }
+    setEmail('');
+    setPassword('');
   }, [loginType]);
 
   // Direct login on button click (no validation or captcha code needed for frontend)
@@ -44,7 +38,7 @@ export const LoginPage: React.FC = () => {
     if (e) e.preventDefault();
 
     addNotification({
-      title: `Welcome ${loginType === 'gov' ? 'Shri Rajesh Deshmukh' : 'Ms. Anjali Patil'}`,
+      title: `Welcome to Mahatech Procure`,
       message: `Successfully signed in to the ${loginType === 'gov' ? 'Government Department Portal' : 'Startup Cockpit'}.`,
       portal: loginType,
       type: 'success'

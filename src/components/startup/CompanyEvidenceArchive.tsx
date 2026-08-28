@@ -40,54 +40,7 @@ export const CompanyEvidenceArchive: React.FC = () => {
   const [newDocType, setNewDocType] = useState('Legal Certificate');
 
   // Archive Documents Data Store
-  const [documents, setDocuments] = useState<ArchiveDoc[]>([
-    // 1. Company & Legal
-    { id: 'DOC-01', name: 'Certificate of Incorporation', type: 'Legal Registration', category: 'legal', uploadedOn: '10 Jan 2024', verifiedStatus: 'Verified by Platform', version: 'v1.0', size: '1.4 MB' },
-    { id: 'DOC-02', name: 'Memorandum & Articles of Association (MOA/AOA)', type: 'Corporate Constitution', category: 'legal', uploadedOn: '10 Jan 2024', verifiedStatus: 'Verified', version: 'v1.0', size: '2.8 MB' },
-    { id: 'DOC-03', name: 'Permanent Account Number (PAN) Card', type: 'Tax ID', category: 'legal', uploadedOn: '10 Jan 2024', verifiedStatus: 'Verified', version: 'v1.0', size: '0.8 MB' },
-    { id: 'DOC-04', name: 'GSTIN Registration Certificate', type: 'Tax Registration', category: 'legal', uploadedOn: '15 Jan 2024', verifiedStatus: 'Verified', version: 'v1.1', size: '1.1 MB' },
-    { id: 'DOC-05', name: 'Company Capability Profile (Executive Dossier)', type: 'Corporate Profile', category: 'legal', uploadedOn: '20 Aug 2026', verifiedStatus: 'Verified', version: 'v2.4', size: '4.6 MB' },
-
-    // 2. DPIIT & Recognitions
-    { id: 'DOC-06', name: 'DPIIT Recognition Certificate (DIPP12345)', type: 'Statutory Startup', category: 'dpiit', uploadedOn: '05 Feb 2024', verifiedStatus: 'Verified by Platform', version: 'v1.0', size: '1.2 MB' },
-    { id: 'DOC-07', name: 'Maharashtra State Innovation Society Recognition', type: 'State Recognition', category: 'dpiit', uploadedOn: '12 Mar 2024', verifiedStatus: 'Verified', version: 'v1.0', size: '1.5 MB' },
-    { id: 'DOC-08', name: 'IIT Bombay SINE Incubation Certificate', type: 'Incubation Proof', category: 'dpiit', uploadedOn: '18 Apr 2024', verifiedStatus: 'Verified', version: 'v1.0', size: '2.1 MB' },
-    { id: 'DOC-09', name: 'National Startup Awards 2024 – Finalist Citation', type: 'Excellence Award', category: 'dpiit', uploadedOn: '22 May 2024', verifiedStatus: 'Verified', version: 'v1.0', size: '1.7 MB' },
-
-    // 3. Technology & Product
-    { id: 'DOC-10', name: 'AquaSense AI Hydraulic Digital Twin Architecture Whitepaper', type: 'Technical Architecture', category: 'tech', uploadedOn: '01 Mar 2024', verifiedStatus: 'Verified', version: 'v2.0', size: '5.2 MB' },
-    { id: 'DOC-11', name: 'Acoustic Clamp IoT Hardware Specs & Sensor Rigging Note', type: 'Hardware Datasheet', category: 'tech', uploadedOn: '01 Mar 2024', verifiedStatus: 'Verified', version: 'v1.2', size: '3.1 MB' },
-    { id: 'DOC-12', name: 'TRL 8 Maturity Self-Assessment & Lab Test Evidence', type: 'TRL Benchmark', category: 'tech', uploadedOn: '10 Mar 2024', verifiedStatus: 'Verified by Platform', version: 'v1.0', size: '2.9 MB' },
-    { id: 'DOC-13', name: 'SCADA / ITMS & GIS Open API Integration Guide', type: 'API Documentation', category: 'tech', uploadedOn: '15 Mar 2024', verifiedStatus: 'Verified', version: 'v2.1', size: '3.8 MB' },
-    { id: 'DOC-14', name: '18-Month Product Roadmap & Sensor Miniaturization', type: 'Product Roadmap', category: 'tech', uploadedOn: '20 Jul 2026', verifiedStatus: 'Informational', version: 'v1.0', size: '1.9 MB' },
-
-    // 4. Past Projects & Case Studies
-    { id: 'DOC-15', name: 'Case Study: Pune MC Water Pilot (Zone A 120km Network)', type: 'Pilot Case Study', category: 'projects', uploadedOn: '10 Jun 2024', verifiedStatus: 'Verified', version: 'v1.0', size: '4.2 MB' },
-    { id: 'DOC-16', name: 'Pune MC Pilot Completion Certificate & Sign-off', type: 'Completion Certificate', category: 'projects', uploadedOn: '12 Jun 2024', verifiedStatus: 'Verified by Platform', version: 'v1.0', size: '1.6 MB' },
-    { id: 'DOC-17', name: 'PoC Report: Nagpur Jal Leakage Detection (14 Feeder Fractures)', type: 'PoC Technical Report', category: 'projects', uploadedOn: '05 Feb 2024', verifiedStatus: 'Verified', version: 'v1.0', size: '3.4 MB' },
-    { id: 'DOC-18', name: 'Thane Smart City Smart Water Rollout Deployment Summary', type: 'Deployment Report', category: 'projects', uploadedOn: '18 Jul 2025', verifiedStatus: 'Verified', version: 'v1.0', size: '3.9 MB' },
-    { id: 'DOC-19', name: 'Official Client Testimonials & Reference Letters (Bundle of 3)', type: 'Client References', category: 'projects', uploadedOn: '20 Jul 2025', verifiedStatus: 'Verified', version: 'v1.0', size: '2.5 MB' },
-
-    // 5. Compliance & Certifications
-    { id: 'DOC-20', name: 'ISO 27001:2022 Information Security Certificate', type: 'Security Standard', category: 'compliance', uploadedOn: '22 Apr 2024', verifiedStatus: 'Verified', version: 'v1.0', size: '1.3 MB' },
-    { id: 'DOC-21', name: 'MSME / Udyam Registration Certificate', type: 'Enterprise Proof', category: 'compliance', uploadedOn: '10 Mar 2024', verifiedStatus: 'Verified', version: 'v1.0', size: '0.9 MB' },
-    { id: 'DOC-22', name: 'ISO 9001:2015 Quality Management System', type: 'Quality Standard', category: 'compliance', uploadedOn: '15 May 2024', verifiedStatus: 'Verified', version: 'v1.0', size: '1.2 MB' },
-
-    // 6. Security & Data Residency
-    { id: 'DOC-23', name: 'CERT-In Empanelled Cybersecurity Audit Report (Level 3)', type: 'Security Audit', category: 'security', uploadedOn: '20 Mar 2026', verifiedStatus: 'Verified by Platform', version: 'v3.0', size: '4.7 MB' },
-    { id: 'DOC-24', name: 'MeitY Sovereign Data Residency & Hosting Declaration (AWS Mumbai)', type: 'Data Residency', category: 'security', uploadedOn: '01 May 2024', verifiedStatus: 'Verified', version: 'v1.0', size: '1.1 MB' },
-    { id: 'DOC-25', name: 'Vulnerability Assessment & Penetration Test (VAPT) Report', type: 'VAPT Audit', category: 'security', uploadedOn: '15 Jun 2026', verifiedStatus: 'Verified', version: 'v2.0', size: '3.2 MB' },
-
-    // 7. Financials
-    { id: 'DOC-26', name: 'Audited Financial Statements – FY 2023–24', type: 'Audited Balance Sheet', category: 'financials', uploadedOn: '30 Sep 2024', verifiedStatus: 'Verified', version: 'v1.0', size: '3.8 MB' },
-    { id: 'DOC-27', name: 'Audited Financial Statements – FY 2022–23', type: 'Audited Balance Sheet', category: 'financials', uploadedOn: '28 Sep 2023', verifiedStatus: 'Verified', version: 'v1.0', size: '3.5 MB' },
-    { id: 'DOC-28', name: 'CA Certified Turnover Declaration (FY 2024–25)', type: 'Turnover Certificate', category: 'financials', uploadedOn: '10 Jul 2025', verifiedStatus: 'Self-Declared', version: 'v1.0', size: '1.2 MB' },
-    { id: 'DOC-29', name: 'Nationalized Bank Account Verification Letter', type: 'Bank Mandate', category: 'financials', uploadedOn: '15 Jan 2024', verifiedStatus: 'Verified', version: 'v1.0', size: '1.0 MB' },
-
-    // 8. Additional Evidence
-    { id: 'DOC-30', name: 'Patent Application #202421008892: Real-time Acoustic Waveform AI', type: 'Intellectual Property', category: 'additional', uploadedOn: '14 Feb 2024', verifiedStatus: 'Verified', version: 'v1.0', size: '2.4 MB' },
-    { id: 'DOC-31', name: 'Times of India Feature: Pune Startups Tackling Municipal Water Loss', type: 'Media Citation', category: 'additional', uploadedOn: '18 May 2024', verifiedStatus: 'Informational', version: 'v1.0', size: '1.5 MB' }
-  ]);
+  const [documents, setDocuments] = useState<ArchiveDoc[]>([]);
 
   // Categories definition
   const categories = [
@@ -237,12 +190,12 @@ export const CompanyEvidenceArchive: React.FC = () => {
           
           <div className="flex items-start sm:items-center gap-4">
             <div className="w-16 h-16 rounded-2xl bg-[#1D64EC] text-white flex items-center justify-center text-xl font-black font-display shadow-md shrink-0">
-              AQ
+              {currentStartup.name ? currentStartup.name.slice(0, 2).toUpperCase() : 'ST'}
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-1">
                 <h2 className="text-xl sm:text-2xl font-black text-navy-900 font-display">
-                  AquaSense Technologies Pvt. Ltd.
+                  {currentStartup.name || 'Startup Registered'}
                 </h2>
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-200 flex items-center gap-1">
                   <Check className="w-3 h-3 text-emerald-600" />
@@ -250,14 +203,14 @@ export const CompanyEvidenceArchive: React.FC = () => {
                 </span>
               </div>
               <p className="text-xs text-slate-500 font-medium">
-                AI-driven water network intelligence for municipal utilities & smart distribution grids
+                {currentStartup.description || 'Public innovation and GovTech problem-solving entity.'}
               </p>
               <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-400 mt-1 font-mono">
-                <span>DPIIT: <strong className="text-emerald-700 font-bold">DIPP12345</strong></span>
+                <span>DPIIT: <strong className="text-emerald-700 font-bold">{currentStartup.dpiitNumber || 'DIPP-VERIFIED'}</strong></span>
                 <span>•</span>
-                <span>GeM Vendor: <strong className="text-purple-700 font-bold">GEM-VEND-MH-882194</strong></span>
+                <span>GeM Vendor: <strong className="text-purple-700 font-bold">GEM-VERIFIED</strong></span>
                 <span>•</span>
-                <span>UID: <strong className="text-slate-600">STARTUP-MH-2024-0187</strong></span>
+                <span>UID: <strong className="text-slate-600">STARTUP-MH-REG</strong></span>
               </div>
             </div>
           </div>
@@ -288,17 +241,17 @@ export const CompanyEvidenceArchive: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Headquarters:</span>
-                <strong className="text-navy-900">Pune, Maharashtra</strong>
+                <strong className="text-navy-900">{currentStartup.location || 'Maharashtra, India'}</strong>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Incorporation:</span>
-                <strong className="text-navy-900">2022 (14 Members)</strong>
+                <span className="text-slate-500">Sector / Domain:</span>
+                <strong className="text-navy-900">{currentStartup.sector || 'DeepTech Innovation'}</strong>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Official Portal:</span>
-                <a href="https://aquasense.tech" target="_blank" rel="noreferrer" className="text-[#1D64EC] font-bold hover:underline">
-                  aquasense.tech
-                </a>
+                <span className="text-[#1D64EC] font-bold">
+                  {currentStartup.website || 'Verified Company Domain'}
+                </span>
               </div>
             </div>
           </div>
@@ -309,7 +262,7 @@ export const CompanyEvidenceArchive: React.FC = () => {
             <div className="space-y-1 text-slate-700">
               <div className="flex justify-between">
                 <span className="text-slate-500">Domain / Focus:</span>
-                <strong className="text-navy-900">Water Tech, AI/ML, IoT</strong>
+                <strong className="text-navy-900">{currentStartup.sector || 'Public Sector Innovation'}</strong>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Maturity Level:</span>
@@ -321,7 +274,7 @@ export const CompanyEvidenceArchive: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Hosting:</span>
-                <strong className="text-emerald-700">MeitY Cloud (AWS Mumbai)</strong>
+                <strong className="text-emerald-700">MeitY Cloud (India)</strong>
               </div>
             </div>
           </div>
@@ -331,20 +284,20 @@ export const CompanyEvidenceArchive: React.FC = () => {
             <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider block">Quantified Impact</span>
             <div className="space-y-1 text-slate-700">
               <div className="flex justify-between">
-                <span className="text-slate-500">NRW Loss Reduction:</span>
-                <strong className="text-emerald-800">20–25% Average</strong>
+                <span className="text-slate-500">Audit Status:</span>
+                <strong className="text-emerald-800">State Verified</strong>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Active Monitoring:</span>
-                <strong className="text-navy-900">450+ km Pipelines</strong>
+                <strong className="text-navy-900">Sandbox Ready</strong>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Utility Cost Savings:</span>
-                <strong className="text-emerald-800">₹1.2 Cr Annualized</strong>
+                <span className="text-slate-500">Compliance Proof:</span>
+                <strong className="text-emerald-800">CERT-In & MeitY</strong>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Rollout Speed:</span>
-                <strong className="text-navy-900">10–14 Days / Zone</strong>
+                <span className="text-slate-500">Deployment SLA:</span>
+                <strong className="text-navy-900">Fast-Track</strong>
               </div>
             </div>
           </div>

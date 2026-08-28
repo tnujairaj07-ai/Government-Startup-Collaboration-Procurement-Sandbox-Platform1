@@ -88,88 +88,17 @@ export const StartupDirectory: React.FC = () => {
 
   // Entity Tabs Configuration
   const entityTabs = [
-    { name: 'Startups', count: '78,195' },
-    { name: 'Incubators', count: '48' },
-    { name: 'Accelerators', count: '24' },
-    { name: 'Corporates', count: '62' },
-    { name: 'Mentors', count: '310' },
-    { name: 'Universities', count: '35' },
-    { name: 'State Innovation Cells', count: '36' }
+    { name: 'Startups', count: `${startups.length}` },
+    { name: 'Incubators', count: '0' },
+    { name: 'Accelerators', count: '0' },
+    { name: 'Corporates', count: '0' },
+    { name: 'Mentors', count: '0' },
+    { name: 'Universities', count: '0' },
+    { name: 'State Innovation Cells', count: '0' }
   ];
 
-  // Ecosystem partner directory data for other tabs
-  const otherEcosystemEntities = [
-    {
-      id: 'ECO-001',
-      name: 'COEP Bhau Institute of Innovation, Entrepreneurship & Leadership',
-      category: 'Incubators',
-      type: 'TBI / NIDHI Incubator',
-      location: 'Pune, Maharashtra',
-      focus: 'DeepTech, IoT, AI/ML & CleanTech',
-      portfolioCount: 140,
-      verified: true
-    },
-    {
-      id: 'ECO-002',
-      name: 'Society for Innovation and Entrepreneurship (SINE), IIT Bombay',
-      category: 'Incubators',
-      type: 'Academic Technology Business Incubator',
-      location: 'Mumbai, Maharashtra',
-      focus: 'Semiconductors, MedTech, Robotics & Aerospace',
-      portfolioCount: 220,
-      verified: true
-    },
-    {
-      id: 'ECO-003',
-      name: 'Maharashtra State Innovation Society (MSInS) Accelerator Hub',
-      category: 'Accelerators',
-      type: 'State Innovation Accelerator',
-      location: 'Mumbai, Maharashtra',
-      focus: 'GovTech, AgriTech & Public Procurement Pilots',
-      portfolioCount: 85,
-      verified: true
-    },
-    {
-      id: 'ECO-004',
-      name: 'Tata Consultancy Services (TCS) Co-Innovation Network (COIN)',
-      category: 'Corporates',
-      type: 'Corporate Venture & Innovation Engine',
-      location: 'Mumbai Suburban, Maharashtra',
-      focus: 'Smart Cities, Cloud SaaS & Industrial IoT',
-      portfolioCount: 310,
-      verified: true
-    },
-    {
-      id: 'ECO-005',
-      name: 'Dr. Meera Deshmukh (COEP Tech Univ & MeitY Advisor)',
-      category: 'Mentors',
-      type: 'Senior Technical Reviewer & Urban AI Lead',
-      location: 'Pune, Maharashtra',
-      focus: 'Acoustic Sensors, SCADA Integration & Algorithmic V&V',
-      portfolioCount: 42,
-      verified: true
-    },
-    {
-      id: 'ECO-006',
-      name: 'Institute of Chemical Technology (ICT) Mumbai R&D Centre',
-      category: 'Universities',
-      type: 'State Research & Technology Transfer Centre',
-      location: 'Mumbai, Maharashtra',
-      focus: 'Polymer Recycling, Bio-refinery & Water Treatment',
-      portfolioCount: 65,
-      verified: true
-    },
-    {
-      id: 'ECO-007',
-      name: 'District Innovation Cell (Pune Collectorate)',
-      category: 'State Innovation Cells',
-      type: 'District Administration Innovation Cell',
-      location: 'Pune, Maharashtra',
-      focus: 'Smart District Water Supply & Public Service Delivery',
-      portfolioCount: 18,
-      verified: true
-    }
-  ];
+  // Ecosystem partner directory data for other tabs (empty when no mock data)
+  const otherEcosystemEntities: any[] = [];
 
   const toggleItem = (list: string[], setList: React.Dispatch<React.SetStateAction<string[]>>, item: string) => {
     if (list.includes(item)) {

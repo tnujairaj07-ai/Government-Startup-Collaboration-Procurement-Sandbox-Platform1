@@ -123,6 +123,22 @@ export const ExecutionWorkspace: React.FC = () => {
     setContactMessage('');
   };
 
+  if (!activeProposal) {
+    return (
+      <div className="space-y-6">
+        <div className="glass-panel rounded-3xl p-16 text-center space-y-3">
+          <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#1D64EC] flex items-center justify-center mx-auto">
+            <Rocket className="w-6 h-6" />
+          </div>
+          <h3 className="text-base font-bold text-navy-900">No Active Pilot Deployments</h3>
+          <p className="text-xs text-slate-500 max-w-sm mx-auto">
+            Once a problem statement proposal receives bilateral execution clearance, live milestone evidence uploads, escrow tranches, and sensor telemetry feeds will unlock in this workspace.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       
@@ -139,16 +155,15 @@ export const ExecutionWorkspace: React.FC = () => {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 Active Pilot
               </span>
-              <span className="text-xs text-slate-400 font-mono">Contract: GR-MH/2026/WTR-994</span>
-              <span className="text-xs text-slate-400 font-mono">• Grant Cap: INR 35.0 Lakhs</span>
+              <span className="text-xs text-slate-400 font-mono">Proposal Ref: {activeProposal.id}</span>
             </div>
 
             <h1 className="text-xl sm:text-2xl font-black text-navy-900 font-display tracking-tight leading-tight">
-              AI-based Water Leakage Detection – Pune Municipal Corporation (Zone A)
+              {activeProposal.challengeTitle}
             </h1>
 
             <p className="text-xs text-slate-500 font-medium">
-              Department: <strong>Maharashtra Water Supply & Sanitation Department</strong> • Nodal Officer: <strong>Shri Rajesh Deshmukh</strong>
+              Department: <strong>{activeProposal.department}</strong>
             </p>
           </div>
 

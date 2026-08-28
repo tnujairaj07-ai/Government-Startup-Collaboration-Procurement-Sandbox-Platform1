@@ -4,15 +4,18 @@ import {
   Activity, ChevronRight, FileText, CheckCircle2, Clock, Sparkles, 
   Scale, Shield, User, MapPin, Mail, Phone, ExternalLink, 
   AlertTriangle, Download, ArrowRight, Building2, CheckSquare, 
-  Calendar, Layers, FileCheck, ShieldCheck, X 
+  Calendar, Layers, FileCheck, ShieldCheck, X, Inbox, FolderOpen,
+  CheckCircle, FileSearch, HelpCircle
 } from 'lucide-react';
 import { usePlatform } from '../../context/PlatformContext';
-import { MetricTile } from '../common/MetricTile';
 import { ProblemStatementModal } from './ProblemStatementModal';
 import { StatusBadge } from '../common/StatusBadge';
 
 export const GovDashboard: React.FC = () => {
-  const { setActiveTab, addNotification } = usePlatform();
+  const { 
+    challenges, startups, proposals, contracts, adminLogs, 
+    setActiveTab, addNotification 
+  } = usePlatform();
 
   const [isNewChallengeModalOpen, setIsNewChallengeModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -20,12 +23,12 @@ export const GovDashboard: React.FC = () => {
 
   // Official Profile Information
   const officialProfile = {
-    name: 'Shri Rajesh Deshmukh',
+    name: 'Department Nodal Officer',
     designation: 'Joint Secretary',
     department: 'Department of Urban Development & Water Resources',
     ministry: 'Government of Maharashtra',
-    office: 'Room 412, 4th Floor, Mantralaya, Mumbai – 400032',
-    userId: 'GOV-MH-UD-2024-0187',
+    office: 'Mantralaya, Mumbai – 400032',
+    userId: 'GOV-MH-UD-OFFICER',
     primaryRole: 'Nodal Officer – Mahatech Procure (Urban Development & Water Resources)',
     responsibilities: [
       'Approve departmental problem statements & innovation calls',
@@ -34,183 +37,48 @@ export const GovDashboard: React.FC = () => {
       'Oversee state-wide scale-up and GeM cataloging'
     ],
     status: 'Active',
-    lastLogin: '27 Aug 2026, 09:14 IST',
-    email: 'rajesh.deshmukh@maharashtra.gov.in',
-    phone: '+91-22-2202 5555 (Ext. 4182)'
+    lastLogin: 'Today, Session Active',
+    email: 'officer@maharashtra.gov.in',
+    phone: '+91-22-2202 5555'
   };
 
-  // Section 3: Pending Priorities Data
+  // Real Dynamic Calculations (0 when empty)
+  const activeChallengesCount = challenges.filter(c => c.status === 'Open').length;
+  const startupsEngagedCount = startups.length;
+  const activePilotsList = proposals.filter(p => p.status === 'pilot_ongoing');
+  const activePilotsCount = activePilotsList.length;
+  const solutionsScaledCount = proposals.filter(p => p.status === 'completed').length;
+  const contractsApprovedCount = contracts.filter(c => c.govStatus === 'approved').length;
+  const pendingApprovalsCount = contracts.filter(c => c.govStatus === 'pending').length + proposals.filter(p => p.status === 'expert_review' || p.status === 'screening_passed').length;
+  
+  // Pending actions derived from context
   const pendingActions = [
-    {
-      id: 'ACT-001',
-      type: 'Challenge' as const,
-      title: 'PS5: AI-based Stormwater Flood Prediction & Early Warning',
-      zone: 'Pune / Western Ghats',
-      dueIn: '2 days',
-      status: 'Pending Your Approval',
-      actionLabel: 'Review Call',
-      targetTab: 'challenges'
-    },
-    {
-      id: 'ACT-002',
-      type: 'Pilot' as const,
-      title: 'AquaSense Technologies – Zone A Leak Detection (M2 Milestone)',
-      zone: 'Pune Municipal Zone A',
-      dueIn: '5 days',
-      status: 'Due for Milestone Review',
-      actionLabel: 'Monitor Pilot',
-      targetTab: 'monitor'
-    },
-    {
-      id: 'ACT-003',
+    ...contracts.filter(c => c.govStatus === 'pending').map(c => ({
+      id: c.id,
       type: 'Contract' as const,
-      title: 'CleanBot Innovations – Waste Segregation Robot (Tranche M2)',
-      zone: 'Navi Mumbai APMC',
-      dueIn: '1 week',
-      status: 'Pending Contract Sign-off',
+      title: `Bilateral Contract: ${c.startupName} (${c.challengeTitle})`,
+      zone: 'Department Zone',
+      dueIn: 'Pending',
+      status: 'Pending Sign-off',
       actionLabel: 'Approve Contract',
       targetTab: 'contracts'
-    },
-    {
-      id: 'ACT-004',
+    })),
+    ...proposals.filter(p => p.status === 'expert_review' || p.status === 'screening_passed').map(p => ({
+      id: p.id,
       type: 'Evaluation' as const,
-      title: 'PS2: Solid Waste Sorting – Expert Panel Deliberation (3 Startups)',
-      zone: 'Urban Development',
-      dueIn: '3 days',
-      status: 'In Progress',
-      actionLabel: 'Evaluate Shortlist',
+      title: `Proposal Review: ${p.startupName} (${p.challengeTitle})`,
+      zone: 'Review Panel',
+      dueIn: 'Pending',
+      status: 'Under Review',
+      actionLabel: 'Evaluate',
       targetTab: 'expert_clearance'
-    }
-  ];
-
-  // Section 4: Key Department Challenges
-  const keyChallenges = [
-    {
-      id: 'PS1',
-      psCode: 'PS1',
-      title: 'Smart Water Loss Reduction in Urban Networks',
-      status: 'In Pilot',
-      proposalsReceived: 9,
-      shortlistedCount: 3,
-      leadOfficer: 'Shri Rajesh Deshmukh',
-      department: 'Water Supply & Sanitation'
-    },
-    {
-      id: 'PS2',
-      psCode: 'PS2',
-      title: 'Autonomous Solid Waste Segregation & Robotic Sorting',
-      status: 'Expert Evaluation',
-      proposalsReceived: 14,
-      shortlistedCount: 2,
-      leadOfficer: 'Shri Rajesh Deshmukh',
-      department: 'Environment & Climate Change'
-    },
-    {
-      id: 'PS5',
-      psCode: 'PS5',
-      title: 'AI-based Stormwater Flood Prediction & Early Warning',
-      status: 'Open for Submissions',
-      proposalsReceived: 6,
-      shortlistedCount: 0,
-      leadOfficer: 'Shri Rajesh Deshmukh',
-      department: 'Disaster Management'
-    }
-  ];
-
-  // Section 5: Active Pilots List
-  const activePilots = [
-    {
-      ps: 'PS1: Smart Water Loss Reduction',
-      startup: 'AquaSense Technologies',
-      zone: 'Pune Zone A (120 km)',
-      milestone: 'M2 (3-Month Review)',
-      status: 'On Track',
-      nextReview: '05 Sep 2026',
-      action: 'Review Milestone'
-    },
-    {
-      ps: 'PS2: Solid Waste Sorter',
-      startup: 'CleanBot Innovations',
-      zone: 'Navi Mumbai APMC Yard',
-      milestone: 'M1 (Assembly & Rigging)',
-      status: 'On Track',
-      nextReview: '10 Sep 2026',
-      action: 'Review Milestone'
-    },
-    {
-      ps: 'PS3: Drone Crop Monitoring',
-      startup: 'CropCare AI Labs',
-      zone: 'Nashik Horticulture',
-      milestone: 'M3 (Validation & GeM)',
-      status: 'Completed',
-      nextReview: '–',
-      action: 'View Report'
-    }
-  ];
-
-  // Section 6: Recent Contracts
-  const recentContracts = [
-    {
-      title: 'Waste Segregation Robot – CleanBot Innovations LLP',
-      ps: 'PS2: Municipal Solid Waste Automation',
-      value: 'INR 42.0 Lakhs',
-      status: 'Active',
-      lastMilestone: 'M2 Completed',
-      nextPayment: 'INR 16.8 Lakhs'
-    },
-    {
-      title: 'Smart Water Leakage Interception – AquaSense Technologies',
-      ps: 'PS1: Smart Water Loss Reduction',
-      value: 'INR 35.0 Lakhs',
-      status: 'Pending eSign',
-      lastMilestone: 'M1 Approved',
-      nextPayment: 'INR 10.5 Lakhs'
-    }
-  ];
-
-  // Section 7: Audit Activity Feed
-  const recentActivities = [
-    { 
-      type: 'Challenge', 
-      title: 'Challenge published: “AI-based Traffic Signal Optimization”', 
-      time: '1 day ago', 
-      category: 'Procurement Notice', 
-      user: 'Shri Rajesh Deshmukh' 
-    },
-    { 
-      type: 'Proposal', 
-      title: 'Proposal received: “NaviMumbai Smart Parking” from Parkly Solutions', 
-      time: '2 days ago', 
-      category: 'Bid Submission', 
-      user: 'System Registry' 
-    },
-    { 
-      type: 'Pilot', 
-      title: 'Pilot milestone completed: “Drone-based Crop Health Monitoring” (M3 Handover)', 
-      time: '3 days ago', 
-      category: 'Field Validation', 
-      user: 'District Pilot Officer' 
-    },
-    { 
-      type: 'Contract', 
-      title: 'Contract approved: “Waste Segregation Robot” with CleanBot Innovations', 
-      time: 'Last week', 
-      category: 'Statutory Sign-off', 
-      user: 'Secretary (UD)' 
-    },
-    { 
-      type: 'Evaluation', 
-      title: 'Expert evaluation completed: PS1 – 3 startups evaluated by COEP / VJTI panel', 
-      time: 'Last week', 
-      category: 'Technical Rubric', 
-      user: 'Dr. Meera Deshmukh' 
-    }
+    }))
   ];
 
   const handleDownloadDepartmentReport = () => {
     addNotification({
       title: 'Department Report Generated',
-      message: 'Downloading comprehensive executive audit report for Urban Development & Water Resources (PDF).',
+      message: 'Downloading executive audit report for Urban Development & Water Resources (PDF).',
       portal: 'gov',
       type: 'success'
     });
@@ -220,7 +88,7 @@ export const GovDashboard: React.FC = () => {
     <div className="space-y-6">
       
       {/* ========================================================================= */}
-      {/* SECTION 1: OFFICIAL PROFILE & ROLE SUMMARY (Profile-like Header Band) */}
+      {/* SECTION 1: OFFICIAL PROFILE & ROLE SUMMARY */}
       {/* ========================================================================= */}
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6">
         
@@ -230,7 +98,7 @@ export const GovDashboard: React.FC = () => {
           {/* Left: Identity */}
           <div className="flex items-start sm:items-center gap-4">
             <div className="w-16 h-16 rounded-2xl bg-[#1D64EC] text-white flex items-center justify-center text-xl font-bold font-display shadow-md shrink-0">
-              RD
+              GO
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-1">
@@ -261,7 +129,7 @@ export const GovDashboard: React.FC = () => {
           {/* Right: Contact & Action */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto shrink-0">
             <div className="text-left sm:text-right text-xs space-y-0.5">
-              <span className="text-[10px] uppercase font-bold text-slate-400 block">Last Active Session</span>
+              <span className="text-[10px] uppercase font-bold text-slate-400 block">Session Status</span>
               <p className="font-bold text-navy-900 font-mono text-[11px]">{officialProfile.lastLogin}</p>
               <div className="flex items-center sm:justify-end gap-2 text-slate-500 text-[11px] pt-1">
                 <Mail className="w-3 h-3 text-slate-400" />
@@ -304,14 +172,14 @@ export const GovDashboard: React.FC = () => {
       </div>
 
       {/* ========================================================================= */}
-      {/* SECTION 2: KEY METRICS AT A GLANCE (KPI Cards) */}
+      {/* SECTION 2: KEY METRICS AT A GLANCE (Real 0 State)                         */}
       {/* ========================================================================= */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-bold text-navy-900 font-display">
             Department Overview – Urban Development & Water Resources
           </h2>
-          <span className="text-xs font-bold text-slate-400 font-mono">Real-time Portal Telemetry</span>
+          <span className="text-xs font-bold text-slate-400 font-mono">Live Platform Telemetry</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3.5">
@@ -322,8 +190,8 @@ export const GovDashboard: React.FC = () => {
             className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-[#1D64EC]/40 transition-all cursor-pointer group"
           >
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Active Challenges</span>
-            <div className="text-2xl font-extrabold text-navy-900 font-display">12</div>
-            <p className="text-[11px] text-[#1D64EC] font-semibold mt-1">4 new this month</p>
+            <div className="text-2xl font-extrabold text-navy-900 font-display">{activeChallengesCount}</div>
+            <p className="text-[11px] text-[#1D64EC] font-semibold mt-1">Open for bidding</p>
             <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400 group-hover:text-[#1D64EC]">
               <span>View All Challenges</span>
               <ArrowRight className="w-3 h-3" />
@@ -336,10 +204,10 @@ export const GovDashboard: React.FC = () => {
             className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-[#1D64EC]/40 transition-all cursor-pointer group"
           >
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Startups Engaged</span>
-            <div className="text-2xl font-extrabold text-navy-900 font-display">37</div>
-            <p className="text-[11px] text-emerald-700 font-semibold mt-1">18 shortlisted, 9 in pilot</p>
+            <div className="text-2xl font-extrabold text-navy-900 font-display">{startupsEngagedCount}</div>
+            <p className="text-[11px] text-emerald-700 font-semibold mt-1">Verified repository</p>
             <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400 group-hover:text-[#1D64EC]">
-              <span>View Portfolio</span>
+              <span>View Directory</span>
               <ArrowRight className="w-3 h-3" />
             </div>
           </div>
@@ -350,8 +218,8 @@ export const GovDashboard: React.FC = () => {
             className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-[#1D64EC]/40 transition-all cursor-pointer group"
           >
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Pilots in Progress</span>
-            <div className="text-2xl font-extrabold text-navy-900 font-display">9</div>
-            <p className="text-[11px] text-amber-700 font-semibold mt-1">2 due for review</p>
+            <div className="text-2xl font-extrabold text-navy-900 font-display">{activePilotsCount}</div>
+            <p className="text-[11px] text-amber-700 font-semibold mt-1">Active sandbox pilots</p>
             <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400 group-hover:text-[#1D64EC]">
               <span>Monitor Pilots</span>
               <ArrowRight className="w-3 h-3" />
@@ -364,8 +232,8 @@ export const GovDashboard: React.FC = () => {
             className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-[#1D64EC]/40 transition-all cursor-pointer group"
           >
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Solutions Scaled</span>
-            <div className="text-2xl font-extrabold text-navy-900 font-display">5</div>
-            <p className="text-[11px] text-purple-700 font-semibold mt-1">Across 3 districts</p>
+            <div className="text-2xl font-extrabold text-navy-900 font-display">{solutionsScaledCount}</div>
+            <p className="text-[11px] text-purple-700 font-semibold mt-1">Statewide deployment</p>
             <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400 group-hover:text-[#1D64EC]">
               <span>View Scaled</span>
               <ArrowRight className="w-3 h-3" />
@@ -378,8 +246,8 @@ export const GovDashboard: React.FC = () => {
             className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-[#1D64EC]/40 transition-all cursor-pointer group"
           >
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Contracts Approved</span>
-            <div className="text-2xl font-extrabold text-navy-900 font-display">14</div>
-            <p className="text-[11px] text-slate-600 font-semibold mt-1">Total: INR 4.8 Cr</p>
+            <div className="text-2xl font-extrabold text-navy-900 font-display">{contractsApprovedCount}</div>
+            <p className="text-[11px] text-slate-600 font-semibold mt-1">Bilateral agreements</p>
             <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400 group-hover:text-[#1D64EC]">
               <span>View Contracts</span>
               <ArrowRight className="w-3 h-3" />
@@ -389,12 +257,12 @@ export const GovDashboard: React.FC = () => {
           {/* Card 6: Pending Approvals */}
           <div 
             onClick={() => setActiveTab('contracts')}
-            className="bg-white rounded-3xl p-5 border border-amber-200 shadow-xs hover:shadow-md transition-all cursor-pointer group bg-amber-50/30"
+            className="bg-white rounded-3xl p-5 border border-slate-200 shadow-xs hover:shadow-md transition-all cursor-pointer group"
           >
-            <span className="text-[11px] font-bold text-amber-800 uppercase tracking-wider block mb-1">Pending Approvals</span>
-            <div className="text-2xl font-extrabold text-amber-900 font-display">6</div>
-            <p className="text-[11px] text-amber-700 font-semibold mt-1">3 PS, 2 Pilots, 1 CTR</p>
-            <div className="pt-3 mt-3 border-t border-amber-200 flex items-center justify-between text-[10px] font-bold text-amber-800 group-hover:underline">
+            <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider block mb-1">Pending Approvals</span>
+            <div className="text-2xl font-extrabold text-navy-900 font-display">{pendingApprovalsCount}</div>
+            <p className="text-[11px] text-slate-500 font-semibold mt-1">Requiring action</p>
+            <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-400 group-hover:text-[#1D64EC]">
               <span>Review Items</span>
               <ArrowRight className="w-3 h-3" />
             </div>
@@ -404,7 +272,7 @@ export const GovDashboard: React.FC = () => {
       </div>
 
       {/* ========================================================================= */}
-      {/* SECTION 3: MY PRIORITIES & PENDING ACTIONS (Task List) */}
+      {/* SECTION 3: MY PRIORITIES & PENDING ACTIONS (Empty State Ready)            */}
       {/* ========================================================================= */}
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
@@ -416,96 +284,69 @@ export const GovDashboard: React.FC = () => {
               Urgent statutory approvals, milestone verifications, and contract ratifications requiring your sign-off.
             </p>
           </div>
-          <span className="px-3 py-1 rounded-full bg-rose-50 text-rose-800 text-[11px] font-bold border border-rose-200">
-            4 Actions Pending
+          <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-[11px] font-bold">
+            {pendingActions.length} Actions Pending
           </span>
         </div>
 
-        <div className="overflow-x-auto rounded-2xl border border-slate-200">
-          <table className="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr className="bg-slate-50 text-navy-900 border-b border-slate-200">
-                <th className="py-3 px-4 font-bold">Type</th>
-                <th className="py-3 px-4 font-bold">Item & Scope</th>
-                <th className="py-3 px-4 font-bold">Zone / Department</th>
-                <th className="py-3 px-4 font-bold">Due In</th>
-                <th className="py-3 px-4 font-bold">Status</th>
-                <th className="py-3 px-4 font-bold text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
-              {pendingActions.map((act) => (
-                <tr key={act.id} className="hover:bg-slate-50/60 transition-colors">
-                  
-                  {/* Type */}
-                  <td className="py-3.5 px-4 whitespace-nowrap">
-                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                      act.type === 'Challenge' ? 'bg-blue-50 text-[#1D64EC] border border-blue-200' :
-                      act.type === 'Pilot' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' :
-                      act.type === 'Contract' ? 'bg-purple-50 text-purple-800 border border-purple-200' :
-                      'bg-amber-50 text-amber-800 border border-amber-200'
-                    }`}>
-                      {act.type}
-                    </span>
-                  </td>
-
-                  {/* Title */}
-                  <td className="py-3.5 px-4 font-bold text-navy-900 max-w-sm">
-                    {act.title}
-                  </td>
-
-                  {/* Zone */}
-                  <td className="py-3.5 px-4 text-slate-600 font-medium whitespace-nowrap">
-                    {act.zone}
-                  </td>
-
-                  {/* Due In */}
-                  <td className="py-3.5 px-4 whitespace-nowrap">
-                    <span className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-800 font-bold text-[11px]">
-                      {act.dueIn}
-                    </span>
-                  </td>
-
-                  {/* Status */}
-                  <td className="py-3.5 px-4 font-semibold text-slate-700 whitespace-nowrap">
-                    {act.status}
-                  </td>
-
-                  {/* Action */}
-                  <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                    <button
-                      type="button"
-                      onClick={() => setActiveTab(act.targetTab as any)}
-                      className="px-3.5 py-1.5 rounded-full bg-[#1D64EC] hover:bg-brand-cobalt text-white font-bold text-[11px] shadow-2xs transition-colors"
-                    >
-                      {act.actionLabel}
-                    </button>
-                  </td>
-
+        {pendingActions.length === 0 ? (
+          <div className="py-12 px-4 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 space-y-3">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto text-xl font-bold">
+              ✓
+            </div>
+            <h3 className="font-bold text-sm text-navy-900">No Pending Approvals or Actions</h3>
+            <p className="text-xs text-slate-500 max-w-md mx-auto">
+              All departmental problem statements, pilot evaluations, and contract milestones are up to date.
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto rounded-2xl border border-slate-200">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="bg-slate-50 text-navy-900 border-b border-slate-200">
+                  <th className="py-3 px-4 font-bold">Type</th>
+                  <th className="py-3 px-4 font-bold">Item & Scope</th>
+                  <th className="py-3 px-4 font-bold">Zone / Department</th>
+                  <th className="py-3 px-4 font-bold">Due In</th>
+                  <th className="py-3 px-4 font-bold">Status</th>
+                  <th className="py-3 px-4 font-bold text-right">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="pt-2 flex justify-end">
-          <button
-            type="button"
-            onClick={() => setActiveTab('challenges')}
-            className="text-xs font-bold text-[#1D64EC] hover:underline flex items-center gap-1"
-          >
-            <span>View All Pending Actions</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-slate-700">
+                {pendingActions.map((act) => (
+                  <tr key={act.id} className="hover:bg-slate-50/60 transition-colors">
+                    <td className="py-3.5 px-4 whitespace-nowrap">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-[#1D64EC] border border-blue-200">
+                        {act.type}
+                      </span>
+                    </td>
+                    <td className="py-3.5 px-4 font-bold text-navy-900 max-w-sm">{act.title}</td>
+                    <td className="py-3.5 px-4 text-slate-600 font-medium whitespace-nowrap">{act.zone}</td>
+                    <td className="py-3.5 px-4 whitespace-nowrap">{act.dueIn}</td>
+                    <td className="py-3.5 px-4 font-semibold text-slate-700 whitespace-nowrap">{act.status}</td>
+                    <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab(act.targetTab as any)}
+                        className="px-3.5 py-1.5 rounded-full bg-[#1D64EC] hover:bg-brand-cobalt text-white font-bold text-[11px] shadow-2xs transition-colors"
+                      >
+                        {act.actionLabel}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* ========================================================================= */}
-      {/* SECTION 4 & 5: 2-COLUMN CHALLENGES OVERVIEW & PILOT ENGAGEMENTS */}
+      {/* SECTION 4 & 5: 2-COLUMN CHALLENGES OVERVIEW & PILOT ENGAGEMENTS           */}
       {/* ========================================================================= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        {/* Left Column: Challenges & Problem Statements Overview (6 cols) */}
+        {/* Left Column: Challenges & Problem Statements Overview */}
         <div className="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs flex flex-col justify-between space-y-4">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -531,39 +372,54 @@ export const GovDashboard: React.FC = () => {
             <div className="grid grid-cols-3 gap-2 py-3 text-center">
               <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                 <span className="text-[10px] font-bold text-slate-400 uppercase block">Published</span>
-                <strong className="text-sm font-extrabold text-navy-900">10 / 12</strong>
+                <strong className="text-sm font-extrabold text-navy-900">{challenges.length}</strong>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                 <span className="text-[10px] font-bold text-slate-400 uppercase block">Proposals</span>
-                <strong className="text-sm font-extrabold text-[#1D64EC]">84</strong>
+                <strong className="text-sm font-extrabold text-[#1D64EC]">{proposals.length}</strong>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                 <span className="text-[10px] font-bold text-slate-400 uppercase block">Shortlisted</span>
-                <strong className="text-sm font-extrabold text-emerald-800">18</strong>
+                <strong className="text-sm font-extrabold text-emerald-800">
+                  {proposals.filter(p => p.status === 'shortlisted' || p.status === 'pilot_ongoing').length}
+                </strong>
               </div>
             </div>
 
-            {/* Challenges Cards */}
-            <div className="space-y-2.5 pt-1">
-              {keyChallenges.map((ch) => (
-                <div
-                  key={ch.id}
-                  onClick={() => setActiveTab('challenges')}
-                  className="p-3.5 rounded-2xl bg-slate-50/80 hover:bg-blue-50/50 border border-slate-100 hover:border-blue-200 transition-all cursor-pointer space-y-1.5"
+            {/* Challenges List or Clean Empty State */}
+            {challenges.length === 0 ? (
+              <div className="py-8 px-4 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 space-y-2.5">
+                <Inbox className="w-8 h-8 text-slate-400 mx-auto" />
+                <p className="text-xs font-bold text-navy-900">No Problem Statements Published Yet</p>
+                <p className="text-[11px] text-slate-500 max-w-xs mx-auto">
+                  Create outcome-focused challenge briefs with clear KPIs and target areas for startups to discover.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setIsNewChallengeModalOpen(true)}
+                  className="px-4 py-1.5 rounded-full bg-[#1D64EC] hover:bg-blue-700 text-white font-bold text-xs shadow-2xs inline-flex items-center gap-1 mt-1"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-[10px] font-bold text-[#1D64EC]">{ch.psCode} • {ch.department}</span>
-                    <StatusBadge label={ch.status} variant={ch.status === 'In Pilot' ? 'emerald' : ch.status === 'Expert Evaluation' ? 'violet' : 'blue'} size="sm" />
+                  <PlusCircle className="w-3.5 h-3.5" />
+                  <span>Create Problem Statement</span>
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-2.5 pt-1">
+                {challenges.slice(0, 3).map((ch) => (
+                  <div
+                    key={ch.id}
+                    onClick={() => setActiveTab('challenges')}
+                    className="p-3.5 rounded-2xl bg-slate-50/80 hover:bg-blue-50/50 border border-slate-100 hover:border-blue-200 transition-all cursor-pointer space-y-1.5"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-[10px] font-bold text-[#1D64EC]">{ch.code} • {ch.department}</span>
+                      <StatusBadge label={ch.status} variant={ch.status === 'Open' ? 'emerald' : 'blue'} size="sm" />
+                    </div>
+                    <h4 className="font-bold text-xs text-navy-900 leading-snug">{ch.title}</h4>
                   </div>
-                  <h4 className="font-bold text-xs text-navy-900 leading-snug">{ch.title}</h4>
-                  <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-                    <span>Proposals: <strong className="text-navy-900">{ch.proposalsReceived}</strong></span>
-                    <span>Shortlisted: <strong className="text-navy-900">{ch.shortlistedCount} startups</strong></span>
-                    <span className="text-slate-400">Lead: {ch.leadOfficer.split(' ')[1]}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="pt-3 border-t border-slate-100">
@@ -578,7 +434,7 @@ export const GovDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Column: Pilots & Startup Engagements (6 cols) */}
+        {/* Right Column: Pilots & Startup Engagements */}
         <div className="lg:col-span-6 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs flex flex-col justify-between space-y-4">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -590,62 +446,55 @@ export const GovDashboard: React.FC = () => {
                   Monitor ongoing pilots, milestones, and field telemetry.
                 </p>
               </div>
-              <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[11px] font-bold border border-emerald-200">
-                9 Active
+              <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-[11px] font-bold">
+                {activePilotsCount} Active
               </span>
             </div>
 
             {/* Summary Strip */}
             <div className="grid grid-cols-3 gap-2 py-3 text-center">
               <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">In Review</span>
-                <strong className="text-sm font-extrabold text-amber-800">2 Due</strong>
+                <span className="text-[10px] font-bold text-slate-400 uppercase block">Active Pilots</span>
+                <strong className="text-sm font-extrabold text-navy-900">{activePilotsCount}</strong>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">Completed (6M)</span>
-                <strong className="text-sm font-extrabold text-navy-900">7 Pilots</strong>
+                <span className="text-[10px] font-bold text-slate-400 uppercase block">Scaled</span>
+                <strong className="text-sm font-extrabold text-purple-700">{solutionsScaledCount}</strong>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                 <span className="text-[10px] font-bold text-slate-400 uppercase block">Escalations</span>
-                <strong className="text-sm font-extrabold text-slate-500">0 Critical</strong>
+                <strong className="text-sm font-extrabold text-emerald-700">0</strong>
               </div>
             </div>
 
-            {/* Active Pilots Rows */}
-            <div className="space-y-2 pt-1">
-              {activePilots.map((p, idx) => (
-                <div key={idx} className="p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between gap-3 text-xs">
-                  <div>
-                    <h5 className="font-bold text-navy-900">{p.startup}</h5>
-                    <p className="text-[11px] text-slate-500">{p.ps} • {p.zone}</p>
-                    <span className="text-[10px] text-emerald-700 font-bold mt-0.5 block">{p.milestone} — {p.status}</span>
+            {/* Active Pilots Rows or Clean Empty State */}
+            {activePilotsList.length === 0 ? (
+              <div className="py-8 px-4 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 space-y-2.5">
+                <Activity className="w-8 h-8 text-slate-400 mx-auto" />
+                <p className="text-xs font-bold text-navy-900">No Active Pilots Underway</p>
+                <p className="text-[11px] text-slate-500 max-w-xs mx-auto">
+                  Once proposals pass expert evaluation and contracts are ratified, live pilot telemetry will appear here.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-2 pt-1">
+                {activePilotsList.map((p, idx) => (
+                  <div key={idx} className="p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between gap-3 text-xs">
+                    <div>
+                      <h5 className="font-bold text-navy-900">{p.startupName}</h5>
+                      <p className="text-[11px] text-slate-500">{p.challengeTitle}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('monitor')}
+                      className="px-3 py-1.5 rounded-full bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold text-[11px] shrink-0 transition-colors"
+                    >
+                      Monitor Pilot
+                    </button>
                   </div>
-
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('monitor')}
-                    className="px-3 py-1.5 rounded-full bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold text-[11px] shrink-0 transition-colors"
-                  >
-                    {p.action}
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            {/* Flagship Pilot Highlight Box */}
-            <div className="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-100 text-xs mt-3 flex items-start justify-between gap-2">
-              <div>
-                <strong className="text-navy-900 block font-bold">Flagship Pilot Highlight:</strong>
-                <p className="text-slate-600 leading-relaxed mt-0.5">AI-powered Water Leakage Detection (Pune Zone A) has achieved <strong className="text-[#1D64EC]">18.4% NRW reduction</strong> over 6 months.</p>
+                ))}
               </div>
-              <button
-                type="button"
-                onClick={() => setActiveCaseStudyModal(true)}
-                className="text-[11px] font-bold text-[#1D64EC] hover:underline shrink-0 whitespace-nowrap mt-1"
-              >
-                View Case Study
-              </button>
-            </div>
+            )}
           </div>
 
           <div className="pt-3 border-t border-slate-100">
@@ -663,7 +512,7 @@ export const GovDashboard: React.FC = () => {
       </div>
 
       {/* ========================================================================= */}
-      {/* SECTION 6: CONTRACTS & APPROVALS */}
+      {/* SECTION 6: CONTRACTS & APPROVALS (Empty State Ready)                      */}
       {/* ========================================================================= */}
       <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
@@ -676,67 +525,54 @@ export const GovDashboard: React.FC = () => {
             </p>
           </div>
           <div className="flex items-center gap-2 text-xs font-bold">
-            <span className="text-slate-500">YTD Ratified: <strong>14 Contracts</strong></span>
-            <span>•</span>
-            <span className="text-[#1D64EC]">Value: <strong>INR 4.8 Cr</strong></span>
+            <span className="text-slate-500">Total Contracts: <strong>{contracts.length}</strong></span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {recentContracts.map((ctr, idx) => (
-            <div key={idx} className="p-5 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-between space-y-3">
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{ctr.ps}</span>
-                  <StatusBadge label={ctr.status} variant={ctr.status === 'Active' ? 'emerald' : 'amber'} size="sm" />
+        {contracts.length === 0 ? (
+          <div className="py-8 px-4 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 space-y-2">
+            <Scale className="w-8 h-8 text-slate-400 mx-auto" />
+            <h4 className="font-bold text-xs text-navy-900">No Bilateral Contracts Generated Yet</h4>
+            <p className="text-[11px] text-slate-500 max-w-sm mx-auto">
+              Contracts are automatically prepared once proposals are approved by domain evaluation panels.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {contracts.map((ctr, idx) => (
+              <div key={idx} className="p-5 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-between space-y-3">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{ctr.id}</span>
+                    <StatusBadge label={ctr.govStatus === 'approved' ? 'Active' : 'Pending'} variant={ctr.govStatus === 'approved' ? 'emerald' : 'amber'} size="sm" />
+                  </div>
+                  <h4 className="font-bold text-sm text-navy-900 leading-snug">{ctr.startupName}</h4>
+                  <div className="flex items-center gap-3 text-xs text-slate-600 mt-2 font-medium">
+                    <span>Value: <strong className="text-navy-900">{ctr.totalValue}</strong></span>
+                  </div>
                 </div>
-                <h4 className="font-bold text-sm text-navy-900 leading-snug">{ctr.title}</h4>
-                <div className="flex items-center gap-3 text-xs text-slate-600 mt-2 font-medium">
-                  <span>Contract Value: <strong className="text-navy-900">{ctr.value}</strong></span>
-                  <span>•</span>
-                  <span>{ctr.lastMilestone}</span>
+
+                <div className="pt-3 border-t border-slate-200/60 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('contracts')}
+                    className="px-4 py-1.5 rounded-full bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs transition-colors"
+                  >
+                    View Contract
+                  </button>
                 </div>
-                <p className="text-xs text-emerald-800 font-semibold mt-1">Next Escrow Release: {ctr.nextPayment}</p>
               </div>
-
-              <div className="pt-3 border-t border-slate-200/60 flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('contracts')}
-                  className="px-4 py-1.5 rounded-full bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs transition-colors"
-                >
-                  View Contract
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('contracts')}
-                  className="px-4 py-1.5 rounded-full bg-[#1D64EC] hover:bg-brand-cobalt text-white font-bold text-xs shadow-2xs transition-colors"
-                >
-                  Approve Payment
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="pt-2 flex justify-end">
-          <button
-            type="button"
-            onClick={() => setActiveTab('contracts')}
-            className="text-xs font-bold text-[#1D64EC] hover:underline flex items-center gap-1"
-          >
-            <span>View All Contracts & Compliance Orders</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ========================================================================= */}
-      {/* SECTION 7 & 8: RECENT ACTIVITY (AUDIT TRAIL) & QUICK ACTIONS */}
+      {/* SECTION 7: RECENT ACTIVITY & AUDIT TRAIL (Empty State Ready)               */}
       {/* ========================================================================= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        {/* Left: Recent Activity & Audit Trail (7 cols) */}
+        {/* Left: Recent Activity & Audit Trail */}
         <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
@@ -750,39 +586,41 @@ export const GovDashboard: React.FC = () => {
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           </div>
 
-          <div className="space-y-3">
-            {recentActivities.map((act, idx) => (
-              <div
-                key={idx}
-                className="p-3.5 rounded-2xl bg-slate-50/70 border border-slate-100 flex items-center justify-between gap-3 hover:bg-blue-50/40 transition-colors"
-              >
-                <div className="flex items-start gap-3">
-                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
-                    act.type === 'Challenge' ? 'bg-blue-50 text-[#1D64EC]' :
-                    act.type === 'Proposal' ? 'bg-purple-50 text-purple-600' :
-                    act.type === 'Pilot' ? 'bg-emerald-50 text-emerald-600' :
-                    act.type === 'Contract' ? 'bg-amber-50 text-amber-600' : 'bg-slate-100 text-slate-600'
-                  }`}>
-                    {act.type === 'Challenge' ? <FileText className="w-4 h-4" /> :
-                     act.type === 'Proposal' ? <Sparkles className="w-4 h-4" /> :
-                     act.type === 'Pilot' ? <CheckCircle2 className="w-4 h-4" /> :
-                     act.type === 'Contract' ? <Scale className="w-4 h-4" /> : <ClipboardCheck className="w-4 h-4" />}
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-navy-900 leading-snug">{act.title}</p>
-                    <div className="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5 font-medium">
-                      <span>{act.time}</span>
-                      <span>•</span>
-                      <span className="text-slate-600">{act.category}</span>
-                      <span>•</span>
-                      <span className="font-mono">{act.user}</span>
+          {adminLogs.length === 0 ? (
+            <div className="py-8 px-4 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 space-y-2">
+              <FileSearch className="w-8 h-8 text-slate-400 mx-auto" />
+              <p className="text-xs font-bold text-navy-900">No Activity Logs Recorded Yet</p>
+              <p className="text-[11px] text-slate-500 max-w-sm mx-auto">
+                All platform actions, problem statement publications, and evaluations will be recorded in this tamper-proof audit trail.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {adminLogs.map((act, idx) => (
+                <div
+                  key={idx}
+                  className="p-3.5 rounded-2xl bg-slate-50/70 border border-slate-100 flex items-center justify-between gap-3 hover:bg-blue-50/40 transition-colors"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#1D64EC] flex items-center justify-center shrink-0 mt-0.5">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-navy-900 leading-snug">{act.action}</p>
+                      <div className="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5 font-medium">
+                        <span>{act.timestamp}</span>
+                        <span>•</span>
+                        <span className="text-slate-600">{act.entity}</span>
+                        <span>•</span>
+                        <span className="font-mono">{act.performedBy}</span>
+                      </div>
                     </div>
                   </div>
+                  <ChevronRight className="w-4 h-4 text-slate-300 shrink-0" />
                 </div>
-                <ChevronRight className="w-4 h-4 text-slate-300 shrink-0" />
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           <div className="pt-2">
             <button
@@ -790,176 +628,123 @@ export const GovDashboard: React.FC = () => {
               onClick={handleDownloadDepartmentReport}
               className="text-xs font-bold text-[#1D64EC] hover:underline flex items-center gap-1"
             >
-              <span>View Full Activity Log & Compliance Trail</span>
+              <span>Download Full Activity Log & Compliance Trail</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
 
-        {/* Right: Quick Actions & Command Shortcuts (5 cols) */}
+        {/* Right: Quick Actions & Command Shortcuts */}
         <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs flex flex-col justify-between space-y-4">
-          <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div className="space-y-3">
+            <div className="pb-3 border-b border-slate-100">
               <h3 className="text-base font-bold text-navy-900 font-display">
                 Quick Actions
               </h3>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Shortcuts</span>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Standard government innovation procurement workflows.
+              </p>
             </div>
 
-            <div className="space-y-2 pt-2">
+            <div className="space-y-2">
               <button
                 type="button"
                 onClick={() => setIsNewChallengeModalOpen(true)}
-                className="w-full p-2.5 px-3.5 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200/80 text-navy-900 font-bold text-xs flex items-center justify-between transition-all group"
+                className="w-full p-3 rounded-2xl bg-[#1D64EC] hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-between shadow-2xs transition-all"
               >
                 <div className="flex items-center gap-2.5">
-                  <PlusCircle className="w-4 h-4 text-[#1D64EC]" />
-                  <span>Create New Challenge</span>
+                  <PlusCircle className="w-4 h-4" />
+                  <span>Draft New Problem Statement</span>
                 </div>
-                <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#1D64EC]" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('challenges')}
-                className="w-full p-2.5 px-3.5 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200/80 text-navy-900 font-bold text-xs flex items-center justify-between transition-all group"
-              >
-                <div className="flex items-center gap-2.5">
-                  <FileText className="w-4 h-4 text-slate-600" />
-                  <span>Manage Problem Statements</span>
-                </div>
-                <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#1D64EC]" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('directory')}
-                className="w-full p-2.5 px-3.5 rounded-xl bg-slate-50 hover:bg-purple-50 border border-slate-200/80 text-navy-900 font-bold text-xs flex items-center justify-between transition-all group"
+                className="w-full p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 text-navy-900 border border-slate-200 font-bold text-xs flex items-center justify-between transition-colors"
               >
                 <div className="flex items-center gap-2.5">
                   <Compass className="w-4 h-4 text-purple-600" />
-                  <span>Browse Startups</span>
+                  <span>Browse DPIIT Startup Directory</span>
                 </div>
-                <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-purple-600" />
+                <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
               </button>
 
               <button
                 type="button"
-                onClick={() => setActiveTab('expert_clearance')}
-                className="w-full p-2.5 px-3.5 rounded-xl bg-slate-50 hover:bg-amber-50 border border-slate-200/80 text-navy-900 font-bold text-xs flex items-center justify-between transition-all group"
+                onClick={() => setActiveTab('ai_evaluator')}
+                className="w-full p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 text-navy-900 border border-slate-200 font-bold text-xs flex items-center justify-between transition-colors"
               >
                 <div className="flex items-center gap-2.5">
-                  <ClipboardCheck className="w-4 h-4 text-amber-600" />
-                  <span>Review Expert Evaluations</span>
+                  <Sparkles className="w-4 h-4 text-blue-600" />
+                  <span>AI Shortlisting Evaluator</span>
                 </div>
-                <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab('monitor')}
-                className="w-full p-2.5 px-3.5 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200/80 text-navy-900 font-bold text-xs flex items-center justify-between transition-all group"
-              >
-                <div className="flex items-center gap-2.5">
-                  <Activity className="w-4 h-4 text-emerald-600" />
-                  <span>Monitor Active Pilots</span>
-                </div>
-                <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-600" />
+                <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('contracts')}
-                className="w-full p-2.5 px-3.5 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200/80 text-navy-900 font-bold text-xs flex items-center justify-between transition-all group"
+                className="w-full p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 text-navy-900 border border-slate-200 font-bold text-xs flex items-center justify-between transition-colors"
               >
                 <div className="flex items-center gap-2.5">
-                  <Scale className="w-4 h-4 text-[#1D64EC]" />
-                  <span>Approve Contracts</span>
+                  <Scale className="w-4 h-4 text-emerald-600" />
+                  <span>Contract Approval Gate</span>
                 </div>
-                <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#1D64EC]" />
+                <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
               </button>
-            </div>
-
-            {/* Frequent PS Quick Links */}
-            <div className="pt-3 border-t border-slate-100 space-y-1.5">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Frequent Problem Statements</span>
-              <div className="flex flex-wrap gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('challenges')}
-                  className="px-2.5 py-1 rounded-lg bg-blue-50 text-[#1D64EC] text-[10px] font-bold border border-blue-100 hover:bg-blue-100"
-                >
-                  PS1: Water Loss Reduction
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('challenges')}
-                  className="px-2.5 py-1 rounded-lg bg-purple-50 text-purple-700 text-[10px] font-bold border border-purple-100 hover:bg-purple-100"
-                >
-                  PS5: Stormwater Flood
-                </button>
-              </div>
             </div>
           </div>
 
-          <div className="pt-3 border-t border-slate-100">
-            <button
-              type="button"
-              onClick={handleDownloadDepartmentReport}
-              className="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>Download Department Report (PDF)</span>
-            </button>
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-xs text-slate-500 space-y-1">
+            <span className="font-bold text-navy-900 block">Department Support:</span>
+            <p>Nodal helpline: <strong className="text-navy-900">+91-22-2202-9988</strong></p>
           </div>
         </div>
 
       </div>
 
-      {/* ========================================================================= */}
-      {/* MODAL 1: OFFICIAL FULL PROFILE MODAL */}
-      {/* ========================================================================= */}
-      {isProfileModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-900/50 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 border border-slate-200 shadow-2xl">
-            <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-100">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-[#1D64EC] text-white flex items-center justify-center text-lg font-bold font-display shadow-sm">
-                  RD
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-navy-900 font-display">
-                    {officialProfile.name}
-                  </h3>
-                  <p className="text-xs text-slate-500">{officialProfile.designation} • {officialProfile.userId}</p>
-                </div>
-              </div>
+      {/* Problem Statement Creation Modal */}
+      {isNewChallengeModalOpen && (
+        <ProblemStatementModal 
+          isOpen={isNewChallengeModalOpen}
+          onClose={() => setIsNewChallengeModalOpen(false)}
+        />
+      )}
 
+      {/* Profile Modal */}
+      {isProfileModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/60 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 border border-slate-200 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <h3 className="text-base font-bold text-navy-900 font-display">
+                Government Officer Profile
+              </h3>
               <button
                 onClick={() => setIsProfileModalOpen(false)}
                 className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs"
               >
-                ×
+                ✕
               </button>
             </div>
 
             <div className="space-y-3 text-xs">
               <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">Government Cadre & Office</span>
-                <p className="font-bold text-navy-900">{officialProfile.department}, {officialProfile.ministry}</p>
-                <p className="text-slate-600">{officialProfile.office}</p>
+                <span className="text-[10px] uppercase font-bold text-slate-400 block">Officer Name</span>
+                <strong className="text-sm font-bold text-navy-900">{officialProfile.name}</strong>
+                <p className="text-slate-600 font-medium">{officialProfile.designation} • {officialProfile.department}</p>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">Platform Delegation & Nodal Authority</span>
-                <p className="font-bold text-[#1D64EC]">{officialProfile.primaryRole}</p>
-                <p className="text-slate-600">Authorized for financial sign-offs up to INR 50 Lakhs per pilot under Government Resolution (GR) No. WTR-2026/081.</p>
-              </div>
-
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">Digital Signing & Security Key</span>
-                <p className="text-slate-700 font-mono">UIDAI Aadhaar eSign Stamped (Certificate Serial: MH-EGOV-89412-2026)</p>
-                <p className="text-emerald-700 font-bold">CERT-In Two-Factor Security Enforced</p>
+              <div className="grid grid-cols-2 gap-3 text-slate-600">
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                  <span className="text-[10px] text-slate-400 font-bold block">OFFICIAL EMAIL</span>
+                  <span className="font-semibold text-navy-900 break-all">{officialProfile.email}</span>
+                </div>
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-100">
+                  <span className="text-[10px] text-slate-400 font-bold block">OFFICE PHONE</span>
+                  <span className="font-semibold text-navy-900">{officialProfile.phone}</span>
+                </div>
               </div>
             </div>
 
@@ -967,7 +752,7 @@ export const GovDashboard: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsProfileModalOpen(false)}
-                className="px-5 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs"
+                className="px-5 py-2 rounded-full bg-[#1D64EC] hover:bg-blue-700 text-white font-bold text-xs"
               >
                 Close
               </button>
@@ -975,69 +760,6 @@ export const GovDashboard: React.FC = () => {
           </div>
         </div>
       )}
-
-      {/* ========================================================================= */}
-      {/* MODAL 2: CASE STUDY MODAL */}
-      {/* ========================================================================= */}
-      {activeCaseStudyModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-900/50 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 space-y-4 border border-slate-200 shadow-2xl">
-            <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-100">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#1D64EC]">Maharashtra Flagship Case Study</span>
-                <h3 className="text-lg font-bold text-navy-900 font-display mt-0.5">
-                  AI-powered Water Leakage Detection (Pune Zone A)
-                </h3>
-              </div>
-              <button
-                onClick={() => setActiveCaseStudyModal(false)}
-                className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs"
-              >
-                ×
-              </button>
-            </div>
-
-            <div className="space-y-3 text-xs text-slate-700 leading-relaxed">
-              <p>
-                Deployed across 120 km of pressurized municipal water distribution pipelines in Pune Zone A, <strong>AquaSense Technologies</strong> utilized non-invasive acoustic sensors and edge Fourier wavelet transforms to intercept 42 hidden underground leaks before surface rupture.
-              </p>
-              <div className="grid grid-cols-3 gap-2 py-2 text-center">
-                <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-100">
-                  <span className="text-[10px] text-emerald-800 uppercase block font-bold">NRW Loss Drop</span>
-                  <strong className="text-sm font-extrabold text-emerald-900">18.4%</strong>
-                </div>
-                <div className="p-2.5 rounded-xl bg-blue-50 border border-blue-100">
-                  <span className="text-[10px] text-[#1D64EC] uppercase block font-bold">Alert Latency</span>
-                  <strong className="text-sm font-extrabold text-navy-900">&lt; 15 mins</strong>
-                </div>
-                <div className="p-2.5 rounded-xl bg-purple-50 border border-purple-100">
-                  <span className="text-[10px] text-purple-700 uppercase block font-bold">Est. Water Saved</span>
-                  <strong className="text-sm font-extrabold text-navy-900">420 ML</strong>
-                </div>
-              </div>
-              <p className="text-slate-500 font-medium">
-                The solution has been cataloged under GeM Fast-Track and approved for statewide replication across 8 municipal corporations.
-              </p>
-            </div>
-
-            <div className="pt-2 border-t border-slate-100 flex justify-end">
-              <button
-                type="button"
-                onClick={() => setActiveCaseStudyModal(false)}
-                className="px-5 py-2 rounded-full bg-[#1D64EC] hover:bg-brand-cobalt text-white font-bold text-xs"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Challenge Creation Modal */}
-      <ProblemStatementModal
-        isOpen={isNewChallengeModalOpen}
-        onClose={() => setIsNewChallengeModalOpen(false)}
-      />
 
     </div>
   );

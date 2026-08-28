@@ -109,71 +109,83 @@ export const ChallengeExplorer: React.FC = () => {
         </div>
       </div>
 
-      {/* Challenge Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredChallenges.map(ch => (
-          <div
-            key={ch.id}
-            className="glass-card rounded-3xl p-6 flex flex-col justify-between hover:shadow-md transition-all duration-200 border border-slate-200/80 group"
-          >
-            <div>
-              {/* Header */}
-              <div className="flex items-center justify-between gap-2 mb-3">
-                <span className="font-mono text-xs font-bold text-slate-400">
-                  {ch.code}
-                </span>
-                <StatusBadge
-                  label={ch.status}
-                  variant={ch.status === 'Open' ? 'emerald' : ch.status === 'Closing Soon' ? 'amber' : 'violet'}
-                  size="sm"
-                />
-              </div>
-
-              {/* Department & Title */}
-              <span className="text-[11px] font-bold text-[#1D64EC] uppercase tracking-wider block mb-1">
-                {ch.department}
-              </span>
-              <h3 className="text-base font-bold text-navy-900 group-hover:text-[#1D64EC] transition-colors leading-snug">
-                {ch.title}
-              </h3>
-
-              {/* Outcome Statement */}
-              <p className="text-xs text-slate-600 line-clamp-3 mt-2 leading-relaxed font-medium">
-                {ch.problemSummary}
-              </p>
-
-              {/* Meta details */}
-              <div className="mt-4 p-3.5 rounded-2xl bg-slate-50 border border-slate-200/70 text-[11px] text-slate-700 space-y-1.5">
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Pilot Budget:</span>
-                  <strong className="text-navy-900">{ch.budget}</strong>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Timeline:</span>
-                  <strong className="text-navy-900">{ch.pilotDurationMonths} months pilot + scale decision</strong>
-                </div>
-              </div>
-            </div>
-
-            {/* CTA Button */}
-            <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-              <span className="text-[10px] text-slate-400 font-mono">
-                {ch.location.join(', ')}
-              </span>
-
-              <button
-                type="button"
-                onClick={() => setApplyChallenge(ch)}
-                className="px-5 py-2.5 rounded-full bg-[#1D64EC] hover:bg-brand-cobalt text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition-all"
-              >
-                <span>View Details & Apply</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
+      {/* Challenge Cards Grid or Clean Empty State */}
+      {filteredChallenges.length === 0 ? (
+        <div className="glass-panel rounded-3xl p-16 text-center space-y-3">
+          <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#1D64EC] flex items-center justify-center mx-auto">
+            <FolderSearch className="w-6 h-6" />
           </div>
-        ))}
-      </div>
+          <h3 className="text-base font-bold text-navy-900">No Open Challenges Available</h3>
+          <p className="text-xs text-slate-500 max-w-sm mx-auto">
+            Government departments are preparing new problem statements. Check back shortly for new innovation calls.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredChallenges.map(ch => (
+            <div
+              key={ch.id}
+              className="glass-card rounded-3xl p-6 flex flex-col justify-between hover:shadow-md transition-all duration-200 border border-slate-200/80 group"
+            >
+              <div>
+                {/* Header */}
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  <span className="font-mono text-xs font-bold text-slate-400">
+                    {ch.code}
+                  </span>
+                  <StatusBadge
+                    label={ch.status}
+                    variant={ch.status === 'Open' ? 'emerald' : ch.status === 'Closing Soon' ? 'amber' : 'violet'}
+                    size="sm"
+                  />
+                </div>
+
+                {/* Department & Title */}
+                <span className="text-[11px] font-bold text-[#1D64EC] uppercase tracking-wider block mb-1">
+                  {ch.department}
+                </span>
+                <h3 className="text-base font-bold text-navy-900 group-hover:text-[#1D64EC] transition-colors leading-snug">
+                  {ch.title}
+                </h3>
+
+                {/* Outcome Statement */}
+                <p className="text-xs text-slate-600 line-clamp-3 mt-2 leading-relaxed font-medium">
+                  {ch.problemSummary}
+                </p>
+
+                {/* Meta details */}
+                <div className="mt-4 p-3.5 rounded-2xl bg-slate-50 border border-slate-200/70 text-[11px] text-slate-700 space-y-1.5">
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Pilot Budget:</span>
+                    <strong className="text-navy-900">{ch.budget}</strong>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Timeline:</span>
+                    <strong className="text-navy-900">{ch.pilotDurationMonths} months pilot + scale decision</strong>
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA Button */}
+              <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-[10px] text-slate-400 font-mono">
+                  {ch.location.join(', ')}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() => setApplyChallenge(ch)}
+                  className="px-5 py-2.5 rounded-full bg-[#1D64EC] hover:bg-brand-cobalt text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition-all"
+                >
+                  <span>View Details & Apply</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Apply Modal */}
       {applyChallenge && (

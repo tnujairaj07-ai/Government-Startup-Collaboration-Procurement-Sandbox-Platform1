@@ -56,234 +56,63 @@ interface ProposalItem {
 }
 
 export const ApplicationTracker: React.FC = () => {
-  const { setActiveTab, addNotification } = usePlatform();
+  const { proposals: contextProposals, setActiveTab, addNotification } = usePlatform();
 
   // Filter States
   const [selectedStatusFilter, setSelectedStatusFilter] = useState<string>('All');
   const [selectedDeptFilter, setSelectedDeptFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   
-  // Selected Proposal for Detailed Timeline View
-  const [selectedProposalId, setSelectedProposalId] = useState<string | null>('PS2');
-  const [docArchiveTab, setDocArchiveTab] = useState<'all' | 'contract' | 'milestones' | 'payments' | 'correspondence'>('all');
-  const [selectedStageIndex, setSelectedStageIndex] = useState<number>(7); // Default to Stage 8 (M2 in progress)
-
-  // Proposals Master Data
-  const proposals: ProposalItem[] = [
-    {
-      id: 'PS2',
-      psCode: 'MH-2026-WTR-01 / PS2',
-      challengeTitle: 'AI-powered Water Leakage Detection for Urban Pipelines',
-      department: 'Maharashtra Water Supply & Sanitation Department',
-      solutionName: 'AquaMind Platform & Acoustic IoT Clamps',
-      currentStage: 'Milestone M2 In Progress',
-      stageNum: 8,
-      stageColor: 'amber',
-      lastUpdated: '15 Dec 2026 – M2 validation in progress',
-      status: 'Active Pilot',
-      statusVariant: 'emerald',
-      keyContacts: {
-        nodalOfficer: 'Shri Rajesh Deshmukh (Joint Secretary)',
-        technicalLead: 'Dr. Meera Deshmukh (Chief Evaluator)'
-      },
-      stages: [
-        {
-          num: 1,
-          title: 'Proposal Submitted',
-          date: '10 Jun 2026',
-          status: 'Completed',
-          description: 'Digital proposal receipt #RCP-88192 generated via Maharashtra Procure Gateway.',
-          documents: [{ name: 'Proposal Receipt #RCP-88192 (PDF)', type: 'Receipt' }]
+  // Proposals Data dynamically mapped from context
+  const proposals: ProposalItem[] = React.useMemo(() => {
+    return contextProposals.map(cp => {
+      const isPilot = cp.status === 'pilot_ongoing';
+      const isCompleted = cp.status === 'completed';
+      return {
+        id: cp.id,
+        psCode: cp.challengeId,
+        challengeTitle: cp.challengeTitle,
+        department: cp.department || 'Government Department',
+        solutionName: cp.proposedSolutionName || 'Proposed Solution',
+        currentStage: isPilot ? 'Active Pilot' : isCompleted ? 'Scale Decision' : 'Proposal Under Review',
+        stageNum: isPilot ? 6 : isCompleted ? 10 : 2,
+        stageColor: (isPilot ? 'emerald' : cp.status === 'shortlisted' ? 'amber' : 'blue') as 'emerald' | 'amber' | 'blue',
+        lastUpdated: cp.submittedAt || 'Recent',
+        status: (isPilot ? 'Active Pilot' : isCompleted ? 'Completed' : 'Open') as 'Open' | 'Active Pilot' | 'Completed' | 'Closed',
+        statusVariant: (isPilot ? 'emerald' : 'blue') as 'blue' | 'amber' | 'emerald' | 'slate',
+        keyContacts: {
+          nodalOfficer: 'Department Nodal Officer',
+          technicalLead: 'Technical Review Chair'
         },
-        {
-          num: 2,
-          title: 'Under Department Review',
-          date: '15 Jun 2026',
-          status: 'Completed',
-          description: 'Eligibility, GST compliance, and DPIIT startup recognition verified by scrutiny team.',
-          notes: 'Eligibility: Confirmed | DPIIT: Verified (DIPP12345)'
-        },
-        {
-          num: 3,
-          title: 'Shortlisted',
-          date: '05 Jul 2026',
-          status: 'Completed',
-          description: 'Top 3 startup solutions selected for technical domain expert committee presentation.',
-          documents: [{ name: 'Shortlist Intimation Letter (PDF)', type: 'Letter' }]
-        },
-        {
-          num: 4,
-          title: 'Expert Evaluation',
-          date: '20 Jul 2026',
-          status: 'Completed',
-          description: 'Technical scorecard 94/100 awarded by Dr. Meera Deshmukh panel.',
-          documents: [{ name: 'Expert Scorecard & Evaluation Matrix (PDF)', type: 'Scorecard' }],
-          notes: 'Overall Score: 94/100 | Key Strengths: Direct problem alignment, empirical evidence, TRL 8 maturity'
-        },
-        {
-          num: 5,
-          title: 'Contract Approval',
-          date: '10 Aug 2026',
-          status: 'Completed',
-          description: 'Approved by Secretary – Water Supply under GR-MH/2026/WTR-994.',
-          documents: [
-            { name: 'Government Resolution Approval Order (PDF)', type: 'GR Order' },
-            { name: 'Bilateral Sandbox Agreement & IP Terms (PDF)', type: 'Contract' }
-          ]
-        },
-        {
-          num: 6,
-          title: 'Pilot Started',
-          date: '01 Sep 2026',
-          status: 'Completed',
-          description: 'Field sensor installation underway across 120 km distribution grid in Pune Zone A.',
-          notes: 'Pilot Location: Pune Zone A | Duration: 6 Months | Scope: 120 km pipeline network'
-        },
-        {
-          num: 7,
-          title: 'Milestone M1 Completed',
-          date: '30 Oct 2026',
-          status: 'Completed',
-          description: '320 acoustic clamp sensors calibrated & INR 10.5 Lakhs escrow tranche paid.',
-          documents: [
-            { name: 'M1 Sensor Deployment Report (PDF)', type: 'Report' },
-            { name: 'Payment Voucher – M1 (PDF)', type: 'Voucher' }
-          ],
-          kpis: [
-            { label: 'Sensors Deployed', value: '320 Units' },
-            { label: 'Coverage', value: '40 km Pipeline' },
-            { label: 'Detection Accuracy', value: '88%' }
-          ]
-        },
-        {
-          num: 8,
-          title: 'Milestone M2 In Progress',
-          date: 'Due 15 Dec 2026',
+        stages: [
+          { num: 1, title: 'Proposal Submitted', date: cp.submittedAt || 'Recent', status: 'Completed' as const, description: 'Digital proposal receipt generated via Maharashtra Procure Gateway.' },
+          { num: 2, title: 'Under Department Review', date: 'Pending', status: (isPilot || isCompleted ? 'Completed' : 'In Progress') as 'Completed' | 'In Progress' | 'Pending', description: 'Scrutiny of startup eligibility and solution brief.' },
+          { num: 3, title: 'Shortlisted', date: 'Pending', status: (isPilot || isCompleted ? 'Completed' : 'Pending') as 'Completed' | 'In Progress' | 'Pending', description: 'Shortlisting for technical domain evaluation.' },
+          { num: 4, title: 'Expert Evaluation', date: 'Pending', status: (isPilot || isCompleted ? 'Completed' : 'Pending') as 'Completed' | 'In Progress' | 'Pending', description: 'Domain expert committee technical clearance.' },
+          { num: 5, title: 'Contract Approval', date: 'Pending', status: (isPilot || isCompleted ? 'Completed' : 'Pending') as 'Completed' | 'In Progress' | 'Pending', description: 'Bilateral pilot contract and milestone escrow generation.' },
+          { num: 6, title: 'Pilot Started', date: 'Pending', status: (isPilot ? 'In Progress' : isCompleted ? 'Completed' : 'Pending') as 'Completed' | 'In Progress' | 'Pending', description: 'Sandbox deployment and telemetry sensor calibration.' },
+          { num: 7, title: 'Milestone M1 Completed', date: 'Pending', status: (isCompleted ? 'Completed' : 'Pending') as 'Completed' | 'In Progress' | 'Pending', description: 'First deliverable verification and tranche release.' },
+          { num: 8, title: 'Milestone M2 Completed', date: 'Pending', status: (isCompleted ? 'Completed' : 'Pending') as 'Completed' | 'In Progress' | 'Pending', description: 'Mid-term KPI performance sign-off.' },
+          { num: 9, title: 'Final Validation', date: 'Pending', status: (isCompleted ? 'Completed' : 'Pending') as 'Completed' | 'In Progress' | 'Pending', description: 'Independent end-of-pilot audit report.' },
+          { num: 10, title: 'Scale Decision', date: 'Pending', status: (isCompleted ? 'Completed' : 'Pending') as 'Completed' | 'In Progress' | 'Pending', description: 'State-wide scale-up and GeM cataloging.' }
+        ],
+        milestones: [],
+        kpis: {
+          primaryName: 'Outcome Alignment',
+          baseline: '0%',
+          target: '100%',
+          current: '0%',
           status: 'In Progress',
-          description: '90-day telemetry export, SCADA integration, and continuous leak logs being validated.',
-          notes: 'Current Progress: 75% of M2 validation tasks completed | Next Submission Due: 15 Dec 2026',
-          documents: [{ name: 'M2 Interim Progress Report (Draft PDF)', type: 'Report' }],
-          actions: ['Submit M2 Milestone Deliverables', 'Upload Telemetry Log Data']
-        },
-        {
-          num: 9,
-          title: 'Final Validation',
-          date: 'Pending (Feb 2027)',
-          status: 'Pending',
-          description: 'Final empirical KPI audit (≥20% verified non-revenue water reduction).',
-          notes: 'Independent validation by Maharashtra Water Quality & Loss Audit Board'
-        },
-        {
-          num: 10,
-          title: 'Scale Decision',
-          date: 'Pending (Mar 2027)',
-          status: 'Pending',
-          description: 'GeM state-wide fast-track standing rate contract & PAC certificate.',
-          notes: 'Conditional on: ≥20% NRW reduction, zero cyber infractions, 99% telemetry uptime'
+          secondary: []
         }
-      ],
-      milestones: [
-        { name: 'M1: Sensor Rigging & Gateway Setup', dueDate: '30 Oct 2026', status: 'Completed', amount: 'INR 10.5 Lakhs', paymentStatus: 'Paid' },
-        { name: 'M2: 90-Day Continuous Telemetry & Leak Fixes', dueDate: '15 Dec 2026', status: 'In Progress', amount: 'INR 14.0 Lakhs', paymentStatus: 'Pending' },
-        { name: 'M3: Final Verification & Scaled Audit', dueDate: '28 Feb 2027', status: 'Pending', amount: 'INR 10.5 Lakhs', paymentStatus: 'Pending' }
-      ],
-      kpis: {
-        primaryName: 'Non-Revenue Water (NRW) Reduction',
-        baseline: '12.0%',
-        target: '≥ 20.0%',
-        current: '18.4%',
-        status: 'On Track',
-        secondary: [
-          { label: 'Leak Detection Accuracy', value: '91.2% (M2)' },
-          { label: 'System Telemetry Uptime', value: '99.4%' },
-          { label: 'Alert Latency to SCADA', value: '< 4 Minutes' }
-        ]
-      }
-    },
-    {
-      id: 'PS7',
-      psCode: 'MH-2026-URB-07 / PS7',
-      challengeTitle: 'Smart Street Lighting – Adaptive Mesh Control & Energy Saver',
-      department: 'Municipal Administration & Urban Development',
-      solutionName: 'LumiFlow AI Dynamic Dimming Gateway',
-      currentStage: 'Expert Evaluation',
-      stageNum: 4,
-      stageColor: 'purple',
-      lastUpdated: '10 Nov 2026 – Scorecard issued (91/100)',
-      status: 'Open',
-      statusVariant: 'blue',
-      keyContacts: {
-        nodalOfficer: 'Shri Vikram Shinde (Chief Engineer)',
-        technicalLead: 'Prof. S. K. Kulkarni (Evaluation Chair)'
-      },
-      stages: [
-        { num: 1, title: 'Proposal Submitted', date: '15 Sep 2026', status: 'Completed', description: 'Proposal receipt #RCP-91024 generated.' },
-        { num: 2, title: 'Under Department Review', date: '28 Sep 2026', status: 'Completed', description: 'Technical and financial eligibility verified.' },
-        { num: 3, title: 'Shortlisted', date: '15 Oct 2026', status: 'Completed', description: 'Selected among top 4 vendors for expert scrutiny.' },
-        { num: 4, title: 'Expert Evaluation', date: '10 Nov 2026', status: 'In Progress', description: 'Panel scorecard 91/100 issued. Pilot scope finalization underway.' },
-        { num: 5, title: 'Contract Approval', date: 'Pending', status: 'Pending', description: 'Drafting standing tripartite sandbox order.' }
-      ],
-      milestones: [
-        { name: 'M1: 500 Luminaire Controller Assembly', dueDate: '15 Jan 2027', status: 'Pending', amount: 'INR 8.0 Lakhs', paymentStatus: 'Due' },
-        { name: 'M2: 60-Day Energy Audit', dueDate: '15 Mar 2027', status: 'Pending', amount: 'INR 12.0 Lakhs', paymentStatus: 'Due' }
-      ],
-      kpis: {
-        primaryName: 'Grid Power Conservation',
-        baseline: '0.0%',
-        target: '≥ 35.0%',
-        current: '33.5% (Lab)',
-        status: 'Pilot Ready',
-        secondary: [
-          { label: 'Mesh Latency', value: '< 200 ms' },
-          { label: 'Fault Alert SLA', value: '< 2 Mins' }
-        ]
-      }
-    },
-    {
-      id: 'PS11',
-      psCode: 'MH-2026-AGR-11 / PS11',
-      challengeTitle: 'Drone-based Crop Health & Pest Infestation Early Warning',
-      department: 'Department of Agriculture & Farmers Welfare',
-      solutionName: 'CropCare AI Multispectral Edge Engine',
-      currentStage: 'Completed – Scaled to State',
-      stageNum: 10,
-      stageColor: 'emerald',
-      lastUpdated: '30 Sep 2026 – GeM Fast-Track Rate Contract Approved',
-      status: 'Completed',
-      statusVariant: 'emerald',
-      keyContacts: {
-        nodalOfficer: 'Dr. Anand Patil (Director – Agriculture)',
-        technicalLead: 'Dr. R. V. Deshpande'
-      },
-      stages: [
-        { num: 1, title: 'Proposal Submitted', date: '20 May 2026', status: 'Completed', description: 'Proposal receipt #RCP-77412 generated.' },
-        { num: 2, title: 'Under Department Review', date: '01 Jun 2026', status: 'Completed', description: 'DGCA drone type certification verified.' },
-        { num: 3, title: 'Shortlisted', date: '15 Jun 2026', status: 'Completed', description: 'Selected for Nashik district pilot.' },
-        { num: 4, title: 'Expert Evaluation', date: '01 Jul 2026', status: 'Completed', description: 'Scorecard 96/100 awarded.' },
-        { num: 5, title: 'Contract Approval', date: '15 Jul 2026', status: 'Completed', description: 'Contract order GR/AGR/2026/04 executed.' },
-        { num: 6, title: 'Pilot Started', date: '01 Aug 2026', status: 'Completed', description: 'Nashik vineyard trial covering 1,400 acres.' },
-        { num: 7, title: 'Milestone M1 Completed', date: '20 Aug 2026', status: 'Completed', description: 'First flight telemetry and NDVI maps delivered.' },
-        { num: 8, title: 'Milestone M2 Completed', date: '10 Sep 2026', status: 'Completed', description: 'Pest infestation detection accuracy verified at 94%.' },
-        { num: 9, title: 'Final Validation', date: '20 Sep 2026', status: 'Completed', description: 'Directorate of Agriculture audit signed off.' },
-        { num: 10, title: 'Scale Decision', date: '30 Sep 2026', status: 'Completed', description: 'Graduated to GeM PAC state procurement catalog.' }
-      ],
-      milestones: [
-        { name: 'M1: Baseline Flight Surveys', dueDate: '20 Aug 2026', status: 'Completed', amount: 'INR 6.0 Lakhs', paymentStatus: 'Paid' },
-        { name: 'M2: AI Pest Warning Maps', dueDate: '10 Sep 2026', status: 'Completed', amount: 'INR 8.5 Lakhs', paymentStatus: 'Paid' }
-      ],
-      kpis: {
-        primaryName: 'Pest Infestation Early Warning Lead Time',
-        baseline: '2 Days',
-        target: '≥ 7 Days Ahead',
-        current: '8.5 Days Ahead',
-        status: 'Exceeded Target',
-        secondary: [
-          { label: 'Mapping Resolution', value: '2.5 cm/px' },
-          { label: 'Crop Yield Impact', value: '+14% Saved' }
-        ]
-      }
-    }
-  ];
+      };
+    });
+  }, [contextProposals]);
+
+  // Selected Proposal for Detailed Timeline View
+  const [selectedProposalId, setSelectedProposalId] = useState<string | null>(null);
+  const [docArchiveTab, setDocArchiveTab] = useState<'all' | 'contract' | 'milestones' | 'payments' | 'correspondence'>('all');
+  const [selectedStageIndex, setSelectedStageIndex] = useState<number>(0);
 
   // Filtered Proposals
   const filteredProposals = proposals.filter(p => {
@@ -296,8 +125,8 @@ export const ApplicationTracker: React.FC = () => {
     return true;
   });
 
-  const activeProposal = proposals.find(p => p.id === selectedProposalId) || proposals[0];
-  const activeStage = activeProposal.stages[selectedStageIndex] || activeProposal.stages[0];
+  const activeProposal = (selectedProposalId ? proposals.find(p => p.id === selectedProposalId) : proposals[0]) || null;
+  const activeStage = activeProposal ? (activeProposal.stages[selectedStageIndex] || activeProposal.stages[0]) : null;
 
   return (
     <div className="space-y-6">
@@ -415,77 +244,97 @@ export const ApplicationTracker: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-700">
-              {filteredProposals.map((prop) => {
-                const isSelected = selectedProposalId === prop.id;
-                return (
-                  <tr 
-                    key={prop.id}
-                    onClick={() => {
-                      setSelectedProposalId(prop.id);
-                      setSelectedStageIndex(prop.stages.findIndex(s => s.status === 'In Progress') !== -1 ? prop.stages.findIndex(s => s.status === 'In Progress') : prop.stages.length - 1);
-                    }}
-                    className={`cursor-pointer transition-colors ${
-                      isSelected ? 'bg-blue-50/70 font-semibold' : 'hover:bg-slate-50/60'
-                    }`}
-                  >
-                    <td className="py-4 px-4 max-w-xs">
-                      <strong className="text-navy-900 font-bold block leading-snug">{prop.challengeTitle}</strong>
-                      <span className="text-[10px] text-slate-400 font-mono block mt-0.5">{prop.psCode}</span>
-                    </td>
-                    <td className="py-4 px-4 text-slate-600 font-medium whitespace-nowrap">
-                      {prop.department}
-                    </td>
-                    <td className="py-4 px-4 font-bold text-[#1D64EC] whitespace-nowrap">
-                      {prop.solutionName}
-                    </td>
-                    <td className="py-4 px-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                        prop.stageColor === 'emerald' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' :
-                        prop.stageColor === 'amber' ? 'bg-amber-100 text-amber-900 border border-amber-200' :
-                        prop.stageColor === 'purple' ? 'bg-purple-100 text-purple-800 border border-purple-200' :
-                        'bg-blue-100 text-[#1D64EC] border border-blue-200'
-                      }`}>
-                        <span className="w-1.5 h-1.5 rounded-full bg-current" />
-                        {prop.currentStage}
-                      </span>
-                    </td>
-                    <td className="py-4 px-4 text-slate-500 font-medium text-[11px] whitespace-nowrap">
-                      {prop.lastUpdated}
-                    </td>
-                    <td className="py-4 px-4 whitespace-nowrap">
-                      <StatusBadge label={prop.status} variant={prop.statusVariant} size="sm" />
-                    </td>
-                    <td className="py-4 px-4 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedProposalId(prop.id);
-                            const el = document.getElementById('proposal-detail-section');
-                            if (el) el.scrollIntoView({ behavior: 'smooth' });
-                          }}
-                          className="px-3 py-1 rounded-xl bg-slate-100 hover:bg-[#1D64EC] hover:text-white text-slate-700 font-bold text-[11px] transition-colors"
-                        >
-                          View Timeline
-                        </button>
-                        {prop.status === 'Active Pilot' && (
+              {filteredProposals.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-12 text-center text-slate-400">
+                    <div className="max-w-xs mx-auto space-y-2">
+                      <Layers className="w-8 h-8 mx-auto text-slate-300" />
+                      <p className="font-bold text-xs text-navy-900">No Proposals Registered</p>
+                      <p className="text-[11px] text-slate-500">Apply to state problem statements to track proposal review stages.</p>
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab('challenges')}
+                        className="px-4 py-1.5 rounded-full bg-[#1D64EC] hover:bg-blue-700 text-white font-bold text-xs shadow-2xs inline-flex items-center gap-1 mt-1"
+                      >
+                        <Rocket className="w-3.5 h-3.5" />
+                        <span>Explore Challenges</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filteredProposals.map((prop) => {
+                  const isSelected = selectedProposalId === prop.id;
+                  return (
+                    <tr 
+                      key={prop.id}
+                      onClick={() => {
+                        setSelectedProposalId(prop.id);
+                        setSelectedStageIndex(prop.stages.findIndex(s => s.status === 'In Progress') !== -1 ? prop.stages.findIndex(s => s.status === 'In Progress') : prop.stages.length - 1);
+                      }}
+                      className={`cursor-pointer transition-colors ${
+                        isSelected ? 'bg-blue-50/70 font-semibold' : 'hover:bg-slate-50/60'
+                      }`}
+                    >
+                      <td className="py-4 px-4 max-w-xs">
+                        <strong className="text-navy-900 font-bold block leading-snug">{prop.challengeTitle}</strong>
+                        <span className="text-[10px] text-slate-400 font-mono block mt-0.5">{prop.psCode}</span>
+                      </td>
+                      <td className="py-4 px-4 text-slate-600 font-medium whitespace-nowrap">
+                        {prop.department}
+                      </td>
+                      <td className="py-4 px-4 font-bold text-[#1D64EC] whitespace-nowrap">
+                        {prop.solutionName}
+                      </td>
+                      <td className="py-4 px-4 whitespace-nowrap">
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                          prop.stageColor === 'emerald' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' :
+                          prop.stageColor === 'amber' ? 'bg-amber-100 text-amber-900 border border-amber-200' :
+                          prop.stageColor === 'purple' ? 'bg-purple-100 text-purple-800 border border-purple-200' :
+                          'bg-blue-100 text-[#1D64EC] border border-blue-200'
+                        }`}>
+                          <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                          {prop.currentStage}
+                        </span>
+                      </td>
+                      <td className="py-4 px-4 text-slate-500 font-medium text-[11px] whitespace-nowrap">
+                        {prop.lastUpdated}
+                      </td>
+                      <td className="py-4 px-4 whitespace-nowrap">
+                        <StatusBadge label={prop.status} variant={prop.statusVariant} size="sm" />
+                      </td>
+                      <td className="py-4 px-4 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1.5">
                           <button
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              setActiveTab('execution');
+                              setSelectedProposalId(prop.id);
+                              const el = document.getElementById('proposal-detail-section');
+                              if (el) el.scrollIntoView({ behavior: 'smooth' });
                             }}
-                            className="px-3 py-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-2xs transition-colors"
+                            className="px-3 py-1 rounded-xl bg-slate-100 hover:bg-[#1D64EC] hover:text-white text-slate-700 font-bold text-[11px] transition-colors"
                           >
-                            Pilot Workspace
+                            View Timeline
                           </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
+                          {prop.status === 'Active Pilot' && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveTab('execution');
+                              }}
+                              className="px-3 py-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-2xs transition-colors"
+                            >
+                              Pilot Workspace
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
@@ -494,6 +343,7 @@ export const ApplicationTracker: React.FC = () => {
       {/* ========================================================================= */}
       {/* SECTION 2: PROPOSAL DETAIL & 10-STAGE VISUAL LIFECYCLE TIMELINE           */}
       {/* ========================================================================= */}
+      {activeProposal && (
       <div id="proposal-detail-section" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6">
         
         {/* Header Strip */}
@@ -879,36 +729,36 @@ export const ApplicationTracker: React.FC = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
-            {[
-              { title: 'Proposal Receipt #RCP-88192', type: 'Receipt', date: '10 Jun 2026' },
-              { title: 'Expert Technical Scorecard (94/100)', type: 'Scorecard', date: '20 Jul 2026' },
-              { title: 'Bilateral Sandbox Agreement Order', type: 'Contract', date: '10 Aug 2026' },
-              { title: 'Milestone M1 Completion Report', type: 'Milestone', date: '30 Oct 2026' },
-              { title: 'Treasury Disbursal Voucher – M1 (₹10.5L)', type: 'Payment', date: '05 Nov 2026' },
-              { title: 'SCADA Telemetry Calibration Sign-off', type: 'Technical', date: '12 Nov 2026' },
-            ].map((doc, idx) => (
-              <div key={idx} className="p-3.5 rounded-2xl bg-white border border-slate-200 flex items-center justify-between gap-2 shadow-2xs">
-                <div className="flex items-center gap-2.5 truncate">
-                  <FileText className="w-4 h-4 text-[#1D64EC] shrink-0" />
-                  <div className="truncate">
-                    <span className="font-bold text-navy-900 truncate block">{doc.title}</span>
-                    <span className="text-[10px] text-slate-400">{doc.type} • {doc.date}</span>
-                  </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+              {activeProposal.stages.flatMap(s => (s.documents || []).map(d => ({ title: d.name, type: d.type, date: s.date }))).length === 0 ? (
+                <div className="col-span-full py-6 text-center text-xs text-slate-400">
+                  No verified milestone or contract documents attached yet.
                 </div>
-                <button
-                  type="button"
-                  onClick={() => addNotification({ title: 'Document Downloaded', message: `Downloaded copy of ${doc.title} (PDF)`, portal: 'startup', type: 'info' })}
-                  className="p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 shrink-0"
-                >
-                  <Download className="w-3.5 h-3.5 text-[#1D64EC]" />
-                </button>
-              </div>
-            ))}
+              ) : (
+                activeProposal.stages.flatMap(s => (s.documents || []).map(d => ({ title: d.name, type: d.type, date: s.date }))).map((doc, idx) => (
+                  <div key={idx} className="p-3.5 rounded-2xl bg-white border border-slate-200 flex items-center justify-between gap-2 shadow-2xs">
+                    <div className="flex items-center gap-2.5 truncate">
+                      <FileText className="w-4 h-4 text-[#1D64EC] shrink-0" />
+                      <div className="truncate">
+                        <span className="font-bold text-navy-900 truncate block">{doc.title}</span>
+                        <span className="text-[10px] text-slate-400">{doc.type} • {doc.date}</span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => addNotification({ title: 'Document Downloaded', message: `Downloaded copy of ${doc.title} (PDF)`, portal: 'startup', type: 'info' })}
+                      className="p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 shrink-0"
+                    >
+                      <Download className="w-3.5 h-3.5 text-[#1D64EC]" />
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
-        </div>
 
-      </div>
+        </div>
+      )}
 
     </div>
   );

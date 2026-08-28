@@ -55,7 +55,7 @@ interface ProblemStatementOption {
 }
 
 export const AIEvaluator: React.FC = () => {
-  const { setActiveTab, addNotification } = usePlatform();
+  const { challenges, proposals, setActiveTab, addNotification } = usePlatform();
 
   // Navigation State: null = Home / PS Selection, string = Selected PS Results View
   const [selectedPSId, setSelectedPSId] = useState<string | null>(null);
@@ -96,265 +96,20 @@ export const AIEvaluator: React.FC = () => {
     { name: 'Risk & operational profile', key: 'riskProfile', weight: 5 }
   ]);
 
-  // PS Dataset with comprehensive 10-dimension AI rankings
-  const [psList, setPsList] = useState<ProblemStatementOption[]>([
-    {
-      id: 'PS1',
-      psCode: 'PS1',
-      title: 'Smart Water Loss Reduction in Urban Distribution Networks',
-      department: 'Maharashtra Water Supply & Sanitation Department',
-      status: 'Published',
-      description: 'AI-based acoustic leak detection and pressure optimization for municipal water distribution mains.',
-      totalStartupsCount: 42,
-      shortlistedCount: 7,
-      startups: [
-        {
-          id: 'ST-001',
-          rank: 1,
-          name: 'AquaSense Technologies',
-          legalName: 'AQUASENSE TECHNOLOGIES PRIVATE LIMITED',
-          logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80',
-          overallScore: 88,
-          suitabilityLabel: 'High Suitability',
-          relevanceScore: 92,
-          evidenceScore: 80,
-          evidenceLevel: 'Level 3 – Customer Verified',
-          pilotReadinessScore: 95,
-          pilotReadinessLabel: 'High',
-          securityScore: 90,
-          securityStatus: 'Compliant',
-          keyStrengths: [
-            'Direct match to PS1 water loss reduction with 3 municipal deployments.',
-            'Strong evidence: 2 government pilots, independent third-party validation.'
-          ],
-          keyRisks: [
-            'Scaling beyond 500 km pipeline needs validation review.',
-            'Last CERT-In Level 3 audit was 14 months ago; renewal pending.'
-          ],
-          recommendation: 'Shortlist for Expert Review',
-          narrativeSummary: `AquaSense Technologies shows strong alignment with PS1: Smart Water Loss Reduction. Their solution uses AI-based leak detection and pressure optimization, directly addressing the stated problem. They have completed 3 municipal deployments with reported NRW reductions of 15–22%, which matches the government's target range.
-
-Evidence strength is moderate-to-high: two government pilots are documented and one has been independently validated by a third-party auditor. The product is pilot-ready, with typical deployment time of 10–14 days for a zone of 100–150 km pipeline.
-
-Main concerns are around scalability beyond 500 km and the need for an updated CERT-In audit. Security controls are largely compliant with state policy, but some documentation is pending.`,
-          aiRecommendationRationale: 'Based on the evaluation model, AI recommends shortlisting AquaSense Technologies for expert evaluation. Key strengths are direct problem relevance, pilot readiness, and verifiable evidence strength. Experts should specifically examine scalability plans and security audit status.',
-          dimensions: [
-            {
-              name: 'Problem/solution relevance',
-              key: 'relevance',
-              weight: 20,
-              score: 92,
-              explanation: 'The startup’s core product is AI-based water leak detection and pressure management, which directly addresses PS1’s objective of reducing non-revenue water (NRW) in urban networks. Real-time anomaly detection matches functional requirements.',
-              evidenceLinks: [
-                { label: 'Product Brochure (Section 2)', docName: 'AquaSense-Product-Spec.pdf' },
-                { label: 'Case Study: Pune NRW Reduction', docName: 'Pune-ZoneA-Validation.pdf' }
-              ]
-            },
-            {
-              name: 'Capability/technology match',
-              key: 'techMatch',
-              weight: 15,
-              score: 88,
-              explanation: 'AquaSense uses ML wavelets for acoustic leak localization, integrates with municipal SCADA systems, and supports field engineer dashboards. Architecture aligns with open REST standards.',
-              evidenceLinks: [
-                { label: 'Technical Architecture Whitepaper', docName: 'AquaSense-Architecture.pdf' },
-                { label: 'SCADA API Connector Specs', docName: 'SCADA-REST-Endpoints.pdf' }
-              ]
-            },
-            {
-              name: 'Expected outcome fit',
-              key: 'outcomeFit',
-              weight: 15,
-              score: 90,
-              explanation: 'Projected 18–22% NRW loss reduction matches the department’s 20% benchmark KPI. Sub-15 min alert latency verified in previous trials.',
-              evidenceLinks: [
-                { label: 'Outcome Benchmark Projections', docName: 'NRW-Outcome-Model.pdf' }
-              ]
-            },
-            {
-              name: 'Evidence strength',
-              key: 'evidence',
-              weight: 10,
-              score: 80,
-              explanation: 'Startup provided 2 government pilot reports and 1 third-party NABL calibration report. Customer references from Pune and PCMC provided.',
-              evidenceLinks: [
-                { label: 'Pune MC Pilot Completion Certificate', docName: 'Pune-Completion-Cert.pdf' },
-                { label: 'NABL Sensor Calibration Audit', docName: 'NABL-Acoustic-Audit.pdf' }
-              ]
-            },
-            {
-              name: 'Relevant past experience',
-              key: 'experience',
-              weight: 10,
-              score: 85,
-              explanation: 'Team has executed 3 distinct pressurized municipal pipeline monitoring contracts over 24 months with verified uptime exceeding 99.2%.',
-              evidenceLinks: [
-                { label: 'Municipal Track Record Summary', docName: 'Past-Deployments-Dossier.pdf' }
-              ]
-            },
-            {
-              name: 'Pilot readiness',
-              key: 'readiness',
-              weight: 10,
-              score: 95,
-              explanation: 'Clamp-on non-invasive hardware nodes are in active commercial production. Deployment turnaround is under 14 days without pipeline excavation.',
-              evidenceLinks: [
-                { label: 'Pilot Deployment SLA & SOP', docName: 'Pilot-Readiness-SOP.pdf' }
-              ]
-            },
-            {
-              name: 'Scalability & replicability',
-              key: 'scalability',
-              weight: 5,
-              score: 75,
-              explanation: 'Effective up to 350 km grids. Scale beyond 500 km multi-district zones will require distributed edge aggregation servers.',
-              evidenceLinks: [
-                { label: 'Grid Scaling Assessment', docName: 'Scalability-StressTest.pdf' }
-              ]
-            },
-            {
-              name: 'Cost/value proposition',
-              key: 'costValue',
-              weight: 5,
-              score: 84,
-              explanation: 'Proposed pilot cost of INR 35 Lakhs falls within the standard INR 50L allocation. Projected water savings yield full ROI in under 9 months.',
-              evidenceLinks: [
-                { label: 'Commercial Value Analysis', docName: 'Cost-Benefit-Model.pdf' }
-              ]
-            },
-            {
-              name: 'Security, privacy, compliance',
-              key: 'security',
-              weight: 10,
-              score: 90,
-              explanation: 'Encrypted telemetry (TLS 1.3/AES-256), MeitY AWS Mumbai cloud hosting, ISO 27001 certified. Renewal for annual CERT-In audit scheduled.',
-              evidenceLinks: [
-                { label: 'CERT-In Level 3 Certificate', docName: 'CERT-In-Audit.pdf' },
-                { label: 'MeitY Cloud Hosting Proof', docName: 'AWS-Mumbai-Residency.pdf' }
-              ]
-            },
-            {
-              name: 'Risk & operational profile',
-              key: 'riskProfile',
-              weight: 5,
-              score: 80,
-              explanation: 'Low operational risk. Battery life rated for 3 years; automated tamper alerts enabled on all field hydrophones.',
-              evidenceLinks: [
-                { label: 'Risk Mitigation Matrix', docName: 'Risk-Profile-Report.pdf' }
-              ]
-            }
-          ]
-        },
-        {
-          id: 'ST-004',
-          rank: 2,
-          name: 'HydroMind Labs',
-          legalName: 'HYDROMIND LABS LLP',
-          logo: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=150&auto=format&fit=crop&q=80',
-          overallScore: 82,
-          suitabilityLabel: 'High Suitability',
-          relevanceScore: 88,
-          evidenceScore: 70,
-          evidenceLevel: 'Level 2 – Self Reported & Documented',
-          pilotReadinessScore: 90,
-          pilotReadinessLabel: 'High',
-          securityScore: 86,
-          securityStatus: 'Compliant',
-          keyStrengths: [
-            'Strong IoT tech fit with transient pressure damping.',
-            'Good outcome projections and affordable unit hardware.'
-          ],
-          keyRisks: [
-            'Limited large metro municipal references.',
-            'Requires GeM cataloging completion.'
-          ],
-          recommendation: 'Shortlist for Expert Review',
-          narrativeSummary: `HydroMind Labs offers a highly cost-effective transient wave monitoring solution for peri-urban and rural water feeder channels. The underlying simulation algorithm is solid and has undergone pilot demonstration in Nagpur rural grids.
-
-Evidence is Level 2: self-reported pilot validation and University TBI incubation records. Pilot readiness is high with rapid sensor clamp installation.`,
-          aiRecommendationRationale: 'Recommended for expert deliberation as a primary or alternate candidate with compelling unit economics.',
-          dimensions: []
-        },
-        {
-          id: 'ST-009',
-          rank: 3,
-          name: 'PipeGuard AI',
-          legalName: 'PIPEGUARD AI SYSTEMS PRIVATE LIMITED',
-          logo: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=150&auto=format&fit=crop&q=80',
-          overallScore: 76,
-          suitabilityLabel: 'Moderate Suitability',
-          relevanceScore: 85,
-          evidenceScore: 65,
-          evidenceLevel: 'Level 2 – Verified Documents',
-          pilotReadinessScore: 80,
-          pilotReadinessLabel: 'Medium',
-          securityScore: 72,
-          securityStatus: 'Partial',
-          keyStrengths: [
-            'Relevant deep learning AI models for acoustic classification.',
-            'Competitive SaaS pricing model.'
-          ],
-          keyRisks: [
-            'No independent third-party validation on pressurized mains.',
-            'Some documentation gaps in cybersecurity policy compliance.'
-          ],
-          recommendation: 'Keep as Backup',
-          narrativeSummary: `PipeGuard AI demonstrates promising algorithms but lacks mature field deployment evidence on high-pressure municipal water grids. Kept as backup candidate.`,
-          aiRecommendationRationale: 'Hold as backup candidate; recommend experts evaluate if primary candidates encounter logistics constraints.',
-          dimensions: []
-        },
-        {
-          id: 'ST-999',
-          rank: 4,
-          name: 'FlowGuard Innovations',
-          legalName: 'FLOWGUARD INNOVATIONS PRIVATE LIMITED',
-          logo: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=150&auto=format&fit=crop&q=80',
-          overallScore: 61,
-          suitabilityLabel: 'Low Suitability',
-          relevanceScore: 70,
-          evidenceScore: 50,
-          evidenceLevel: 'Level 1 – Self Reported',
-          pilotReadinessScore: 75,
-          pilotReadinessLabel: 'Medium',
-          securityScore: 58,
-          securityStatus: 'Partial',
-          keyStrengths: [
-            'Innovative laboratory acoustic transducer approach.'
-          ],
-          keyRisks: [
-            'Weak municipal track record; high hardware failure risk.',
-            'Overseas cloud hosting non-compliant with state data residency.'
-          ],
-          recommendation: 'Do Not Shortlist',
-          narrativeSummary: `FlowGuard Innovations is currently at TRL 5. Hardware failure rates in lab stress tests and lack of MeitY cloud hosting disqualify it from this pilot round.`,
-          aiRecommendationRationale: 'Do not shortlist. Advise entity to mature product in incubator before public procurement re-application.',
-          dimensions: []
-        }
-      ]
-    },
-    {
-      id: 'PS2',
-      psCode: 'PS2',
-      title: 'Autonomous Solid Waste Segregation & Robotic Sorter',
-      department: 'Environment & Climate Change Department',
-      status: 'Published',
-      description: 'High-speed robotic delta arm with computer vision to classify and divert dry recyclables at municipal transfer stations.',
-      totalStartupsCount: 28,
-      shortlistedCount: 4,
+  // PS Dataset derived from context challenges
+  const psList = useMemo<ProblemStatementOption[]>(() => {
+    return challenges.map(ch => ({
+      id: ch.id,
+      psCode: ch.code || ch.id,
+      title: ch.title,
+      department: ch.department,
+      status: (ch.status === 'Open' ? 'Published' : 'Draft') as 'Published' | 'Draft' | 'In Pilot',
+      description: ch.description,
+      totalStartupsCount: ch.matchedStartupsCount || 0,
+      shortlistedCount: ch.proposalsCount || 0,
       startups: []
-    },
-    {
-      id: 'PS5',
-      psCode: 'PS5',
-      title: 'AI-based Stormwater Flood Prediction & Early Warning',
-      department: 'Disaster Management Department',
-      status: 'Published',
-      description: 'Precipitation hydrological modeling and sensor telemetry across urban storm drainage catchments.',
-      totalStartupsCount: 34,
-      shortlistedCount: 5,
-      startups: []
-    }
-  ]);
+    }));
+  }, [challenges]);
 
   // Selected Problem Statement
   const currentPS = useMemo(() => {
@@ -398,24 +153,12 @@ Evidence is Level 2: self-reported pilot validation and University TBI incubatio
     }, 900);
   };
 
+  // User override recommendations store
+  const [recommendations, setRecommendations] = useState<Record<string, 'Shortlist for Expert Review' | 'Keep as Backup' | 'Do Not Shortlist'>>({});
+
   // Change Recommendation for a Startup
   const handleRecommendationChange = (startupId: string, rec: 'Shortlist for Expert Review' | 'Keep as Backup' | 'Do Not Shortlist') => {
-    if (!selectedPSId) return;
-
-    setPsList(prev => prev.map(p => {
-      if (p.id === selectedPSId) {
-        return {
-          ...p,
-          startups: p.startups.map(s => {
-            if (s.id === startupId) {
-              return { ...s, recommendation: rec };
-            }
-            return s;
-          })
-        };
-      }
-      return p;
-    }));
+    setRecommendations(prev => ({ ...prev, [startupId]: rec }));
   };
 
   // Confirm Handoff to Expert Evaluation
@@ -515,64 +258,84 @@ Evidence is Level 2: self-reported pilot validation and University TBI incubatio
             </span>
           </div>
 
-          {/* PS Selection Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredPSOptions.map((ps) => (
-              <div
-                key={ps.id}
-                className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-[#1D64EC]/40 transition-all flex flex-col justify-between group space-y-4"
-              >
-                <div>
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <span className="font-mono text-[11px] font-bold text-[#1D64EC] uppercase">
-                      {ps.psCode} • {ps.department.split(' ')[1] || 'State'}
-                    </span>
-                    <StatusBadge label={ps.status} variant="blue" size="sm" />
-                  </div>
-
-                  <h3 className="font-bold text-base text-navy-900 group-hover:text-[#1D64EC] transition-colors leading-snug">
-                    {ps.title}
-                  </h3>
-
-                  <p className="text-xs text-slate-600 mt-2 line-clamp-2 leading-relaxed font-medium">
-                    {ps.description}
-                  </p>
-
-                  <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 mt-4 flex items-center justify-between text-xs">
-                    <div>
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block">Candidate Pool</span>
-                      <strong className="text-navy-900">{ps.totalStartupsCount} Startups</strong>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-[10px] uppercase font-bold text-slate-400 block">AI Shortlist</span>
-                      <strong className="text-[#1D64EC]">{ps.shortlistedCount} Recommended</strong>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-3 border-t border-slate-100">
-                  <button
-                    type="button"
-                    onClick={() => handleRunEvaluation(ps.id)}
-                    disabled={isEvaluating}
-                    className="w-full py-2.5 rounded-full bg-[#1D64EC] hover:bg-brand-cobalt text-white font-bold text-xs shadow-sm flex items-center justify-center gap-2 transition-all hover:scale-[1.02] disabled:opacity-50"
-                  >
-                    {isEvaluating ? (
-                      <>
-                        <RefreshCw className="w-4 h-4 animate-spin" />
-                        <span>Evaluating Multi-Dimensions...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-4 h-4" />
-                        <span>Run AI Evaluation</span>
-                      </>
-                    )}
-                  </button>
-                </div>
+          {/* PS Selection Grid or Clean Empty State */}
+          {filteredPSOptions.length === 0 ? (
+            <div className="py-16 px-4 text-center rounded-3xl border border-dashed border-slate-200 bg-white space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#1D64EC] flex items-center justify-center mx-auto text-xl font-bold">
+                <Bot className="w-6 h-6" />
               </div>
-            ))}
-          </div>
+              <h3 className="font-bold text-sm text-navy-900">No Problem Statements Available for AI Evaluation</h3>
+              <p className="text-xs text-slate-500 max-w-md mx-auto">
+                Once problem statements are created and published, the 10-dimension AI evaluation engine will automatically rank candidate startups.
+              </p>
+              <button
+                type="button"
+                onClick={() => setActiveTab('challenges')}
+                className="px-5 py-2 rounded-full bg-[#1D64EC] hover:bg-blue-700 text-white font-bold text-xs shadow-2xs inline-flex items-center gap-1.5 mt-2"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Create Problem Statement</span>
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredPSOptions.map((ps) => (
+                <div
+                  key={ps.id}
+                  className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-[#1D64EC]/40 transition-all flex flex-col justify-between group space-y-4"
+                >
+                  <div>
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <span className="font-mono text-[11px] font-bold text-[#1D64EC] uppercase">
+                        {ps.psCode} • {ps.department.split(' ')[1] || 'State'}
+                      </span>
+                      <StatusBadge label={ps.status} variant="blue" size="sm" />
+                    </div>
+
+                    <h3 className="font-bold text-base text-navy-900 group-hover:text-[#1D64EC] transition-colors leading-snug">
+                      {ps.title}
+                    </h3>
+
+                    <p className="text-xs text-slate-600 mt-2 line-clamp-2 leading-relaxed font-medium">
+                      {ps.description}
+                    </p>
+
+                    <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 mt-4 flex items-center justify-between text-xs">
+                      <div>
+                        <span className="text-[10px] uppercase font-bold text-slate-400 block">Candidate Pool</span>
+                        <strong className="text-navy-900">{ps.totalStartupsCount} Startups</strong>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[10px] uppercase font-bold text-slate-400 block">AI Shortlist</span>
+                        <strong className="text-[#1D64EC]">{ps.shortlistedCount} Recommended</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-100">
+                    <button
+                      type="button"
+                      onClick={() => handleRunEvaluation(ps.id)}
+                      disabled={isEvaluating}
+                      className="w-full py-2.5 rounded-full bg-[#1D64EC] hover:bg-brand-cobalt text-white font-bold text-xs shadow-sm flex items-center justify-center gap-2 transition-all hover:scale-[1.02] disabled:opacity-50"
+                    >
+                      {isEvaluating ? (
+                        <>
+                          <RefreshCw className="w-4 h-4 animate-spin" />
+                          <span>Evaluating Multi-Dimensions...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="w-4 h-4" />
+                          <span>Run AI Evaluation</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className="p-4 rounded-2xl bg-blue-50/70 border border-blue-100 text-xs text-slate-600 leading-relaxed font-medium">
             <strong>System Notice:</strong> AI evaluates all registered startups against the selected problem statement using relevance, technology fit, evidence strength, pilot readiness, security, and other dimensions. The output is a ranked shortlist with explanations, not a final decision.

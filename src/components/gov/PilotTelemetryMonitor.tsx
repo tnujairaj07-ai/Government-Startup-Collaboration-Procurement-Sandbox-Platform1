@@ -59,524 +59,64 @@ export const PilotTelemetryMonitor: React.FC = () => {
   const [sortBy, setSortBy] = useState<string>('default');
 
   // Rich list of startups selected/sorted for pilot deployment
-  const pilotStartups: PilotStartupItem[] = useMemo(() => [
-    {
-      id: 'ST-001',
-      name: 'AquaSense Technologies',
-      legalName: 'AQUASENSE TECHNOLOGIES PRIVATE LIMITED',
+  const pilotStartups: PilotStartupItem[] = useMemo(() => {
+    return proposals.filter(p => p.status === 'pilot_ongoing' || p.status === 'completed').map(p => ({
+      id: p.id,
+      name: p.startupName,
+      legalName: `${p.startupName.toUpperCase()} PRIVATE LIMITED`,
       logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80',
-      initials: 'AT',
-      stage: 'In Pilot',
-      location: 'Pune, Maharashtra',
-      sector: 'Smart Water & Utilities',
-      pilotName: 'AI-based Water Leakage Detection – Pune Zone A',
-      pilotCode: 'MHA-PILOT-2026-WTR-01',
+      initials: p.startupName.slice(0, 2).toUpperCase(),
+      stage: (p.status === 'completed' ? 'Scaling' : 'In Pilot') as 'Scaling' | 'In Pilot' | 'Early Traction' | 'Validation' | 'Pilot-ready',
+      location: 'Maharashtra, India',
+      sector: 'DeepTech & Public Innovation',
+      pilotName: p.challengeTitle,
+      pilotCode: `MHA-PILOT-${p.id}`,
       budget: 'INR 35.0 Lakhs',
-      progressPct: 65,
-      activeSensors: 312,
-      totalSensors: 320,
-      telemetryMetricLabel: 'Water Loss Reduction',
-      telemetryMetricValue: '18.4%',
-      targetMetricValue: '20.0%',
-      alertsThisMonth: 47,
-      verifiedAlerts: 38,
-      falseAlerts: 9,
-      savingsOrImpact: 'INR 12.3 Lakhs/month',
+      progressPct: 50,
+      activeSensors: 100,
+      totalSensors: 100,
+      telemetryMetricLabel: 'Target Benchmark',
+      telemetryMetricValue: '100%',
+      targetMetricValue: '100%',
+      alertsThisMonth: 0,
+      verifiedAlerts: 0,
+      falseAlerts: 0,
+      savingsOrImpact: 'Verified Public Impact',
       milestones: [
         {
           title: 'M1 – Deployment & Baseline Data Calibration',
           stage: 'M1',
           amount: 'INR 10.5 Lakhs (30%)',
           status: 'approved',
-          dateInfo: 'Paid on 30 Oct 2026',
-          description: 'Sensor deployment report, baseline water loss data, and SCADA integration certificate.'
+          dateInfo: 'Completed',
+          description: 'Sensor deployment and baseline calibration verification.'
         },
         {
-          title: 'M2 – 3-Month Performance Review & Live Leak Interception',
+          title: 'M2 – Performance Review & Telemetry Sign-off',
           stage: 'M2',
           amount: 'INR 14.0 Lakhs (40%)',
           status: 'submitted',
-          dateInfo: 'Due in 12 days',
-          description: '90-day telemetry export, verified leak logs (38 leaks resolved), third-party validation note.'
-        },
-        {
-          title: 'M3 – Final Validation, GeM Cataloging & Handover',
-          stage: 'M3',
-          amount: 'INR 10.5 Lakhs (30%)',
-          status: 'pending',
-          dateInfo: 'Month 6',
-          description: 'Final KPI validation report (>20% sustained NRW reduction), municipal handover documentation.'
-        }
-      ],
-      risksAndIssues: [
-        'Sensor outage in Sector 7 – 5 nodes offline (startup has raised maintenance ticket #TK-482).',
-        'Data latency spike on 10 Aug – resolved; root cause: transient network congestion.'
-      ],
-      dataPoints: [
-        { time: 'Day 10', value: 8.2 },
-        { time: 'Day 20', value: 11.5 },
-        { time: 'Day 30', value: 14.1 },
-        { time: 'Day 45', value: 16.0 },
-        { time: 'Day 60', value: 17.2 },
-        { time: 'Day 75', value: 18.0 },
-        { time: 'Day 90', value: 18.4 }
-      ]
-    },
-    {
-      id: 'ST-002',
-      name: 'CleanBot Innovations',
-      legalName: 'CLEANBOT INNOVATIONS LLP',
-      logo: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=150&auto=format&fit=crop&q=80',
-      initials: 'CB',
-      stage: 'Early Traction',
-      location: 'Navi Mumbai, Maharashtra',
-      sector: 'Robotics & Waste Management',
-      pilotName: 'Autonomous Municipal Solid Waste Sorting Robot',
-      pilotCode: 'MHA-PILOT-2026-ENV-08',
-      budget: 'INR 28.0 Lakhs',
-      progressPct: 45,
-      activeSensors: 48,
-      totalSensors: 50,
-      telemetryMetricLabel: 'Recyclables Purity Rate',
-      telemetryMetricValue: '94.2%',
-      targetMetricValue: '90.0%',
-      alertsThisMonth: 19,
-      verifiedAlerts: 18,
-      falseAlerts: 1,
-      savingsOrImpact: '340 Tons Landfill Diverted',
-      milestones: [
-        {
-          title: 'M1 – Robot Fabrication & Optical Cascade Mount',
-          stage: 'M1',
-          amount: 'INR 8.4 Lakhs (30%)',
-          status: 'approved',
-          dateInfo: 'Paid on 15 Nov 2026',
-          description: 'Deployment of delta sorting arm at APMC transfer station.'
-        },
-        {
-          title: 'M2 – Continuous 60-Day Sorting & Purity Audit',
-          stage: 'M2',
-          amount: 'INR 11.2 Lakhs (40%)',
-          status: 'submitted',
-          dateInfo: 'Under Department Review',
-          description: 'Validation of 1.2 tons/day dry recyclable processing.'
-        },
-        {
-          title: 'M3 – Full Plant Handover & State Scale Model',
-          stage: 'M3',
-          amount: 'INR 8.4 Lakhs (30%)',
-          status: 'pending',
-          dateInfo: 'Month 6',
-          description: 'Final certification and SOP training for municipal sanitary inspectors.'
-        }
-      ],
-      risksAndIssues: [
-        'Dust accumulation on NIR sensor lens during peak dry days (automatic wiper added).'
-      ],
-      dataPoints: [
-        { time: 'Day 10', value: 78.5 },
-        { time: 'Day 20', value: 83.2 },
-        { time: 'Day 30', value: 88.0 },
-        { time: 'Day 45', value: 91.4 },
-        { time: 'Day 60', value: 94.2 }
-      ]
-    },
-    {
-      id: 'ST-003',
-      name: 'CropCare AI',
-      legalName: 'CROPCARE AI LABS PRIVATE LIMITED',
-      logo: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=150&auto=format&fit=crop&q=80',
-      initials: 'CC',
-      stage: 'Scaling',
-      location: 'Nashik, Maharashtra',
-      sector: 'Agriculture & FoodTech',
-      pilotName: 'Drone-based Crop Health & Pest Risk Monitoring',
-      pilotCode: 'MHA-PILOT-2026-AGR-03',
-      budget: 'INR 42.0 Lakhs',
-      progressPct: 80,
-      activeSensors: 16,
-      totalSensors: 16,
-      telemetryMetricLabel: 'Pest Detection Accuracy',
-      telemetryMetricValue: '91.8%',
-      targetMetricValue: '85.0%',
-      alertsThisMonth: 62,
-      verifiedAlerts: 58,
-      falseAlerts: 4,
-      savingsOrImpact: 'INR 3.4 Cr Farmer Value Saved',
-      milestones: [
-        {
-          title: 'M1 – Flight Corridor Clearance & Baseline Aerial Grid',
-          stage: 'M1',
-          amount: 'INR 12.6 Lakhs (30%)',
-          status: 'approved',
-          dateInfo: 'Paid on 20 Sep 2026',
-          description: 'Survey of 12,000 acres grape farms in Nashik & Sangli.'
-        },
-        {
-          title: 'M2 – AI Model Tuning & WhatsApp Advisory Rollout',
-          stage: 'M2',
-          amount: 'INR 16.8 Lakhs (40%)',
-          status: 'approved',
-          dateInfo: 'Paid on 10 Dec 2026',
-          description: 'Marathi audio advisory delivery to 2,400 registered farmers.'
-        },
-        {
-          title: 'M3 – Scaled Statewide Rollout on GeM',
-          stage: 'M3',
-          amount: 'INR 12.6 Lakhs (30%)',
-          status: 'submitted',
-          dateInfo: 'In Final Validation',
-          description: 'Integration with AgriStack state portal.'
-        }
-      ],
-      risksAndIssues: [
-        'Flight delays during unseasonal monsoon squalls in Western Nashik.'
-      ],
-      dataPoints: [
-        { time: 'Day 10', value: 72.0 },
-        { time: 'Day 20', value: 79.4 },
-        { time: 'Day 30', value: 84.1 },
-        { time: 'Day 45', value: 88.0 },
-        { time: 'Day 60', value: 91.8 }
-      ]
-    },
-    {
-      id: 'ST-004',
-      name: 'HydroMind Labs',
-      legalName: 'HYDROMIND LABS LLP',
-      logo: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=150&auto=format&fit=crop&q=80',
-      initials: 'HL',
-      stage: 'Validation',
-      location: 'Nagpur, Maharashtra',
-      sector: 'Smart Water & Utilities',
-      pilotName: 'Nagpur Hydraulic Surge & Water Flow Telemetry',
-      pilotCode: 'MHA-PILOT-2026-WTR-04',
-      budget: 'INR 18.0 Lakhs',
-      progressPct: 35,
-      activeSensors: 64,
-      totalSensors: 70,
-      telemetryMetricLabel: 'Surge Suppression Factor',
-      telemetryMetricValue: '16.2%',
-      targetMetricValue: '18.0%',
-      alertsThisMonth: 21,
-      verifiedAlerts: 16,
-      falseAlerts: 5,
-      savingsOrImpact: 'INR 4.8 Lakhs Saved',
-      milestones: [
-        {
-          title: 'M1 – Sensor Tap-in & Edge Gateway Installation',
-          stage: 'M1',
-          amount: 'INR 5.4 Lakhs (30%)',
-          status: 'approved',
-          dateInfo: 'Paid on 05 Nov 2026',
-          description: 'Deployment of 64 acoustic transient monitoring nodes.'
-        },
-        {
-          title: 'M2 – 90-Day Spike Damping Verification',
-          stage: 'M2',
-          amount: 'INR 7.2 Lakhs (40%)',
-          status: 'pending',
           dateInfo: 'In Progress',
-          description: 'Suppression of water hammer events across feeders.'
+          description: 'Live telemetry logs, field KPI validation, and milestone verification.'
         },
         {
-          title: 'M3 – Final Commissioning',
-          stage: 'M3',
-          amount: 'INR 5.4 Lakhs (30%)',
-          status: 'pending',
-          dateInfo: 'Month 5',
-          description: 'Nagpur Jal handover and dashboard sync.'
-        }
-      ],
-      risksAndIssues: ['Battery replacement scheduled for 6 sub-station nodes.'],
-      dataPoints: [
-        { time: 'Day 10', value: 6.0 },
-        { time: 'Day 20', value: 9.8 },
-        { time: 'Day 30', value: 12.4 },
-        { time: 'Day 45', value: 16.2 }
-      ]
-    },
-    {
-      id: 'ST-005',
-      name: 'PipeGuard AI Technologies',
-      legalName: 'PIPEGUARD AI TECHNOLOGIES PRIVATE LIMITED',
-      logo: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=150&auto=format&fit=crop&q=80',
-      initials: 'PG',
-      stage: 'Validation',
-      location: 'Mumbai Suburban, Maharashtra',
-      sector: 'Healthcare & Lifesciences',
-      pilotName: 'Ultrasonic Pipeline Acoustic Digital Twin',
-      pilotCode: 'MHA-PILOT-2026-URB-05',
-      budget: 'INR 22.0 Lakhs',
-      progressPct: 50,
-      activeSensors: 110,
-      totalSensors: 115,
-      telemetryMetricLabel: 'Leak Anomaly Alert Rate',
-      telemetryMetricValue: '88.5%',
-      targetMetricValue: '85.0%',
-      alertsThisMonth: 32,
-      verifiedAlerts: 28,
-      falseAlerts: 4,
-      savingsOrImpact: 'INR 7.1 Lakhs Saved',
-      milestones: [
-        {
-          title: 'M1 – Ultrasonic Calibration on Sub-mains',
-          stage: 'M1',
-          amount: 'INR 6.6 Lakhs (30%)',
-          status: 'approved',
-          dateInfo: 'Paid on 18 Oct 2026',
-          description: 'Ultrasonic transducers mounted across 55 km pipelines.'
-        },
-        {
-          title: 'M2 – Mid-term Telemetry Validation',
-          stage: 'M2',
-          amount: 'INR 8.8 Lakhs (40%)',
-          status: 'submitted',
-          dateInfo: 'Under Evaluation',
-          description: 'Continuous leak isolation report verified by MCGM.'
-        },
-        {
-          title: 'M3 – Final Handover',
-          stage: 'M3',
-          amount: 'INR 6.6 Lakhs (30%)',
-          status: 'pending',
-          dateInfo: 'Month 6',
-          description: 'Full municipal API integration.'
-        }
-      ],
-      risksAndIssues: ['Transceiver signal attenuation in underground vaults.'],
-      dataPoints: [
-        { time: 'Day 10', value: 10.2 },
-        { time: 'Day 20', value: 14.5 },
-        { time: 'Day 30', value: 17.8 },
-        { time: 'Day 45', value: 21.0 }
-      ]
-    },
-    {
-      id: 'ST-006',
-      name: 'TerraVision Remote Sensing',
-      legalName: 'TERRAVISION REMOTE SENSING LLP',
-      logo: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=150&auto=format&fit=crop&q=80',
-      initials: 'TV',
-      stage: 'In Pilot',
-      location: 'Raigad, Maharashtra',
-      sector: 'Disaster Management & AI',
-      pilotName: 'Landslide Early Warning Inclinometer Network',
-      pilotCode: 'MHA-PILOT-2026-DIS-02',
-      budget: 'INR 38.0 Lakhs',
-      progressPct: 55,
-      activeSensors: 24,
-      totalSensors: 25,
-      telemetryMetricLabel: 'Early Warning Accuracy',
-      telemetryMetricValue: '93.4%',
-      targetMetricValue: '90.0%',
-      alertsThisMonth: 12,
-      verifiedAlerts: 11,
-      falseAlerts: 1,
-      savingsOrImpact: 'Zero Fatalities in Ghats',
-      milestones: [
-        {
-          title: 'M1 – Geotechnical Inclinometer Drill-Mount',
-          stage: 'M1',
-          amount: 'INR 11.4 Lakhs (30%)',
-          status: 'approved',
-          dateInfo: 'Paid on 02 Nov 2026',
-          description: 'Installation of 24 deep-bore slope sensors along NH-66.'
-        },
-        {
-          title: 'M2 – Monsoon Precipitation Correlation Model',
-          stage: 'M2',
-          amount: 'INR 15.2 Lakhs (40%)',
-          status: 'submitted',
-          dateInfo: 'Under Review',
-          description: 'Live sync with IMD Doppler radar data.'
-        },
-        {
-          title: 'M3 – District Disaster Control Room Handover',
-          stage: 'M3',
-          amount: 'INR 11.4 Lakhs (30%)',
-          status: 'pending',
-          dateInfo: 'Month 6',
-          description: 'Automated SMS broadcast siren integration.'
-        }
-      ],
-      risksAndIssues: ['Rockfall impact protection required on sensor casing 4.'],
-      dataPoints: [
-        { time: 'Day 10', value: 81.0 },
-        { time: 'Day 20', value: 86.5 },
-        { time: 'Day 30', value: 89.2 },
-        { time: 'Day 45', value: 93.4 }
-      ]
-    },
-    {
-      id: 'ST-007',
-      name: 'BioReap Agrotech',
-      legalName: 'BIOREAP AGROTECH PRIVATE LIMITED',
-      logo: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=150&auto=format&fit=crop&q=80',
-      initials: 'BA',
-      stage: 'Early Traction',
-      location: 'Solapur, Maharashtra',
-      sector: 'Agriculture & FoodTech',
-      pilotName: 'Solar-Powered PCM Micro Cold Storage System',
-      pilotCode: 'MHA-PILOT-2026-AGR-05',
-      budget: 'INR 32.0 Lakhs',
-      progressPct: 40,
-      activeSensors: 18,
-      totalSensors: 18,
-      telemetryMetricLabel: 'Thermal Retention (0 Grid)',
-      telemetryMetricValue: '99.1%',
-      targetMetricValue: '95.0%',
-      alertsThisMonth: 8,
-      verifiedAlerts: 8,
-      falseAlerts: 0,
-      savingsOrImpact: 'Zero Spoilage across 40 Tons Produce',
-      milestones: [
-        {
-          title: 'M1 – Solar Photovoltaic & PCM Thermal Setup',
-          stage: 'M1',
-          amount: 'INR 9.6 Lakhs (30%)',
-          status: 'approved',
-          dateInfo: 'Paid on 22 Nov 2026',
-          description: 'Commissioning of two 10 MT micro-storage pods.'
-        },
-        {
-          title: 'M2 – 60-Day Pomegranate & Mango Shelf-Life Trial',
-          stage: 'M2',
-          amount: 'INR 12.8 Lakhs (40%)',
-          status: 'submitted',
-          dateInfo: 'Under Review',
-          description: 'Telemetry logs confirming constant 4°C retention without diesel.'
-        },
-        {
-          title: 'M3 – FPO Handover & Scale Model',
-          stage: 'M3',
-          amount: 'INR 9.6 Lakhs (30%)',
-          status: 'pending',
-          dateInfo: 'Month 6',
-          description: 'Handover to local farmer producer organization.'
-        }
-      ],
-      risksAndIssues: ['Routine solar panel dust wiping needed.'],
-      dataPoints: [
-        { time: 'Day 10', value: 92.0 },
-        { time: 'Day 20', value: 95.4 },
-        { time: 'Day 30', value: 97.5 },
-        { time: 'Day 45', value: 99.1 }
-      ]
-    },
-    {
-      id: 'ST-008',
-      name: 'SmartGrid Dynamics',
-      legalName: 'SMARTGRID DYNAMICS PRIVATE LIMITED',
-      logo: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=150&auto=format&fit=crop&q=80',
-      initials: 'SD',
-      stage: 'Validation',
-      location: 'Chandrapur, Maharashtra',
-      sector: 'Healthcare & Lifesciences',
-      pilotName: 'Smart Grid Micro-Inverter Feeder Stabilization',
-      pilotCode: 'MHA-PILOT-2026-ENE-12',
-      budget: 'INR 35.0 Lakhs',
-      progressPct: 30,
-      activeSensors: 85,
-      totalSensors: 90,
-      telemetryMetricLabel: 'Feeder Trip Suppression',
-      telemetryMetricValue: '42.5%',
-      targetMetricValue: '40.0%',
-      alertsThisMonth: 15,
-      verifiedAlerts: 14,
-      falseAlerts: 1,
-      savingsOrImpact: 'Zero Agricultural Feeder Blackouts',
-      milestones: [
-        {
-          title: 'M1 – Bidirectional Inverter Interconnect',
-          stage: 'M1',
-          amount: 'INR 10.5 Lakhs (30%)',
-          status: 'approved',
-          dateInfo: 'Paid on 12 Nov 2026',
-          description: 'MSEDCL sub-station interconnect and SCADA sync.'
-        },
-        {
-          title: 'M2 – Transient Load Balancing Test',
-          stage: 'M2',
-          amount: 'INR 14.0 Lakhs (40%)',
-          status: 'pending',
-          dateInfo: 'In Progress',
-          description: 'Peak solar generation injection stability audit.'
-        },
-        {
-          title: 'M3 – Full Feeder Commissioning',
+          title: 'M3 – Final Validation & Handover',
           stage: 'M3',
           amount: 'INR 10.5 Lakhs (30%)',
           status: 'pending',
-          dateInfo: 'Month 6',
-          description: 'Statewide grid compliance certification.'
+          dateInfo: 'Pending',
+          description: 'Final audit report and state-wide scale recommendation.'
         }
       ],
-      risksAndIssues: ['Grid harmonic distortion during rapid thunderstorm switching.'],
+      risksAndIssues: [],
       dataPoints: [
-        { time: 'Day 10', value: 18.0 },
-        { time: 'Day 20', value: 26.5 },
-        { time: 'Day 30', value: 34.0 },
-        { time: 'Day 45', value: 42.5 }
+        { time: 'Day 10', value: 20 },
+        { time: 'Day 20', value: 40 },
+        { time: 'Day 30', value: 60 },
+        { time: 'Day 45', value: 80 }
       ]
-    },
-    {
-      id: 'ST-009',
-      name: 'VoxIndian NLP Labs',
-      legalName: 'VOXINDIAN NLP LABS LLP',
-      logo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-      initials: 'VN',
-      stage: 'Validation',
-      location: 'Thane, Maharashtra',
-      sector: 'Education',
-      pilotName: 'Citizen Voice-AI Grievance Intake in Marathi Dialects',
-      pilotCode: 'MHA-PILOT-2026-GAD-13',
-      budget: 'INR 25.0 Lakhs',
-      progressPct: 50,
-      activeSensors: 36,
-      totalSensors: 36,
-      telemetryMetricLabel: 'Speech Recognition Precision',
-      telemetryMetricValue: '94.6%',
-      targetMetricValue: '92.0%',
-      alertsThisMonth: 29,
-      verifiedAlerts: 28,
-      falseAlerts: 1,
-      savingsOrImpact: 'Sub-3s Grievance Token Generation',
-      milestones: [
-        {
-          title: 'M1 – Dialect Acoustic Fine-Tuning',
-          stage: 'M1',
-          amount: 'INR 7.5 Lakhs (30%)',
-          status: 'approved',
-          dateInfo: 'Paid on 28 Oct 2026',
-          description: 'Dataset training for Varhadi, Ahirani, and Malvani Marathi.'
-        },
-        {
-          title: 'M2 – Collectorate SIP Trunk Live Trial',
-          stage: 'M2',
-          amount: 'INR 10.0 Lakhs (40%)',
-          status: 'submitted',
-          dateInfo: 'Under Verification',
-          description: 'Live phone grievance intake across 5 district collectorates.'
-        },
-        {
-          title: 'M3 – Statewide Aaple Sarkar Integration',
-          stage: 'M3',
-          amount: 'INR 7.5 Lakhs (30%)',
-          status: 'pending',
-          dateInfo: 'Month 6',
-          description: 'Handover and API launch.'
-        }
-      ],
-      risksAndIssues: ['Telephony audio quality drop in poor 2G network areas.'],
-      dataPoints: [
-        { time: 'Day 10', value: 82.0 },
-        { time: 'Day 20', value: 87.2 },
-        { time: 'Day 30', value: 91.5 },
-        { time: 'Day 45', value: 94.6 }
-      ]
-    }
-  ], []);
+    }));
+  }, [proposals]);
 
   // Filtered & sorted startup list
   const filteredStartups = useMemo(() => {
@@ -742,86 +282,89 @@ export const PilotTelemetryMonitor: React.FC = () => {
             </div>
           </div>
 
-          {/* 3-Column Startup Card Grid (Matching Reference Image) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredStartups.map(startup => (
-              <div
-                key={startup.id}
-                onClick={() => setSelectedStartupId(startup.id)}
-                className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-[#1D64EC] transition-all cursor-pointer flex flex-col justify-between group"
-              >
-                <div>
-                  
-                  {/* Card Header: Avatar + Title + Stage + Location */}
-                  <div className="flex items-start gap-3.5 mb-4">
-                    
-                    {/* Logo / Monogram Avatar Badge */}
-                    {startup.logo ? (
-                      <img
-                        src={startup.logo}
-                        alt={startup.name}
-                        className="w-12 h-12 rounded-full object-cover border border-slate-200 shadow-xs shrink-0"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 rounded-full bg-slate-100 border border-slate-200 text-navy-900 font-extrabold text-xs flex items-center justify-center shrink-0">
-                        {startup.initials}
-                      </div>
-                    )}
-
-                    {/* Startup Information */}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-xs text-navy-900 leading-snug group-hover:text-[#1D64EC] transition-colors line-clamp-2 uppercase">
-                        {startup.legalName || startup.name}
-                      </h3>
-                      
-                      {/* Stage */}
-                      <p className="text-xs font-semibold text-slate-500 mt-1">
-                        {startup.stage}
-                      </p>
-
-                      {/* City, State */}
-                      <p className="text-[11px] text-slate-400 font-medium mt-0.5 truncate">
-                        {startup.location}
-                      </p>
-                    </div>
-
-                  </div>
-
-                  {/* Progress & Live Telemetry Snippet */}
-                  <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 space-y-2 mb-4">
-                    <div className="flex items-center justify-between text-[11px]">
-                      <span className="font-semibold text-slate-600">Pilot Milestone Progress</span>
-                      <strong className="text-navy-900 font-bold">{startup.progressPct}%</strong>
-                    </div>
-                    <div className="w-full h-1.5 rounded-full bg-slate-200 overflow-hidden">
-                      <div 
-                        className="h-full bg-[#1D64EC] rounded-full transition-all duration-500"
-                        style={{ width: `${startup.progressPct}%` }}
-                      />
-                    </div>
-                    <div className="flex items-center justify-between text-[11px] pt-1">
-                      <span className="text-slate-500 truncate">{startup.telemetryMetricLabel}</span>
-                      <span className="font-bold text-emerald-700">{startup.telemetryMetricValue}</span>
-                    </div>
-                  </div>
-
-                </div>
-
-                {/* Card Sub-Panel / Sector Footer */}
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-[11px] font-medium text-slate-500">
-                    {startup.sector}
-                  </span>
-
-                  <div className="flex items-center gap-1 text-[11px] font-bold text-[#1D64EC] group-hover:translate-x-0.5 transition-transform">
-                    <span>View Pilot Monitor</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </div>
-                </div>
-
+          {/* 3-Column Startup Card Grid or Clean Empty State */}
+          {filteredStartups.length === 0 ? (
+            <div className="glass-panel rounded-3xl p-16 text-center space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#1D64EC] flex items-center justify-center mx-auto">
+                <Activity className="w-6 h-6" />
               </div>
-            ))}
-          </div>
+              <h3 className="text-base font-bold text-navy-900">No Active Pilots Deployed</h3>
+              <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                Once startup problem proposals receive expert clearance and bilateral pilot agreements are approved, live telemetry monitoring will appear here.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredStartups.map(startup => (
+                <div
+                  key={startup.id}
+                  onClick={() => setSelectedStartupId(startup.id)}
+                  className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-[#1D64EC] transition-all cursor-pointer flex flex-col justify-between group"
+                >
+                  <div>
+                    {/* Card Header: Avatar + Title + Stage + Location */}
+                    <div className="flex items-start gap-3.5 mb-4">
+                      {startup.logo ? (
+                        <img
+                          src={startup.logo}
+                          alt={startup.name}
+                          className="w-12 h-12 rounded-full object-cover border border-slate-200 shadow-xs shrink-0"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-slate-100 border border-slate-200 text-navy-900 font-extrabold text-xs flex items-center justify-center shrink-0">
+                          {startup.initials}
+                        </div>
+                      )}
+
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-bold text-xs text-navy-900 leading-snug group-hover:text-[#1D64EC] transition-colors line-clamp-2 uppercase">
+                          {startup.legalName || startup.name}
+                        </h3>
+                        <p className="text-xs font-semibold text-slate-500 mt-1">
+                          {startup.stage}
+                        </p>
+                        <p className="text-[11px] text-slate-400 font-medium mt-0.5 truncate">
+                          {startup.location}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Progress & Live Telemetry Snippet */}
+                    <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 space-y-2 mb-4">
+                      <div className="flex items-center justify-between text-[11px]">
+                        <span className="font-semibold text-slate-600">Pilot Milestone Progress</span>
+                        <strong className="text-navy-900 font-bold">{startup.progressPct}%</strong>
+                      </div>
+                      <div className="w-full h-1.5 rounded-full bg-slate-200 overflow-hidden">
+                        <div 
+                          className="h-full bg-[#1D64EC] rounded-full transition-all duration-500"
+                          style={{ width: `${startup.progressPct}%` }}
+                        />
+                      </div>
+                      <div className="flex items-center justify-between text-[11px] pt-1">
+                        <span className="text-slate-500 truncate">{startup.telemetryMetricLabel}</span>
+                        <span className="font-bold text-emerald-700">{startup.telemetryMetricValue}</span>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* Card Sub-Panel / Sector Footer */}
+                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                    <span className="text-[11px] font-medium text-slate-500">
+                      {startup.sector}
+                    </span>
+
+                    <div className="flex items-center gap-1 text-[11px] font-bold text-[#1D64EC] group-hover:translate-x-0.5 transition-transform">
+                      <span>View Pilot Monitor</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+
+                </div>
+              ))}
+            </div>
+          )}
 
         </div>
       )}

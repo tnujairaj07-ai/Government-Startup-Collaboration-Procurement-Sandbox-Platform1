@@ -6,137 +6,62 @@ import {
   Building2, User, Globe, Mail, Phone, ExternalLink, Download, 
   ShieldCheck, AlertTriangle, Scale, DollarSign, Award, ArrowRight, 
   Check, Eye, Shield, Layers, FileCheck, Search, ChevronLeft, Calendar, 
-  Edit3, Briefcase, MapPin, Hash, Users, Activity, Sparkle
+  Edit3, Briefcase, MapPin, Hash, Users, Activity, Sparkle, Inbox
 } from 'lucide-react';
 import { StatusBadge } from '../common/StatusBadge';
 
 export const StartupDashboard: React.FC = () => {
-  const { currentStartup, setActiveTab, addNotification } = usePlatform();
+  const { currentStartup, proposals, contracts, setActiveTab, addNotification } = usePlatform();
 
   const [activeFilter, setActiveFilter] = useState<'all' | 'proposals' | 'pilots' | 'scaled'>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedInvoiceModal, setSelectedInvoiceModal] = useState<any | null>(null);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
 
-  // Founder Profile Data
+  // Founder Profile Data (from currentStartup or clean defaults)
   const founder = {
-    name: 'Ms. Anjali Patil',
+    name: currentStartup.founderName || 'Founder Name',
     role: 'Founder & CEO',
-    company: 'AquaSense Technologies Pvt. Ltd.',
-    status: 'Recognized Startup',
-    dpiitNo: 'DIPP12345',
-    userId: 'STARTUP-MH-2024-0187',
-    gender: 'Female',
-    email: 'anjali@aquasense.tech',
-    phone: '+91-98220 54321',
-    address: 'Viman Nagar, Pune, Maharashtra, India',
-    experience: '8+ Years (Water IoT)',
-    sector: 'Water Tech, AI/ML & Smart IoT',
-    cin: 'U72900PN2021PTC198421',
-    gstin: '27AABCA1234F1Z5',
-    teamSize: '12 Members',
-    incorporationYear: '2021',
-    website: 'aquasense.tech',
-    complianceScore: '92 / 100'
+    company: currentStartup.name || 'Your Registered Startup',
+    status: currentStartup.dpiitRecognized ? 'DPIIT Verified' : 'DPIIT Registered',
+    dpiitNo: currentStartup.dpiitNumber || 'DIPP-XXXXX',
+    userId: currentStartup.id || 'STARTUP-MH-USER',
+    gender: 'N/A',
+    email: currentStartup.contactEmail || currentStartup.email || 'founder@yourstartup.com',
+    phone: currentStartup.phone || '+91-XXXXXXXXXX',
+    address: currentStartup.location || 'Maharashtra, India',
+    experience: 'N/A',
+    sector: currentStartup.sector || 'DeepTech & Public Innovation',
+    cin: currentStartup.cin || 'UXXXXXXXXXXXXXX',
+    gstin: currentStartup.gst || currentStartup.gstin || '27XXXXXXXXXXXXX',
+    teamSize: `${currentStartup.teamSize || 0} Members`,
+    incorporationYear: currentStartup.yearFounded ? String(currentStartup.yearFounded) : '2026',
+    website: currentStartup.website || 'yourstartup.com',
+    complianceScore: `${currentStartup.cyberScore || 0} / 100`
   };
 
-  // Engagements (Proposals, Pilots, Scaled) for the middle grid
-  const engagements = [
-    {
-      id: 'ENG-1',
-      type: 'proposal',
-      title: 'PS2: Smart Water Loss Reduction',
-      department: 'Urban Development & Water Resources',
-      timeBadge: '15 Jul 2026',
-      status: 'Shortlisted',
-      statusColor: 'emerald',
-      stage: 'Expert Evaluation',
-      kpiText: 'Target: ≥20% NRW Reduction',
-      actionLabel: 'View Proposal',
-      tabTarget: 'applications'
-    },
-    {
-      id: 'ENG-2',
-      type: 'pilot',
-      title: 'Pune Zone A – Water Leakage Pilot',
-      department: 'Urban Dev. / Pune Municipal Corp.',
-      timeBadge: '05 Sep 2026 (Due)',
-      status: 'On Track',
-      statusColor: 'emerald',
-      stage: 'M2 – 3-Month Review',
-      kpiText: '18.4% verified NRW reduction',
-      actionLabel: 'Submit M2',
-      tabTarget: 'execution'
-    },
-    {
-      id: 'ENG-3',
-      type: 'proposal',
-      title: 'PS5: Stormwater Flood Prediction AI',
-      department: 'Urban Development & Water Resources',
-      timeBadge: '02 Aug 2026',
-      status: 'Under Review',
-      statusColor: 'blue',
-      stage: 'AI Shortlisting Evaluation',
-      kpiText: 'Sub-15 min flood alert latency',
-      actionLabel: 'View Details',
-      tabTarget: 'applications'
-    },
-    {
-      id: 'ENG-4',
-      type: 'pilot',
-      title: 'Nashik Feeder – Smart Pressure Mgmt',
-      department: 'Urban Dev. / Nashik Division',
-      timeBadge: '12 Sep 2026 (Due)',
-      status: 'On Track',
-      statusColor: 'emerald',
-      stage: 'M1 – Sensor Assembly',
-      kpiText: '12% pressure surge damping',
-      actionLabel: 'Monitor Pilot',
-      tabTarget: 'execution'
-    },
-    {
-      id: 'ENG-5',
-      type: 'proposal',
-      title: 'Smart Street Lighting Dynamic Dimming',
-      department: 'Municipal Administration',
-      timeBadge: '10 Jun 2026',
-      status: 'Shortlisted',
-      statusColor: 'emerald',
-      stage: 'Pilot Clearance Approval',
-      kpiText: '35% energy conservation',
-      actionLabel: 'View Bid',
-      tabTarget: 'applications'
-    },
-    {
-      id: 'ENG-6',
-      type: 'scaled',
-      title: 'Pune Zone A – Scaled Telemetry',
-      department: 'Urban Development & Water Resources',
-      timeBadge: 'Scaled Solution',
-      status: 'GeM Ready',
-      statusColor: 'purple',
-      stage: 'Fast-Track Procurement',
-      kpiText: '120 km municipal pipeline scaled',
-      actionLabel: 'GeM Catalog',
-      tabTarget: 'gem'
-    }
-  ];
+  // Engagements derived from context proposals
+  const engagements = proposals.map((p) => ({
+    id: p.id,
+    type: p.status === 'pilot_ongoing' ? 'pilot' : p.status === 'completed' ? 'scaled' : 'proposal',
+    title: p.challengeTitle,
+    department: p.department || 'Government Department',
+    timeBadge: p.submittedAt || 'Recent',
+    status: p.status === 'pilot_ongoing' ? 'Active Pilot' : p.status === 'shortlisted' ? 'Shortlisted' : 'Under Review',
+    statusColor: p.status === 'pilot_ongoing' ? 'emerald' : p.status === 'shortlisted' ? 'emerald' : 'blue',
+    stage: p.status === 'pilot_ongoing' ? 'Active Pilot' : p.status === 'completed' ? 'Scale Decision' : 'Submitted',
+    kpiText: p.proposedSolutionName || 'Outcome alignment verified',
+    actionLabel: p.status === 'pilot_ongoing' ? 'Pilot Console' : 'View Proposal',
+    tabTarget: p.status === 'pilot_ongoing' ? 'execution' : 'applications'
+  }));
 
-  // Milestone timeline slots
-  const milestoneSlots = [
-    { label: 'M1: Sensor Rigging', status: 'completed', time: 'Completed' },
-    { label: 'M2: 3-Month Review', status: 'active', time: 'Due 05 Sep' },
-    { label: 'M3: Telemetry Audit', status: 'upcoming', time: 'Due 15 Nov' },
-    { label: 'GeM PAC Scale', status: 'ready', time: 'Fast-Track' },
-    { label: 'DPIIT Annual Filing', status: 'pending', time: 'Due 10 Sep' }
-  ];
-
-  // Invoices data
-  const invoices = [
-    { id: 'INV-2026-042', project: 'CropCare AI – Drone Monitoring', amount: '₹8.5 Lakhs', status: 'Paid', date: '10 Aug 2026' },
-    { id: 'INV-2026-037', project: 'Pune Zone A – Water Leakage (M2)', amount: '₹14.0 Lakhs', status: 'Paid', date: '01 Aug 2026' },
-    { id: 'INV-2026-045', project: 'Nashik – Smart Pressure Mgmt.', amount: '₹6.0 Lakhs', status: 'Pending', date: '20 Aug 2026' }
-  ];
+  // Invoices derived from contracts
+  const invoices = contracts.map((c) => ({
+    id: `INV-${c.id}`,
+    project: c.challengeTitle,
+    amount: c.totalValue,
+    status: c.govStatus === 'approved' ? 'Paid' : 'Pending',
+    date: c.effectiveDate || 'Recent'
+  }));
 
   const filteredEngagements = engagements.filter(item => {
     if (activeFilter === 'proposals' && item.type !== 'proposal') return false;
@@ -148,6 +73,8 @@ export const StartupDashboard: React.FC = () => {
     }
     return true;
   });
+
+  const activePilotsCount = proposals.filter(p => p.status === 'pilot_ongoing').length;
 
   return (
     <div className="space-y-6">
@@ -170,7 +97,7 @@ export const StartupDashboard: React.FC = () => {
             className="px-4 py-2 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-navy-900 font-bold text-xs shadow-xs flex items-center gap-2 transition-all"
           >
             <Ticket className="w-3.5 h-3.5 text-purple-600" />
-            <span>Evidence Passport</span>
+            <span>Evidence Archive</span>
           </button>
           
           <button
@@ -184,7 +111,7 @@ export const StartupDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Main 2-Column Grid matching reference profile */}
+      {/* Main 2-Column Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* ========================================================================= */}
@@ -196,7 +123,7 @@ export const StartupDashboard: React.FC = () => {
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4">
               <div className="w-16 h-16 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-xl font-black font-display shadow-md shrink-0 border-2 border-white">
-                AP
+                {founder.name ? founder.name.slice(0, 2).toUpperCase() : 'ST'}
               </div>
               <div className="space-y-1">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-200">
@@ -224,20 +151,6 @@ export const StartupDashboard: React.FC = () => {
 
           {/* Quick Action Icon Strip */}
           <div className="flex items-center gap-2 pt-1">
-            <a
-              href={`tel:${founder.phone}`}
-              className="p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 transition-colors flex items-center justify-center"
-              title="Call Founder"
-            >
-              <Phone className="w-4 h-4" />
-            </a>
-            <a
-              href={`mailto:${founder.email}`}
-              className="p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 transition-colors flex items-center justify-center"
-              title="Email Founder"
-            >
-              <Mail className="w-4 h-4" />
-            </a>
             <button
               type="button"
               onClick={() => setActiveTab('passport')}
@@ -248,7 +161,7 @@ export const StartupDashboard: React.FC = () => {
             </button>
           </div>
 
-          {/* Key-Value Information List matching reference layout */}
+          {/* Key-Value Information List */}
           <div className="divide-y divide-slate-100 text-xs space-y-3 pt-2">
             
             <div className="flex items-center justify-between pt-3">
@@ -283,68 +196,12 @@ export const StartupDashboard: React.FC = () => {
 
             <div className="flex items-center justify-between pt-3">
               <span className="text-slate-400 font-medium flex items-center gap-2">
-                <User className="w-4 h-4 text-blue-500" />
-                User ID
-              </span>
-              <span className="font-mono text-slate-600 font-semibold text-right">
-                {founder.userId}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between pt-3">
-              <span className="text-slate-400 font-medium flex items-center gap-2">
                 <Mail className="w-4 h-4 text-slate-400" />
                 Email
               </span>
               <span className="text-slate-700 font-medium truncate max-w-[180px]">
                 {founder.email}
               </span>
-            </div>
-
-            <div className="flex items-center justify-between pt-3">
-              <span className="text-slate-400 font-medium flex items-center gap-2">
-                <Phone className="w-4 h-4 text-slate-400" />
-                Phone Number
-              </span>
-              <span className="text-slate-700 font-medium">
-                {founder.phone}
-              </span>
-            </div>
-
-            <div className="flex items-start justify-between pt-3">
-              <span className="text-slate-400 font-medium flex items-center gap-2 shrink-0">
-                <MapPin className="w-4 h-4 text-red-400" />
-                Headquarters
-              </span>
-              <span className="text-slate-700 font-medium text-right leading-snug">
-                {founder.address}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between pt-3">
-              <span className="text-slate-400 font-medium flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-slate-400" />
-                Incorporation
-              </span>
-              <strong className="text-navy-900 font-bold">
-                {founder.incorporationYear} ({founder.teamSize})
-              </strong>
-            </div>
-
-            <div className="flex items-center justify-between pt-3">
-              <span className="text-slate-400 font-medium flex items-center gap-2">
-                <Globe className="w-4 h-4 text-[#1D64EC]" />
-                Website
-              </span>
-              <a 
-                href={`https://${founder.website}`}
-                target="_blank" 
-                rel="noreferrer" 
-                className="text-[#1D64EC] font-bold hover:underline inline-flex items-center gap-1"
-              >
-                <span>{founder.website}</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
             </div>
 
             <div className="flex items-center justify-between pt-3">
@@ -359,20 +216,19 @@ export const StartupDashboard: React.FC = () => {
 
           </div>
 
-          {/* Startup Description Note */}
           <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-600 leading-relaxed">
-            <strong className="text-navy-900 block mb-0.5">Solution Scope:</strong>
-            AI-based water leakage detection, acoustic edge telemetry, and pressure optimization for municipal supply mains.
+            <strong className="text-navy-900 block mb-0.5">Sandbox Status:</strong>
+            Registered innovator in Maharashtra state procurement gateway.
           </div>
 
         </div>
 
         {/* ========================================================================= */}
-        {/* RIGHT COLUMN: METRICS + ENGAGEMENT CARDS + SCHEDULE (Col 5-12)             */}
+        {/* RIGHT COLUMN: METRICS + ENGAGEMENT CARDS (Col 5-12)                        */}
         {/* ========================================================================= */}
         <div className="lg:col-span-8 space-y-6">
           
-          {/* 1. TOP METRICS ROW: 3 Spacious, Non-Overflowing Cards */}
+          {/* 1. TOP METRICS ROW */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             
             {/* Metric 1: Active Proposals */}
@@ -387,15 +243,9 @@ export const StartupDashboard: React.FC = () => {
                 <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
               </div>
               <div className="text-3xl font-black text-navy-900 font-display">
-                4
+                {proposals.length}
               </div>
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 mt-2">
-                <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-[11px] font-bold border border-emerald-200">
-                  1 Shortlisted
-                </span>
-                <span className="text-[11px] text-slate-500">2 in review</span>
-              </div>
-              <p className="text-[11px] text-slate-400 mt-1">Across Urban Dev & Municipal Depts</p>
+              <p className="text-[11px] text-slate-400 mt-1">Submitted problem statements</p>
             </div>
 
             {/* Metric 2: Pilots in Progress */}
@@ -412,47 +262,35 @@ export const StartupDashboard: React.FC = () => {
                 </span>
               </div>
               <div className="text-3xl font-black text-emerald-800 font-display">
-                2
+                {activePilotsCount}
               </div>
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-800 mt-2">
-                <span className="px-2 py-0.5 rounded-md bg-amber-50 text-[11px] font-bold border border-amber-200">
-                  M2 Due in 5 Days
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-400 mt-1">Pune Zone A (18.4% NRW) & Nashik</p>
+              <p className="text-[11px] text-slate-400 mt-1">Live active testbeds</p>
             </div>
 
-            {/* Metric 3: Gov Revenue (YTD) */}
+            {/* Metric 3: Gov Revenue */}
             <div 
               onClick={() => setActiveTab('contracts')}
               className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-purple-500/40 transition-all cursor-pointer group"
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  REVENUE (YTD)
+                  CONTRACTS SIGNED
                 </span>
                 <span className="p-1 rounded-lg bg-purple-50 text-purple-600">
                   <DollarSign className="w-3.5 h-3.5" />
                 </span>
               </div>
               <div className="text-3xl font-black text-navy-900 font-display">
-                ₹68 Lakhs
+                {contracts.length}
               </div>
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-purple-800 mt-2">
-                <span className="px-2 py-0.5 rounded-md bg-purple-50 text-[11px] font-bold border border-purple-200">
-                  85% Paid Out
-                </span>
-                <span className="text-[11px] text-slate-500">₹58L Escrow</span>
-              </div>
-              <p className="text-[11px] text-slate-400 mt-1">Treasury PFMS direct transfer</p>
+              <p className="text-[11px] text-slate-400 mt-1">Treasury PFMS direct tranches</p>
             </div>
 
           </div>
 
-          {/* 2. ENGAGEMENTS CARD GRID (Matching reference "Today Patient" Card Grid) */}
+          {/* 2. ENGAGEMENTS CARD GRID */}
           <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs space-y-4">
             
-            {/* Header with Search and Filter Pills */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
               <div className="flex items-center gap-3">
                 <h3 className="text-lg font-black text-navy-900 font-display">
@@ -475,97 +313,67 @@ export const StartupDashboard: React.FC = () => {
                     className="pl-8 pr-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-navy-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1D64EC]/20 focus:border-[#1D64EC]"
                   />
                 </div>
-
-                {/* Filter Checkboxes/Pills */}
-                <div className="hidden sm:flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-bold text-slate-600">
-                  <button
-                    type="button"
-                    onClick={() => setActiveFilter('all')}
-                    className={`px-2.5 py-1 rounded-lg transition-all ${activeFilter === 'all' ? 'bg-white text-navy-900 shadow-xs' : 'hover:text-navy-900'}`}
-                  >
-                    All
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveFilter('proposals')}
-                    className={`px-2.5 py-1 rounded-lg transition-all ${activeFilter === 'proposals' ? 'bg-white text-navy-900 shadow-xs' : 'hover:text-navy-900'}`}
-                  >
-                    Proposals
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveFilter('pilots')}
-                    className={`px-2.5 py-1 rounded-lg transition-all ${activeFilter === 'pilots' ? 'bg-white text-navy-900 shadow-xs' : 'hover:text-navy-900'}`}
-                  >
-                    Pilots
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveFilter('scaled')}
-                    className={`px-2.5 py-1 rounded-lg transition-all ${activeFilter === 'scaled' ? 'bg-white text-navy-900 shadow-xs' : 'hover:text-navy-900'}`}
-                  >
-                    Scaled
-                  </button>
-                </div>
               </div>
             </div>
 
-            {/* 6 Cards Grid (Matching the 6 appointment cards layout in the reference image) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
-              {filteredEngagements.map((item) => (
-                <div
-                  key={item.id}
-                  className="p-4 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:border-[#1D64EC]/40 hover:bg-white transition-all shadow-2xs flex flex-col justify-between space-y-3 group"
+            {filteredEngagements.length === 0 ? (
+              <div className="py-12 px-4 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 space-y-2.5">
+                <Inbox className="w-8 h-8 text-slate-400 mx-auto" />
+                <h4 className="font-bold text-xs text-navy-900">No Active Proposals or Pilots</h4>
+                <p className="text-[11px] text-slate-500 max-w-xs mx-auto">
+                  Browse open government challenges and submit your innovation proposal to initiate pilot evaluation.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('challenges')}
+                  className="px-4 py-1.5 rounded-full bg-[#1D64EC] hover:bg-blue-700 text-white font-bold text-xs shadow-2xs inline-flex items-center gap-1 mt-1"
                 >
-                  <div className="space-y-2">
-                    {/* Top status & due time badge */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-bold text-slate-500 font-mono">
-                        {item.timeBadge}
-                      </span>
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                        item.statusColor === 'emerald' ? 'bg-emerald-100/80 text-emerald-800' :
-                        item.statusColor === 'blue' ? 'bg-blue-100/80 text-[#1D64EC]' :
-                        item.statusColor === 'purple' ? 'bg-purple-100/80 text-purple-800' : 'bg-slate-200 text-slate-700'
-                      }`}>
-                        {item.status}
-                      </span>
-                    </div>
-
-                    {/* Title & Department */}
-                    <div>
-                      <h4 className="text-xs font-bold text-navy-900 leading-snug group-hover:text-[#1D64EC] transition-colors">
-                        {item.title}
-                      </h4>
-                      <p className="text-[11px] text-slate-500 mt-0.5 truncate">
-                        {item.department}
-                      </p>
-                    </div>
-
-                    {/* Stage & KPI Text */}
-                    <div className="p-2 rounded-xl bg-white border border-slate-100 space-y-0.5 text-[11px]">
-                      <span className="text-slate-400 block text-[10px] font-bold uppercase">Current Stage</span>
-                      <strong className="text-navy-900 block font-semibold">{item.stage}</strong>
-                      <span className="text-emerald-700 font-medium block">{item.kpiText}</span>
-                    </div>
-                  </div>
-
-                  {/* Bottom Action Button */}
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab(item.tabTarget)}
-                    className="w-full py-1.5 rounded-xl bg-slate-100 hover:bg-[#1D64EC] hover:text-white text-slate-700 font-bold text-[11px] transition-all flex items-center justify-center gap-1 shadow-2xs"
+                  <Rocket className="w-3.5 h-3.5" />
+                  <span>Browse Open Challenges</span>
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
+                {filteredEngagements.map((item) => (
+                  <div
+                    key={item.id}
+                    className="p-4 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:border-[#1D64EC]/40 hover:bg-white transition-all shadow-2xs flex flex-col justify-between space-y-3 group"
                   >
-                    <span>{item.actionLabel}</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </button>
-                </div>
-              ))}
-            </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-slate-500 font-mono">
+                          {item.timeBadge}
+                        </span>
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100/80 text-[#1D64EC]">
+                          {item.status}
+                        </span>
+                      </div>
 
-            {/* Bottom pagination / link */}
+                      <div>
+                        <h4 className="text-xs font-bold text-navy-900 leading-snug group-hover:text-[#1D64EC] transition-colors">
+                          {item.title}
+                        </h4>
+                        <p className="text-[11px] text-slate-500 mt-0.5 truncate">
+                          {item.department}
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab(item.tabTarget)}
+                      className="w-full py-1.5 rounded-xl bg-slate-100 hover:bg-[#1D64EC] hover:text-white text-slate-700 font-bold text-[11px] transition-all flex items-center justify-center gap-1 shadow-2xs"
+                    >
+                      <span>{item.actionLabel}</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <div className="pt-2 flex items-center justify-between text-xs text-slate-500 border-t border-slate-100">
-              <span>Showing {filteredEngagements.length} verified government engagements</span>
+              <span>{filteredEngagements.length} active engagements</span>
               <button
                 type="button"
                 onClick={() => setActiveTab('applications')}
@@ -578,52 +386,7 @@ export const StartupDashboard: React.FC = () => {
 
           </div>
 
-          {/* 3. MILESTONES & TIMELINE SLOTS (Matching Availability Bar in Reference Image) */}
-          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-base font-bold text-navy-900 font-display">
-                  Milestone & Compliance Schedule
-                </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Tap milestone blocks to inspect deliverable verification status or submit telemetry proofs.
-                </p>
-              </div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-200">
-                SLA Milestones
-              </span>
-            </div>
-
-            {/* Milestone Slot Chips matching the time slots in reference */}
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-              {milestoneSlots.map((slot, idx) => (
-                <div
-                  key={idx}
-                  onClick={() => setActiveTab('execution')}
-                  className={`p-3 rounded-2xl text-center cursor-pointer transition-all border ${
-                    slot.status === 'active'
-                      ? 'bg-[#1D64EC] text-white border-[#1D64EC] shadow-sm font-bold scale-[1.02]'
-                      : slot.status === 'ready'
-                      ? 'bg-purple-600 text-white border-purple-600 font-bold shadow-sm'
-                      : slot.status === 'completed'
-                      ? 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100 font-semibold'
-                      : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 font-semibold'
-                  }`}
-                >
-                  <div className="text-[11px] font-bold leading-tight truncate">
-                    {slot.label}
-                  </div>
-                  <div className={`text-[10px] mt-1 ${
-                    slot.status === 'active' || slot.status === 'ready' ? 'text-white/80' : 'text-slate-400'
-                  }`}>
-                    {slot.time}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 4. FINANCIALS & RECENT INVOICES STRIP */}
+          {/* 3. FINANCIALS & RECENT INVOICES STRIP */}
           <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100">
               <h3 className="text-base font-bold text-navy-900 font-display">
@@ -634,30 +397,34 @@ export const StartupDashboard: React.FC = () => {
                 onClick={() => setActiveTab('contracts')}
                 className="text-xs font-bold text-[#1D64EC] hover:underline flex items-center gap-1"
               >
-                <span>View All Invoices</span>
+                <span>View Contracts</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-              {invoices.map((inv) => (
-                <div key={inv.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono font-bold text-[#1D64EC]">{inv.id}</span>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                      inv.status === 'Paid' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
-                    }`}>
-                      {inv.status}
-                    </span>
+            {invoices.length === 0 ? (
+              <div className="py-6 text-center text-xs text-slate-400">
+                No milestone invoices or escrow disbursals recorded yet.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                {invoices.map((inv) => (
+                  <div key={inv.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono font-bold text-[#1D64EC]">{inv.id}</span>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                        {inv.status}
+                      </span>
+                    </div>
+                    <p className="font-bold text-navy-900 truncate">{inv.project}</p>
+                    <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+                      <strong className="text-navy-900 text-xs">{inv.amount}</strong>
+                      <span>{inv.date}</span>
+                    </div>
                   </div>
-                  <p className="font-bold text-navy-900 truncate">{inv.project}</p>
-                  <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-                    <strong className="text-navy-900 text-xs">{inv.amount}</strong>
-                    <span>{inv.date}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
         </div>
@@ -670,7 +437,7 @@ export const StartupDashboard: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 border border-slate-200 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h3 className="text-base font-bold text-navy-900 font-display">
-                Edit Founder & Company Profile
+                Edit Founder Profile
               </h3>
               <button
                 onClick={() => setIsEditProfileOpen(false)}
@@ -682,7 +449,7 @@ export const StartupDashboard: React.FC = () => {
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="block font-bold text-navy-900 mb-1">Founder / CEO Name</label>
+                <label className="block font-bold text-navy-900 mb-1">Founder Name</label>
                 <input
                   type="text"
                   defaultValue={founder.name}
@@ -691,28 +458,10 @@ export const StartupDashboard: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-bold text-navy-900 mb-1">Official Contact Email</label>
+                <label className="block font-bold text-navy-900 mb-1">Contact Email</label>
                 <input
                   type="email"
                   defaultValue={founder.email}
-                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-navy-900"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-navy-900 mb-1">Phone Number</label>
-                <input
-                  type="text"
-                  defaultValue={founder.phone}
-                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-navy-900"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-navy-900 mb-1">Company Website</label>
-                <input
-                  type="text"
-                  defaultValue={founder.website}
                   className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-navy-900"
                 />
               </div>

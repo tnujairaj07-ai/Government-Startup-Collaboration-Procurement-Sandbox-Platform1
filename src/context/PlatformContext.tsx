@@ -5,7 +5,8 @@ import {
 } from '../types';
 import { 
   INITIAL_CHALLENGES, INITIAL_STARTUPS, INITIAL_PROPOSALS, 
-  INITIAL_CONTRACTS, INITIAL_TELEMETRY_FEEDS, INITIAL_NOTIFICATIONS, INITIAL_ADMIN_LOGS 
+  INITIAL_CONTRACTS, INITIAL_TELEMETRY_FEEDS, INITIAL_NOTIFICATIONS, INITIAL_ADMIN_LOGS,
+  EMPTY_STARTUP 
 } from '../data/mockData';
 import confetti from 'canvas-confetti';
 
@@ -87,8 +88,8 @@ export const PlatformProvider: React.FC<{ children: ReactNode }> = ({ children }
     }
   }, []);
 
-  // Current active startup for founder view (defaults to AquaSense Technologies)
-  const currentStartup = startups[0] || INITIAL_STARTUPS[0];
+  // Current active startup for founder view (defaults to empty startup when no data)
+  const currentStartup = startups[0] || EMPTY_STARTUP;
 
   const setCurrentRole = (role: PortalRole) => {
     setCurrentRoleState(role);

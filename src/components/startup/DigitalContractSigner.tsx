@@ -185,6 +185,29 @@ Tranche M3 (30% - INR 10.5 Lakhs): Released upon final empirical audit by the Ma
     }
   ];
 
+  if (!currentContract) {
+    return (
+      <div className="space-y-6">
+        <div className="glass-panel rounded-3xl p-16 text-center space-y-3">
+          <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#1D64EC] flex items-center justify-center mx-auto">
+            <FileSignature className="w-6 h-6" />
+          </div>
+          <h3 className="text-base font-bold text-navy-900">No Bilateral Contracts Awaiting Signature</h3>
+          <p className="text-xs text-slate-500 max-w-sm mx-auto">
+            When your problem statement proposals receive clearance from the state evaluation committee, official Sandbox Pilot Agreements will appear here for Aadhaar-based eSign.
+          </p>
+          <button
+            type="button"
+            onClick={() => setActiveTab('challenges')}
+            className="px-5 py-2 rounded-full bg-[#1D64EC] hover:bg-blue-700 text-white font-bold text-xs shadow-2xs inline-flex items-center gap-1.5 mt-2"
+          >
+            <span>Explore Open Challenges</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       
@@ -199,15 +222,15 @@ Tranche M3 (30% - INR 10.5 Lakhs): Released upon final empirical audit by the Ma
               <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-[#1D64EC] text-[10px] font-bold border border-blue-200 uppercase tracking-wider">
                 Government of Maharashtra • Bilateral Sandbox Agreement
               </span>
-              <span className="text-xs text-slate-400 font-mono">Order Ref: GR-MH/2026/WTR-994</span>
+              <span className="text-xs text-slate-400 font-mono">Order Ref: {currentContract.id}</span>
             </div>
 
             <h1 className="text-xl sm:text-2xl font-black text-navy-900 font-display tracking-tight leading-tight">
-              Pilot Agreement – AI-based Water Leakage Detection (PS2)
+              Pilot Agreement – {currentContract.challengeTitle}
             </h1>
 
             <p className="text-xs text-slate-500 font-medium">
-              Department: <strong>Maharashtra Water Supply & Sanitation</strong> • Startup: <strong>AquaSense Technologies Pvt. Ltd.</strong>
+              Startup: <strong>{currentContract.startupName}</strong>
             </p>
           </div>
 

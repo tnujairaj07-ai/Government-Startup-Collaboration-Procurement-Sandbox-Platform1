@@ -96,400 +96,72 @@ export const ContractApprovalGate: React.FC = () => {
   // Modal State for Document Preview
   const [previewDoc, setPreviewDoc] = useState<{ type: string; fileName: string; date: string } | null>(null);
 
-  // Dataset of Problem Statements with Shortlisted Startups, Evaluations & Documents
-  const psContractData: ProblemStatementContractItem[] = [
-    {
-      id: 'PS1',
-      psCode: 'PS1',
-      title: 'Smart Water Loss Reduction in Urban Distribution Networks',
-      description: 'AI-based acoustic leak detection and pressure optimization for municipal water distribution mains.',
-      department: 'Maharashtra Water Supply & Sanitation Department',
-      status: 'Evaluation Complete',
-      shortlistedCount: 3,
+  // Dataset of Problem Statements derived from contracts in context
+  const psContractData: ProblemStatementContractItem[] = React.useMemo(() => {
+    return contracts.map(c => ({
+      id: c.id,
+      psCode: c.id,
+      title: c.challengeTitle,
+      description: `Bilateral pilot innovation contract for ${c.challengeTitle}`,
+      department: 'Government Department',
+      status: (c.govStatus === 'approved' ? 'Approved' : 'Pending Approval') as 'Evaluation Complete' | 'Approved' | 'In Pilot' | 'Pending Approval',
+      shortlistedCount: 1,
       bestPerformer: {
-        name: 'AquaSense Technologies',
+        name: c.startupName,
         score: 94
       },
       approvalSummary: {
-        statusText: 'Approved – Contract Pending eSign',
-        approvedStartupName: 'AquaSense Technologies',
-        contractRef: 'MHA-GOV-2026-CTR-26136',
-        contractValue: 'INR 35.0 Lakhs',
-        contractSigned: false
+        statusText: c.govStatus === 'approved' ? 'Approved – Contract Signed' : 'Pending Sign-off',
+        approvedStartupName: c.startupName,
+        contractRef: c.id,
+        contractValue: c.totalValue,
+        contractSigned: c.govStatus === 'approved'
       },
       evaluationCriteria: [
-        { name: 'Technical Performance & Algorithm Reliability', weight: '40%' },
-        { name: 'Quantified KPI Impact (Water Loss Reduction)', weight: '30%' },
-        { name: 'Cybersecurity, CERT-In & DPDP Compliance', weight: '15%' },
-        { name: 'Cost Effectiveness & District Scalability', weight: '15%' }
+        { name: 'Technical Performance', weight: '40%' },
+        { name: 'Quantified KPI Impact', weight: '30%' },
+        { name: 'Cybersecurity & Compliance', weight: '15%' },
+        { name: 'Cost Effectiveness', weight: '15%' }
       ],
-      expertPanelNote: 'Based on pilot performance, expert scoring (average 94/100), and alignment with department priorities, AquaSense Technologies is recommended for full-scale deployment under PS1.',
+      expertPanelNote: `Recommended for pilot deployment under agreement ${c.id}.`,
       shortlistedStartups: [
         {
-          id: 'ST-001',
-          name: 'AquaSense Technologies',
-          legalName: 'AQUASENSE TECHNOLOGIES PRIVATE LIMITED',
+          id: `ST-${c.id}`,
+          name: c.startupName,
+          legalName: `${c.startupName.toUpperCase()} PRIVATE LIMITED`,
           logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80',
-          pilotStatus: 'Completed',
-          score: 94,
-          technicalScore: 96,
-          impactScore: 95,
-          complianceScore: 92,
-          costScaleScore: 88,
-          keyMetricsSummary: '20–25% water loss reduction (18.4% verified at Month 3)',
-          pilotDuration: '6 months',
-          recommendation: 'Recommended',
-          approvalStatus: 'Approved',
-          notes: 'Patented acoustic sensors with sub-15 minute alert latency. Flawless SCADA integration.'
-        },
-        {
-          id: 'ST-004',
-          name: 'HydroMind Labs',
-          legalName: 'HYDROMIND LABS LLP',
-          logo: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=150&auto=format&fit=crop&q=80',
-          pilotStatus: 'Completed',
-          score: 81,
-          technicalScore: 85,
-          impactScore: 80,
-          complianceScore: 88,
-          costScaleScore: 78,
-          keyMetricsSummary: '15–18% water loss reduction',
-          pilotDuration: '4 months',
-          recommendation: 'Alternate',
-          approvalStatus: 'Not Approved',
-          notes: 'Good edge transient surge suppression; however, lower overall NRW loss reduction.'
-        },
-        {
-          id: 'ST-999',
-          name: 'FlowGuard Innovations',
-          legalName: 'FLOWGUARD INNOVATIONS PRIVATE LIMITED',
-          logo: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=150&auto=format&fit=crop&q=80',
-          pilotStatus: 'Terminated',
-          score: 62,
-          technicalScore: 70,
-          impactScore: 60,
-          complianceScore: 65,
-          costScaleScore: 55,
-          keyMetricsSummary: '8–10% reduction; sensor hardware deployment delays',
-          pilotDuration: '3 months',
-          recommendation: 'Not Recommended',
-          approvalStatus: 'Rejected',
-          notes: 'Frequent sensor battery outages; failed to submit baseline telemetry data within contract SLA.'
-        }
-      ],
-      contractTerms: {
-        agreementRef: 'MHA-GOV-2026-CTR-26136',
-        pilotCost: 'INR 35.0 Lakhs',
-        scope: 'Deploy AI-based leak detection across 2 zones in Pune (Zone A), covering ~120 km of water pipeline network.',
-        milestones: [
-          { name: 'M1 – Deployment & Baseline Data Calibration', pct: '30%', amount: 'INR 10.5 Lakhs' },
-          { name: 'M2 – 3-Month Performance Review & Live Leak Interception', pct: '40%', amount: 'INR 14.0 Lakhs' },
-          { name: 'M3 – Final Validation, GeM Cataloging & Municipal Handover', pct: '30%', amount: 'INR 10.5 Lakhs' }
-        ],
-        ipClause: 'Startup retains core IP over proprietary algorithms; Government gets perpetual, royalty-free license for internal use. All pilot data owned by Govt of Maharashtra.',
-        cyberClause: 'Compliance with Maharashtra State Cyber Policy v2.0; mandatory annual third-party CERT-In audit.',
-        terminationClause: 'Either party may terminate with 30 days’ notice if KPIs are not met for 2 consecutive months.'
-      },
-      documents: [
-        {
-          type: 'Approval File',
-          description: 'Internal Department Approval Note-sheet & Secretary Sign-offs',
-          date: '15-Jul-2026',
-          fileName: 'MHA-WTR-2026-APPROVAL-NOTE.pdf',
-          fileSize: '1.8 MB'
-        },
-        {
-          type: 'Approval Order',
-          description: 'Government Resolution (GR) Official Approval Order No. WTR-2026/CR-81',
-          date: '20-Jul-2026',
-          fileName: 'GOVT-RESOLUTION-GR-WTR-81.pdf',
-          fileSize: '840 KB'
-        },
-        {
-          type: 'Tender Document',
-          description: 'RFP / Innovation Challenge Notice and Technical Performance Specifications',
-          date: '10-Jan-2026',
-          fileName: 'RFP-CHALLENGE-26136-SPEC.pdf',
-          fileSize: '3.4 MB'
-        },
-        {
-          type: 'Contract Agreement',
-          description: 'Standard Bilateral Pilot Contract Agreement with Aadhaar eSign Stamping',
-          date: '25-Jul-2026',
-          fileName: 'MHA-GOV-CTR-26136-SIGNED.pdf',
-          fileSize: '2.1 MB'
-        },
-        {
-          type: 'Compliance Certificates',
-          description: 'CERT-In Level 3 Cyber Audit, AWS Mumbai MeitY Empanelment, ISO 27001',
-          date: '01-Aug-2026',
-          fileName: 'AQUASENSE-CERTIN-MEITY-CERTS.pdf',
-          fileSize: '4.2 MB'
-        }
-      ]
-    },
-    {
-      id: 'PS2',
-      psCode: 'PS2',
-      title: 'Autonomous Solid Waste Segregation & Robotic Sorting',
-      description: 'High-speed robotic arm with computer vision to divert recyclables at municipal transfer stations.',
-      department: 'Environment & Climate Change Department',
-      status: 'Approved',
-      shortlistedCount: 2,
-      bestPerformer: {
-        name: 'CleanBot Innovations',
-        score: 91
-      },
-      approvalSummary: {
-        statusText: 'Approved – Contract Signed',
-        approvedStartupName: 'CleanBot Innovations',
-        contractRef: 'MHA-GOV-2026-CTR-ENV08',
-        contractValue: 'INR 28.0 Lakhs',
-        contractSigned: true
-      },
-      evaluationCriteria: [
-        { name: 'Sorting Precision & Optical Detection', weight: '40%' },
-        { name: 'Throughput (Tons/Day Landfill Diverted)', weight: '30%' },
-        { name: 'Industrial Safety ISO 10218 Compliance', weight: '15%' },
-        { name: 'Operating Cost per Ton Sorted', weight: '15%' }
-      ],
-      expertPanelNote: 'CleanBot Innovations demonstrated verified sorting purity exceeding 94.2% in Navi Mumbai trial with zero safety infractions. Strongly recommended.',
-      shortlistedStartups: [
-        {
-          id: 'ST-002',
-          name: 'CleanBot Innovations',
-          legalName: 'CLEANBOT INNOVATIONS LLP',
-          logo: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=150&auto=format&fit=crop&q=80',
-          pilotStatus: 'Completed',
-          score: 91,
-          technicalScore: 93,
-          impactScore: 90,
-          complianceScore: 92,
-          costScaleScore: 86,
-          keyMetricsSummary: '94.2% sorting purity; 1.2 tons/day throughput',
-          pilotDuration: '6 months',
-          recommendation: 'Recommended',
-          approvalStatus: 'Approved',
-          notes: 'High-speed delta sorting arm with edge computer vision.'
-        },
-        {
-          id: 'ST-888',
-          name: 'EcoSort Robotics',
-          legalName: 'ECOSORT ROBOTICS PRIVATE LIMITED',
-          logo: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=150&auto=format&fit=crop&q=80',
-          pilotStatus: 'Completed',
-          score: 79,
-          technicalScore: 80,
-          impactScore: 78,
-          complianceScore: 82,
-          costScaleScore: 74,
-          keyMetricsSummary: '82% sorting purity',
-          pilotDuration: '4 months',
-          recommendation: 'Alternate',
-          approvalStatus: 'Not Approved',
-          notes: 'Slower pneumatic ejection speed; higher maintenance down-time.'
-        }
-      ],
-      contractTerms: {
-        agreementRef: 'MHA-GOV-2026-CTR-ENV08',
-        pilotCost: 'INR 28.0 Lakhs',
-        scope: 'Deploy autonomous dry waste segregation robot at APMC market yard transfer station.',
-        milestones: [
-          { name: 'M1 – Robot Assembly & Optical Rigging', pct: '30%', amount: 'INR 8.4 Lakhs' },
-          { name: 'M2 – Continuous 60-Day Purity Run', pct: '40%', amount: 'INR 11.2 Lakhs' },
-          { name: 'M3 – Municipal SOP Handover', pct: '30%', amount: 'INR 8.4 Lakhs' }
-        ],
-        ipClause: 'Shared GovTech IP framework. Waste characterization data owned by State.',
-        cyberClause: 'State Cyber Policy v2.0; secure edge firmware hashing.',
-        terminationClause: '30 days written notice.'
-      },
-      documents: [
-        {
-          type: 'Approval File',
-          description: 'Departmental Evaluation & Empowered Committee Approval Note',
-          date: '02-Aug-2026',
-          fileName: 'MHA-ENV-2026-APPROVAL-NOTE.pdf',
-          fileSize: '1.4 MB'
-        },
-        {
-          type: 'Approval Order',
-          description: 'Official Government Order (GR No. ENV-2026-112)',
-          date: '08-Aug-2026',
-          fileName: 'GR-ORDER-ENV-112.pdf',
-          fileSize: '650 KB'
-        },
-        {
-          type: 'Tender Document',
-          description: 'Municipal Solid Waste Robotics Challenge Tender Document',
-          date: '15-Feb-2026',
-          fileName: 'TENDER-ENV-ROBOTICS-2026.pdf',
-          fileSize: '2.8 MB'
-        },
-        {
-          type: 'Contract Agreement',
-          description: 'Bilateral Legally Binding Pilot Agreement Signed',
-          date: '14-Aug-2026',
-          fileName: 'MHA-CTR-ENV08-SIGNED.pdf',
-          fileSize: '1.9 MB'
-        }
-      ]
-    },
-    {
-      id: 'PS3',
-      psCode: 'PS3',
-      title: 'Drone-Based Multispectral Crop Health & Pest Risk Monitoring',
-      description: 'Aerial remote sensing and AI spectral index models to detect crop stress and nutrient deficiencies.',
-      department: 'Agriculture & Rural Development Department',
-      status: 'Approved',
-      shortlistedCount: 2,
-      bestPerformer: {
-        name: 'CropCare AI Labs',
-        score: 93
-      },
-      approvalSummary: {
-        statusText: 'Approved – Contract Signed',
-        approvedStartupName: 'CropCare AI Labs',
-        contractRef: 'MHA-GOV-2026-CTR-AGR03',
-        contractValue: 'INR 42.0 Lakhs',
-        contractSigned: true
-      },
-      evaluationCriteria: [
-        { name: 'Pest Detection Accuracy & Speed', weight: '40%' },
-        { name: 'Farmer Advisory Reach & Regional Language Bot', weight: '30%' },
-        { name: 'DGCA & Geospatial Survey Compliance', weight: '15%' },
-        { name: 'Cost per Hectare Surveyed', weight: '15%' }
-      ],
-      expertPanelNote: 'CropCare AI surveyed 12,000 acres in Nashik & Sangli with 91.8% pre-symptom pest detection and Marathi audio advisory bot.',
-      shortlistedStartups: [
-        {
-          id: 'ST-003',
-          name: 'CropCare AI Labs',
-          legalName: 'CROPCARE AI LABS PRIVATE LIMITED',
-          logo: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=150&auto=format&fit=crop&q=80',
-          pilotStatus: 'Completed',
-          score: 93,
-          technicalScore: 94,
-          impactScore: 96,
-          complianceScore: 92,
-          costScaleScore: 88,
-          keyMetricsSummary: '91.8% pest pre-symptom detection; INR 3.4 Cr saved',
-          pilotDuration: '4 months',
-          recommendation: 'Recommended',
-          approvalStatus: 'Approved',
-          notes: 'DGCA type-certified drones with Marathi WhatsApp bot.'
-        }
-      ],
-      contractTerms: {
-        agreementRef: 'MHA-GOV-2026-CTR-AGR03',
-        pilotCost: 'INR 42.0 Lakhs',
-        scope: 'Multispectral drone operations across 3 horticulture districts in Maharashtra.',
-        milestones: [
-          { name: 'M1 – Flight Corridor Clearance & Baseline Grid', pct: '30%', amount: 'INR 12.6 Lakhs' },
-          { name: 'M2 – WhatsApp Advisory Rollout (2,400 farmers)', pct: '40%', amount: 'INR 16.8 Lakhs' },
-          { name: 'M3 – Final AgriStack Handover', pct: '30%', amount: 'INR 12.6 Lakhs' }
-        ],
-        ipClause: 'Public domain agronomic datasets; startup algorithmic proprietary.',
-        cyberClause: 'Survey of India geospatial compliance.',
-        terminationClause: '30 days standard notice.'
-      },
-      documents: [
-        {
-          type: 'Approval File',
-          description: 'Departmental Steering Committee Approval Note',
-          date: '10-Jul-2026',
-          fileName: 'MHA-AGR-APPROVAL-NOTE.pdf',
-          fileSize: '1.2 MB'
-        },
-        {
-          type: 'Approval Order',
-          description: 'Official Agriculture Dept GR No. AGR-2026-94',
-          date: '18-Jul-2026',
-          fileName: 'GR-ORDER-AGR-94.pdf',
-          fileSize: '720 KB'
-        },
-        {
-          type: 'Contract Agreement',
-          description: 'Fully Executed Pilot Contract Agreement',
-          date: '22-Jul-2026',
-          fileName: 'MHA-CTR-AGR03-SIGNED.pdf',
-          fileSize: '2.0 MB'
-        }
-      ]
-    },
-    {
-      id: 'PS4',
-      psCode: 'PS4',
-      title: 'AI-Based Early Warning & Landslide Risk Monitoring System',
-      description: 'Geotechnical slope sensor telemetry and precipitation modeling in fragile mountain ghat sections.',
-      department: 'Disaster Management, Relief & Rehabilitation Department',
-      status: 'In Pilot',
-      shortlistedCount: 2,
-      bestPerformer: {
-        name: 'TerraVision Remote Sensing',
-        score: 89
-      },
-      approvalSummary: {
-        statusText: 'In Pilot – Milestone M2 in Review',
-        approvedStartupName: 'TerraVision Remote Sensing',
-        contractSigned: false
-      },
-      evaluationCriteria: [
-        { name: 'Early Warning Accuracy (>4h Lead Time)', weight: '40%' },
-        { name: 'False Alarm Minimization (<5%)', weight: '30%' },
-        { name: 'Ruggedized Sensor Weatherproofing', weight: '15%' },
-        { name: 'Disaster Control Room Siren Integration', weight: '15%' }
-      ],
-      expertPanelNote: 'Field trials underway along NH-66 ghat corridors in Raigad. 24 deep-bore inclinometers active.',
-      shortlistedStartups: [
-        {
-          id: 'ST-006',
-          name: 'TerraVision Remote Sensing',
-          legalName: 'TERRAVISION REMOTE SENSING LLP',
-          logo: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=150&auto=format&fit=crop&q=80',
           pilotStatus: 'In Progress',
-          score: 89,
-          technicalScore: 90,
-          impactScore: 88,
+          score: 94,
+          technicalScore: 95,
+          impactScore: 94,
           complianceScore: 92,
-          costScaleScore: 84,
-          keyMetricsSummary: '93.4% early warning accuracy; zero fatalities',
+          costScaleScore: 90,
+          keyMetricsSummary: 'Target KPI alignment confirmed',
           pilotDuration: '6 months',
           recommendation: 'Recommended',
-          approvalStatus: 'Pending Sign-off',
-          notes: 'Real-time slope displacement monitoring with sub-meter accuracy.'
+          approvalStatus: (c.govStatus === 'approved' ? 'Approved' : 'Pending Sign-off') as 'Approved' | 'Under Review' | 'Not Approved' | 'Rejected' | 'Pending Sign-off',
+          notes: 'Standard bilateral pilot agreement.'
         }
       ],
       contractTerms: {
-        agreementRef: 'MHA-GOV-2026-CTR-DIS02',
-        pilotCost: 'INR 38.0 Lakhs',
-        scope: 'Deploy 24 slope inclinometers and early warning sirens along Western Ghats.',
-        milestones: [
-          { name: 'M1 – Geotechnical Borehole Sensors', pct: '30%', amount: 'INR 11.4 Lakhs' },
-          { name: 'M2 – Monsoon Precipitation Correlation', pct: '40%', amount: 'INR 15.2 Lakhs' },
-          { name: 'M3 – Control Room Siren Integration', pct: '30%', amount: 'INR 11.4 Lakhs' }
-        ],
-        ipClause: 'Public safety emergency datasets open.',
-        cyberClause: 'MeitY Cloud in India.',
+        agreementRef: c.id,
+        pilotCost: c.totalValue,
+        scope: c.challengeTitle,
+        milestones: (c.milestones || []).map((m: any) => ({ name: m.name || 'Milestone', pct: '33%', amount: `INR ${m.amount || '0'}` })),
+        ipClause: 'Shared GovTech IP framework. Telemetry datasets owned by State.',
+        cyberClause: 'State Cyber Policy compliance.',
         terminationClause: '30 days standard notice.'
       },
-      documents: [
-        {
-          type: 'Tender Document',
-          description: 'Western Ghats Landslide Monitoring Challenge Specifications',
-          date: '05-Mar-2026',
-          fileName: 'TENDER-DISASTER-2026.pdf',
-          fileSize: '3.1 MB'
-        }
-      ]
-    }
-  ];
+      documents: []
+    }));
+  }, [contracts]);
 
   // Active Problem Statement for Section 2
-  const currentPS = psContractData.find(ps => ps.id === selectedPSId) || psContractData[0];
+  const currentPS = psContractData.find(ps => ps.id === selectedPSId) || psContractData[0] || null;
 
   // Active Approved Item for Section 4
-  const currentApprovedPS = psContractData.find(ps => ps.id === selectedApprovedPSId) || psContractData[0];
-  const currentApprovedStartup = currentApprovedPS.shortlistedStartups.find(s => s.approvalStatus === 'Approved') || currentApprovedPS.shortlistedStartups[0];
+  const currentApprovedPS = psContractData.find(ps => ps.id === selectedApprovedPSId) || psContractData[0] || null;
+  const currentApprovedStartup = currentApprovedPS ? (currentApprovedPS.shortlistedStartups.find(s => s.approvalStatus === 'Approved') || currentApprovedPS.shortlistedStartups[0]) : null;
 
   // Filtered PS list
   const filteredPSList = psContractData.filter(ps => {
@@ -637,93 +309,103 @@ export const ContractApprovalGate: React.FC = () => {
             <span className="text-xs font-bold text-slate-400">
               Showing {filteredPSList.length} Challenges
             </span>
-          </div>
-
-          {/* Problem Statement Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {filteredPSList.map((ps) => (
-              <div
-                key={ps.id}
-                className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-[#1D64EC]/50 transition-all flex flex-col justify-between group space-y-4"
-              >
-                <div>
-                  {/* Top Row: PS ID + Title + Status */}
-                  <div className="flex items-start justify-between gap-3 mb-2">
-                    <div>
-                      <span className="text-[11px] font-mono font-bold text-[#1D64EC] uppercase tracking-wider block mb-1">
-                        {ps.psCode} • {ps.department}
-                      </span>
-                      <h3 className="text-base font-bold text-navy-900 leading-snug group-hover:text-[#1D64EC] transition-colors">
-                        {ps.title}
-                      </h3>
-                    </div>
-
-                    <StatusBadge
-                      label={ps.status}
-                      variant={
-                        ps.status === 'Approved' ? 'emerald' :
-                        ps.status === 'Evaluation Complete' ? 'violet' :
-                        ps.status === 'In Pilot' ? 'amber' : 'blue'
-                      }
-                      size="sm"
-                    />
-                  </div>
-
-                  {/* 1-Line Description */}
-                  <p className="text-xs text-slate-600 leading-relaxed line-clamp-2 mb-4 font-medium">
-                    {ps.description}
-                  </p>
-
-                  {/* Metadata Chips: Shortlist Count & Best Performer */}
-                  <div className="space-y-2 pt-3 border-t border-slate-100 text-xs">
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-500 font-medium">Shortlisted Startups:</span>
-                      <strong className="text-navy-900 font-bold">{ps.shortlistedCount} startups shortlisted</strong>
-                    </div>
-
-                    <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
-                      <div>
-                        <span className="text-[10px] uppercase font-bold text-slate-400 block">Best Performer</span>
-                        <p className="text-xs font-bold text-navy-900 mt-0.5">{ps.bestPerformer.name}</p>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-[10px] uppercase font-bold text-slate-400 block">Panel Score</span>
-                        <p className="text-sm font-extrabold text-[#1D64EC] font-display mt-0.5">{ps.bestPerformer.score}/100</p>
-                      </div>
-                    </div>
-
-                    {/* Approval Status */}
-                    <div className="flex items-center gap-2 pt-1 text-[11px]">
-                      <span className="font-semibold text-slate-500">Approval Status:</span>
-                      <span className={`font-bold ${
-                        ps.status === 'Approved' ? 'text-emerald-700' :
-                        ps.status === 'Evaluation Complete' ? 'text-purple-700' : 'text-amber-700'
-                      }`}>
-                        {ps.approvalSummary.statusText}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Bottom CTA Button */}
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-[11px] text-slate-400 font-mono">
-                    Agreement: {ps.contractTerms.agreementRef}
-                  </span>
-
-                  <button
-                    type="button"
-                    onClick={() => setSelectedPSId(ps.id)}
-                    className="px-5 py-2.5 rounded-full bg-[#1D64EC] hover:bg-brand-cobalt text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition-all group-hover:scale-[1.02]"
-                  >
-                    <span>View Details</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
+          </div>          {/* Problem Statement Cards Grid or Clean Empty State */}
+          {filteredPSList.length === 0 ? (
+            <div className="glass-panel rounded-3xl p-16 text-center space-y-3">
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#1D64EC] flex items-center justify-center mx-auto">
+                <Scale className="w-6 h-6" />
               </div>
-            ))}
-          </div>
+              <h3 className="text-base font-bold text-navy-900">No Contracts Awaiting Approval</h3>
+              <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                When startup proposals receive technical domain expert clearance, bilateral contract packages will appear here for secretarial ratification.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {filteredPSList.map((ps) => (
+                <div
+                  key={ps.id}
+                  className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-[#1D64EC]/50 transition-all flex flex-col justify-between group space-y-4"
+                >
+                  <div>
+                    {/* Top Row: PS ID + Title + Status */}
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <div>
+                        <span className="text-[11px] font-mono font-bold text-[#1D64EC] uppercase tracking-wider block mb-1">
+                          {ps.psCode} • {ps.department}
+                        </span>
+                        <h3 className="text-base font-bold text-navy-900 leading-snug group-hover:text-[#1D64EC] transition-colors">
+                          {ps.title}
+                        </h3>
+                      </div>
+
+                      <StatusBadge
+                        label={ps.status}
+                        variant={
+                          ps.status === 'Approved' ? 'emerald' :
+                          ps.status === 'Evaluation Complete' ? 'violet' :
+                          ps.status === 'In Pilot' ? 'amber' : 'blue'
+                        }
+                        size="sm"
+                      />
+                    </div>
+
+                    {/* 1-Line Description */}
+                    <p className="text-xs text-slate-600 leading-relaxed line-clamp-2 mb-4 font-medium">
+                      {ps.description}
+                    </p>
+
+                    {/* Metadata Chips: Shortlist Count & Best Performer */}
+                    <div className="space-y-2 pt-3 border-t border-slate-100 text-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-500 font-medium">Shortlisted Startups:</span>
+                        <strong className="text-navy-900 font-bold">{ps.shortlistedCount} startups shortlisted</strong>
+                      </div>
+
+                      <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                        <div>
+                          <span className="text-[10px] uppercase font-bold text-slate-400 block">Best Performer</span>
+                          <p className="text-xs font-bold text-navy-900 mt-0.5">{ps.bestPerformer.name}</p>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-[10px] uppercase font-bold text-slate-400 block">Panel Score</span>
+                          <p className="text-sm font-extrabold text-[#1D64EC] font-display mt-0.5">{ps.bestPerformer.score}/100</p>
+                        </div>
+                      </div>
+
+                      {/* Approval Status */}
+                      <div className="flex items-center gap-2 pt-1 text-[11px]">
+                        <span className="font-semibold text-slate-500">Approval Status:</span>
+                        <span className={`font-bold ${
+                          ps.status === 'Approved' ? 'text-emerald-700' :
+                          ps.status === 'Evaluation Complete' ? 'text-purple-700' : 'text-amber-700'
+                        }`}>
+                          {ps.approvalSummary.statusText}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom CTA Button */}
+                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <span className="text-[11px] text-slate-400 font-mono">
+                      Ref: {ps.contractTerms.agreementRef}
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={() => setSelectedPSId(ps.id)}
+                      className="px-4 py-2 rounded-full bg-[#1D64EC] hover:bg-brand-cobalt text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition-all group-hover:scale-[1.02]"
+                    >
+                      <span>Review Shortlist & Approve</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                </div>
+              ))}
+            </div>
+          )}
 
         </div>
       )}
@@ -731,7 +413,7 @@ export const ContractApprovalGate: React.FC = () => {
       {/* ========================================================================= */}
       {/* SECTION 2: PROBLEM STATEMENT DETAIL PAGE (When clicking a PS) */}
       {/* ========================================================================= */}
-      {activeMainTab === 'overview' && selectedPSId && (
+      {activeMainTab === 'overview' && selectedPSId && currentPS && (
         <div className="space-y-6 animate-in fade-in duration-200">
           
           {/* Breadcrumb & Navigation */}
@@ -1170,7 +852,7 @@ export const ContractApprovalGate: React.FC = () => {
       {/* ========================================================================= */}
       {/* SECTION 4: APPROVED STARTUP DETAIL PAGE (When clicking View Full Details) */}
       {/* ========================================================================= */}
-      {activeMainTab === 'approved_repository' && selectedApprovedPSId && (
+      {activeMainTab === 'approved_repository' && selectedApprovedPSId && currentApprovedPS && currentApprovedStartup && (
         <div className="space-y-6 animate-in fade-in duration-200">
           
           {/* Breadcrumb */}

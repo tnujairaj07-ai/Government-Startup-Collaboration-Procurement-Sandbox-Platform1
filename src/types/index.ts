@@ -70,20 +70,35 @@ export interface Startup {
   id: string;
   name: string;
   tagline: string;
+  legalName?: string;
+  brandName?: string;
+  description?: string;
+  sector?: string;
+  email?: string;
+  phone?: string;
+  headquarters?: string;
+  website?: string;
+  complianceScore?: number;
+  incorporationDate?: string;
+  gstin?: string;
+  dpiitVerified?: boolean;
   logo: string;
   domains: string[];
   techStack: string[];
-  stage: 'Prototype' | 'Pilot-ready' | 'Scaled';
+  stage: 'Prototype' | 'Pilot-ready' | 'Scaled' | 'Seed' | 'Early Traction' | 'Validation' | 'In Pilot';
   location: string;
   trl: number;
+  trlLevel?: number;
   dpiitNumber: string;
   dpiitRecognized: boolean;
   gemReady: boolean;
+  gemRegistered?: boolean;
   gemSellerId: string;
   yearFounded: number;
   teamSize: number;
   cin: string;
   gst: string;
+  pan?: string;
   contactEmail: string;
   founderName: string;
   matchScore: number;
@@ -100,6 +115,15 @@ export interface Startup {
   cloudInfrastructure: string;
   cyberScore: number;
   status: 'Shortlisted' | 'In Pilot' | 'Scaled' | 'New';
+  turnoverLastFY?: string;
+  turnoverCr?: number;
+  registeredAddress?: string;
+  technologyTags?: string[];
+  securityCertifications?: string[];
+  priorGovContracts?: number;
+  verifiedEvidencePassport?: any;
+  aiReadinessScore?: number;
+  coFounders?: string[];
 }
 
 export interface Milestone {
@@ -166,6 +190,9 @@ export interface Proposal {
   milestones: Milestone[];
   expertScorecard?: ExpertScorecard;
   aiFitScore: number;
+  solutionSummary?: string;
+  currentStageName?: string;
+  currentStage?: string;
 }
 
 export interface ContractComparisonOption {
@@ -205,6 +232,8 @@ export interface Contract {
   approvedByGovOfficial?: string;
   govApprovedAt?: string;
   auditTrail: { timestamp: string; action: string; actor: string; ip?: string }[];
+  milestones?: { name: string; amount: string; status?: string }[];
+  createdAt?: string;
 }
 
 export interface TelemetryDataPoint {
